@@ -1,0 +1,9 @@
+
+
+.idea/
+cmake-build-debug/
+
+
+report/
+!report/report.pdf
+!report/report.tex
