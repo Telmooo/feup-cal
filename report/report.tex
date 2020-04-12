@@ -111,11 +111,100 @@
 
 \newpage
 %----------------------------------------------------------------------------------------
-%	CHAPTER 1 - Descrição do problema
+%	CHAPTER 1 - Descrição do Problema
 %----------------------------------------------------------------------------------------
 \chapter[Descrição do Problema][Descrição do Problema]{Descrição do Problema} \label{\thechapter}
 
-
 \newpage
+
+%----------------------------------------------------------------------------------------
+%	CHAPTER 2 - Formalização do Problema
+%----------------------------------------------------------------------------------------
+\chapter[Formalização do Problema][Formalização do Problema]{Formalização do Problema} \label{\thechapter}
+
+\section{Dados de Entrada}
+
+$C_i$ - sequência de veículos, sendo $C_i(i)$ o seu i-ésimo elemento. Cada veículo é caraterizado por:
+\begin{itemize}
+	\item $capacity$ - número de prisioneiros que pode transportar
+	\item $type$ - tipo de veículo
+	\item $loc$ - localização atual do veículo
+\end{itemize}
+
+$R_i$ - sequência de pedidos de transporte de prisioneiros, sendo $R_i(i)$ o seu i-ésimo elemento. Cada pedido é caraterizado por:
+\begin{itemize}
+	\item $pickup$ - local de recolha dos prisioneiros
+	\item $dest$ - local de destino dos prisioneiros
+	\item $numPris$ - número de prisioneiros a serem transportados
+	\item $type$ - tipo de prisioneiros
+\end{itemize}
+
+$G_i = (V_i, E_i)$ - grafo dirigido pesado, composto por:
+\begin{itemize}
+	\item $V$ - vértices, representando pontos da rede viária, com:
+		\begin{itemize}
+			\item $ID$ - Identificador único do vértice
+			\item $D$ - Densidade populacional no vértice
+			\item $Adj \subseteq E$ - arestas que saiem do vértice
+		\end{itemize}
+	\item $E$ - arestas, representando conexão entre dois pontos da rede viária, com:
+		\begin{itemize}
+			\item $ID$ - Identificador único da aresta
+			\item $W_d$ - peso da aresta em relação à distância (representa a distância entre os dois vértices)
+			\item $W_t$ - peso da aresta em relação ao tempo (representa o tempo médio que demora a percorrer a distância entre os dois vértices, considerando o tráfego normal naquela conexão da rede viária)
+			\item $open$ - se a conexão entre os vértices está aberta, isto é, se a rua estiver cortada por alguma razão então não é possível utilizar esta conexão
+		\end{itemize}
+\end{itemize}
+
+$S$ - vértice da central
+
+\section{Dados de Saída}
+
+$G_f = (V_f, E_f)$ - grafo dirigido pesado, tendo $V_f$ e $E_f$ os mesmos atributos que $V_i$ e $E_i$, excluindo atributos específicos do algoritmo utilizado
+
+$C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o seu i-ésimo elemento. Cada veículo é caraterizado por:
+\begin{itemize}
+	\item $S$ - sequência de serviços a realizar, sendo $S(i)$ o seu i-ésimo elemento. Cada serviço é caraterizado por:
+	\begin{itemize}
+		\item $emptySeats$ - número de lugares vazios
+		\item $R_f$ - sequência de pedidos atendidos, sendo $R_f(i)$ o seu i-ésimo elemento. Cada pedido atendido é caraterizado por:
+		\begin{itemize}
+			\item $pickupHour$ - hora de chegada ao local de recolha
+			\item $destHour$ - hora de chegada ao local de destino
+		\end{itemize}
+		\item $P = { e ~ \epsilon ~ E_i }$ - sequência de arestas a percorrer, sendo $P(i)$ o seu i-ésimo elemento
+		\item $dist$ - distância percorrida no serviço
+		\item $startHour$ - hora esperada de ínicio do serviço
+		\item $endHour$ - hora esperada de termino do serviço
+	\end{itemize}
+\end{itemize}
+
+\section{Restrições}
+
+\subsection{Sobre os dados de entrada}
+
+\begin{itemize}
+	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: capacity(C_i(i)) > 0$, uma vez que não faz sentido os veículos não poderem transportar prisioneiros
+	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: loc(C_i(i)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, dado que o veículo tem de ser capaz de voltar à central. $loc(C_i(i))$ ao chegar a um destino de entrega de prisioneiros
+	\item $\forall r ~ \epsilon ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
+	\item $\forall r ~ \epsilon ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
+	\item $\forall e ~ \epsilon ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
+	\item $\forall e ~ \epsilon ~ E_i, e$ deve ser uma rua ao qual os veículos possam utilizar, ruas que os veículos não tenham permissão para entrar não são incluídas no grafo $G_i$
+	\item $S ~ \epsilon ~ V_i$, uma vez que a central é um vértice do grafo $G_i$
+\end{itemize}
+
+\subsection{Sobre os dados de saída}
+
+\begin{itemize}
+	\item $\vert C_f \vert \leq \vert C_i \vert $ - não se pode usar mais veículos que os disponíveis
+	\item $\forall v_f ~ \epsilon ~ V_f, \exists v_i ~ \epsilon ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall e_f ~ \epsilon ~ E_f, \exists e_i ~ \epsilon ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
+	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se for houver um pedido de transporte de prisioneiros
+	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), endHour(s) > startHour(s)$
+	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), startHour(s) < pickupHour(\forall r ~ \epsilon ~ R_f) < endHour(s) ~ \wedge ~ startHour(s) < destHour(\forall r ~ \epsilon ~ R_f) \leq endHour(s)$
+\end{itemize}
+
+\section{Função objetivo}
 
 \end{document}
