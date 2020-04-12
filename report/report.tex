@@ -40,7 +40,7 @@
 % Following code to edit the pagestyle
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Meat Wagons - Transporte de Prisioneiros}
+\rhead{Meat Wagons}
 \lhead{\leftmark}
 \rfoot{Página \thepage}
 
@@ -114,6 +114,29 @@
 %	CHAPTER 1 - Descrição do Problema
 %----------------------------------------------------------------------------------------
 \chapter[Descrição do Problema][Descrição do Problema]{Descrição do Problema} \label{\thechapter}
+
+Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos usando carrinhas que se encontram adaptadas ao serviço. Estes veículos têm a necessidade de serem altamente resistentes uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
+
+Para este projeto, queremos optimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possivel dividir nas seguintes fases:
+
+
+\subsection{Primeira Iteração - Recolha não seletiva de prisioneiros utilizando uma única carrinha}
+	Inicialmente considere que só existe uma única camioneta para realizar todos os serviços.
+	Com a primeira iteração pretende-se que apenas uma carrinha vá recolher os prisioneiros a uma dada localização, tendo em conta a urgência da situação. As situações que  sejam mais exigentes serão respondidas primeiro pela carrinha.
+
+	É importante de notar que a recolha só pode ser efetuada se exisrem caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
+
+	Algumas vezes, obras nas vias públicas podem fazer com que certas zonas tornem-se inacessíveis, inviabilizando o acesso ao destino de alguns prisioneiros. Avalie a conectividade do grafo, a fim de identificar pontos de recolha e de entrega com pouca acessibilidade.
+
+\subsection{Segunda Iteração - Recolha seletiva de prisioneiros utilizando uma única carrinha}
+	Durante a segunda fase, cada prisioneiro irá ser agrupado com outros prisioneiros sempre que seja possivel, de modo a não exceder a capacidade da carrinha.
+
+
+
+\subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando várias carrinhas}
+
+	Concluindo, nesta ultima fase vai-se ter em consideração o diverso número de carrinhas que a frota possui. Algumas carrinhas vão diferir de outras, tendo cada carrinha uma determinada função. Por exemplo, vão existir carrinhas especificas para transportar prisioneiros até aos aeroportos, linhas de comboio.
+
 
 \newpage
 
