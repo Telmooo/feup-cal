@@ -160,6 +160,8 @@ $R_i$ - sequência de pedidos de transporte de prisioneiros, sendo $R_i(i)$ o se
 	\item $dest$ - local de destino dos prisioneiros
 	\item $numPris$ - número de prisioneiros a serem transportados
 	\item $type$ - tipo de prisioneiros
+	\item $p_d$ - peso da distância no trajeto a efetuar
+	\item $p_t$ - peso do tempo no trajeto a efetuar
 \end{itemize}
 
 $G_i = (V_i, E_i)$ - grafo dirigido pesado, composto por:
@@ -194,6 +196,8 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 		\begin{itemize}
 			\item $pickupHour$ - hora de chegada ao local de recolha
 			\item $destHour$ - hora de chegada ao local de destino
+			\item $p_d$ - peso da distância no trajeto a efetuar
+			\item $p_t$ - peso do tempo no trajeto a efetuar
 		\end{itemize}
 		\item $P = { e ~ \epsilon ~ E_i }$ - sequência de arestas a percorrer, sendo $P(i)$ o seu i-ésimo elemento
 		\item $dist$ - distância percorrida no serviço
@@ -222,6 +226,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\item $\vert C_f \vert \leq \vert C_i \vert $ - não se pode usar mais veículos que os disponíveis
 	\item $\forall v_f ~ \epsilon ~ V_f, \exists v_i ~ \epsilon ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
 	\item $\forall e_f ~ \epsilon ~ E_f, \exists e_i ~ \epsilon ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall r_f ~ \epsilon ~ R_f, \exists r_i ~ \epsilon ~ R_i$ tal que $r_f$ e $r_i$ têm os mesmo valores para os atributos $p_d$ e $p_t$
 	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
 	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se for houver um pedido de transporte de prisioneiros
 	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), endHour(s) > startHour(s)$
@@ -229,5 +234,29 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 \end{itemize}
 
 \section{Função objetivo}
+
+A solução ótima passa por minizar a soma ponderada da distância percorrida e o tempo do serviço de uma determinada carrinha, que resulta na seguinte função:
+
+$\sum_{c ~ \epsilon ~ C_f} \sum_{s ~ \epsilon ~ S} \sum_{e ~ \epsilon ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
+
+\begin{itemize}
+	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de uma carrinha 
+	\item $max(p_t(R_f(s))$ - é o maior valor para o peso do tempo numa determinada sequência de pedidos de um serviço de uma carrinha
+\end{itemize}
+
+Deste modo, obtivemos a função objetivo para o nosso problema que se encontra acima.
+
+\newpage
+%----------------------------------------------------------------------------------------
+%	CHAPTER 3 - Perspectiva de solução
+%----------------------------------------------------------------------------------------
+\chapter[Perspectiva de solução][Perspectiva de solução]{Perspectiva de solução} \label{\thechapter}
+
+\section{Pré-processamento dos dados}
+
+\section{Algoritmos utilizados}
+
+
+
 
 \end{document}
