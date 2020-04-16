@@ -151,7 +151,6 @@ $C_i$ - sequência de veículos, sendo $C_i(i)$ o seu i-ésimo elemento. Cada ve
 \begin{itemize}
 	\item $capacity$ - número de prisioneiros que pode transportar
 	\item $type$ - tipo de veículo
-	\item $loc$ - localização atual do veículo
 \end{itemize}
 
 $R_i$ - sequência de pedidos de transporte de prisioneiros, sendo $R_i(i)$ o seu i-ésimo elemento. Cada pedido é caraterizado por:
@@ -212,7 +211,6 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 
 \begin{itemize}
 	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: capacity(C_i(i)) > 0$, uma vez que não faz sentido os veículos não poderem transportar prisioneiros
-	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: loc(C_i(i)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, dado que o veículo tem de ser capaz de voltar à central. $loc(C_i(i))$ ao chegar a um destino de entrega de prisioneiros
 	\item $\forall r ~ \epsilon ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
 	\item $\forall r ~ \epsilon ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
 	\item $\forall e ~ \epsilon ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
@@ -252,11 +250,22 @@ Deste modo, obtivemos a função objetivo para o nosso problema que se encontra 
 %----------------------------------------------------------------------------------------
 \chapter[Perspectiva de solução][Perspectiva de solução]{Perspectiva de solução} \label{\thechapter}
 
-\section{Pré-processamento dos dados}
+\section{Pré-processamento dos dados de entrada}
+
+\subsection{Grafo}
+Partindo da central, eliminar tudo aquilo que não seja alcançável 
+Tem de ser tudo fortemente conexo
+
+\subsection{Pedidos de transporte de prisioneiros}
+Remover todos os pedidos que não pertençam ao grafo pre processado.
+Ordenar os prisioneiros por tipo para no caso de existir uma carrinha com lugar livre este seja ocupado.
 
 \section{Algoritmos utilizados}
 
-
+Floyd-Warshall
+bellmanFord
+Dijkstra
+A*
 
 
 \end{document}
