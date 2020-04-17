@@ -253,14 +253,25 @@ Deste modo, obtivemos a função objetivo para o nosso problema que se encontra 
 \section{Pré-processamento dos dados de entrada}
 
 \subsection{Grafo}
-Partindo da central, eliminar tudo aquilo que não seja alcançável 
-Tem de ser tudo fortemente conexo
+Partindo da central todos as arestas que não forem alcançáveis têm a variável $open$ definida como falsa. 
+Além disso, todas os vértices do grafo que não pertencerem à componente fortemente conexa de origem devem ter as arestas que lhe alcançam marcadas como inacessíveis.
 
 \subsection{Pedidos de transporte de prisioneiros}
-Remover todos os pedidos que não pertençam ao grafo pre processado.
-Ordenar os prisioneiros por tipo para no caso de existir uma carrinha com lugar livre este seja ocupado.
+Remover todos os pedidos de transporte de prisioneiros que não pertençam ao grafo pré-processado, isto é, remover aqueles que façam parte de arestas que têm a componente $open$ definida como falsa.
 
-\section{Algoritmos utilizados}
+Também devemos organizar os pedidos de transporte de prisioneiros por ordem decrescente do número de prisioneiros a transportar, facilitando depois no alocamento de veículos para o seu transporte.
+
+\subsection{Veículos para transporte de prisioneiros}
+Relativamente ao pré-processamento dos veículos de transporte, devemos organizá-los por ordem decrescente de capacidade. Assim, como também temos os pedidos de transporte de prisioneiros organizados por ordem decrescente do número de prisioneiros a transportar podemos potencialmente minizar o número de veículos utilizados.
+
+\section{Identificação do problema}
+
+A empresa de transporte de prisioneiros Meat Wagons necessita de transportar os prisioneiros  de um ponto de recolha até um determinado destino. De modo a otimizar este transporte, a empresa optou por procurar o caminho mais eficiente para a efetuar a viagem. 
+
+Este problema é um caso do \textbf{Travelling Salesman Problem}.
+
+\subsection{Primeira Iteração}
+
 
 Floyd-Warshall
 bellmanFord
