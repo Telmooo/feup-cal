@@ -90,7 +90,7 @@
 \textbf{Projeto CAL - 2019/20 - MIEIC}
 \Repeat{2}{\linebreak}
 \begin{tabular}{l r}
-	\textbf{Professor das Aulas Práticas}: & Rosaldo José Fernandes Rossetti
+	\textbf{Professor das Aulas Práticas}: & \href{https://sigarra.up.pt/feup/pt/func_geral.formview?p_codigo=419241}{Rosaldo José Fernandes Rossetti}
 \end{tabular}
 \Repeat{4}{\linebreak}
 % FEUP Logo
@@ -213,6 +213,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: capacity(C_i(i)) > 0$, uma vez que não faz sentido os veículos não poderem transportar prisioneiros
 	\item $\forall r ~ \epsilon ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
 	\item $\forall r ~ \epsilon ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
+	\item $\forall r ~ \epsilon ~ R_i, p_d \geq 0 \wedge p_t \geq 0 \wedge (p_d \neq 0 \vee p_t \neq 0)$
 	\item $\forall e ~ \epsilon ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
 	\item $\forall e ~ \epsilon ~ E_i, e$ deve ser uma rua ao qual os veículos possam utilizar, ruas que os veículos não tenham permissão para entrar não são incluídas no grafo $G_i$
 	\item $S ~ \epsilon ~ V_i$, uma vez que a central é um vértice do grafo $G_i$
@@ -268,15 +269,49 @@ Relativamente ao pré-processamento dos veículos de transporte, devemos organiz
 
 A empresa de transporte de prisioneiros Meat Wagons necessita de transportar os prisioneiros  de um ponto de recolha até um determinado destino. De modo a otimizar este transporte, a empresa optou por procurar o caminho mais eficiente para a efetuar a viagem. 
 
-Este problema é um caso do \textbf{Travelling Salesman Problem}.
+Na primeira iteração, onde apenas está disponível um veículo, que realiza os pedidos de transporte um de cada vez, este problema trata-se do \textbf{caminho mais curto} entre a origem e o local de recolha seguido do \textbf{caminho mais curto} entre o local de recolha e o destino. A segunda iteração é semelhante à primeira iteração, variando apenas o número de veículos disponíveis para realizar os pedidos.
 
-\subsection{Primeira Iteração}
+Na terceira e última iteração, não só varia o número de veículos disponíveis, como também o número de pedidos de transporte que um veículo pode realizar num único serviço, equiparando-se ao problema designado por \textbf{Vehicle Routing Problem}, uma generalização do problema do \textbf{Travelling Salesman Problem}, um problema NP-díficil.
 
+Vale também realçar que os veículos devem retornar para a central no fim 
 
-Floyd-Warshall
-bellmanFord
-Dijkstra
-A*
+\section{Caminho mais curto}
+Este é o problema referido na primeira e segunda iteração, e trata-se de encontrar o percurso mais curto e eficiente entre dois pontos, ou entre todos os pares de pontos do grafo.
 
+\subsection{Entre dois pontos}
+Entre os vários algoritmos que existem para calcular o caminho mais curto entre dois pontos destacam-se os seguintes algoritmos:
+
+\subsubsection{Algoritmo de Dijkstra}
+Concebido por \href{https://en.wikipedia.org/wiki/Edsger_W._Dijkstra}{Edsger W. Dijkstra} 
+
+\subsubsection{Algoritmo A*}
+
+\subsubsection{Algoritmo de Bellman-Ford}
+
+\subsection{Entre todos os pares de pontos}
+
+\subsubsection{Algoritmo de Floyd-Warshall}
+
+\subsubsection{Johnson's??}
+
+\section{TSP/VRP}
+
+\subsection{Brute-force}
+
+\subsection{Held-Karp}
+
+\subsection{nearest neighbour}
+
+\subsection{genetic}
+
+\newpage
+\chapter{Bibliografia}
+\begin{itemize}
+	\item Apresentações fornecidas pelo professor Rosaldo José Fernandes Rossetti nas aulas téoricas da cadeira \href{https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=436441}{Conceção e Análise de Algoritmos}
+	\item \href{https://en.wikipedia.org/wiki/Shortest_path_problem}{Shortest Path Problem}
+	\item \href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{Dijkstra's Algorithm}
+	\item \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Traveling Salesman Problem}
+	\item \href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{Vehicle Routing Problem}
+\end{itemize}
 
 \end{document}
