@@ -9,6 +9,9 @@
 % Encondings
 \usepackage[utf8]{inputenc}
 
+% Code
+\usepackage{minted}
+
 % Language
 \usepackage[portuguese]{babel}
 
@@ -198,7 +201,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 			\item $p_d$ - peso da distância no trajeto a efetuar
 			\item $p_t$ - peso do tempo no trajeto a efetuar
 		\end{itemize}
-		\item $P = { e ~ \epsilon ~ E_i }$ - sequência de arestas a percorrer, sendo $P(i)$ o seu i-ésimo elemento
+		\item $P = { e ~ \in ~ E_i }$ - sequência de arestas a percorrer, sendo $P(i)$ o seu i-ésimo elemento
 		\item $dist$ - distância percorrida no serviço
 		\item $startHour$ - hora esperada de ínicio do serviço
 		\item $endHour$ - hora esperada de termino do serviço
@@ -210,33 +213,33 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 \subsection{Sobre os dados de entrada}
 
 \begin{itemize}
-	\item $\forall i ~ \epsilon ~ [0, \vert C_i \vert [: capacity(C_i(i)) > 0$, uma vez que não faz sentido os veículos não poderem transportar prisioneiros
-	\item $\forall r ~ \epsilon ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
-	\item $\forall r ~ \epsilon ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
-	\item $\forall r ~ \epsilon ~ R_i, p_d \geq 0 \wedge p_t \geq 0 \wedge (p_d \neq 0 \vee p_t \neq 0)$
-	\item $\forall e ~ \epsilon ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
-	\item $\forall e ~ \epsilon ~ E_i, e$ deve ser uma rua ao qual os veículos possam utilizar, ruas que os veículos não tenham permissão para entrar não são incluídas no grafo $G_i$
-	\item $S ~ \epsilon ~ V_i$, uma vez que a central é um vértice do grafo $G_i$
+	\item $\forall i ~ \in ~ [0, \vert C_i \vert [: capacity(C_i(i)) > 0$, uma vez que não faz sentido os veículos não poderem transportar prisioneiros
+	\item $\forall r ~ \in ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
+	\item $\forall r ~ \in ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
+	\item $\forall r ~ \in ~ R_i, p_d \geq 0 \wedge p_t \geq 0 \wedge (p_d \neq 0 \vee p_t \neq 0)$
+	\item $\forall e ~ \in ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
+	\item $\forall e ~ \in ~ E_i, e$ deve ser uma rua ao qual os veículos possam utilizar, ruas que os veículos não tenham permissão para entrar não são incluídas no grafo $G_i$
+	\item $S ~ \in ~ V_i$, uma vez que a central é um vértice do grafo $G_i$
 \end{itemize}
 
 \subsection{Sobre os dados de saída}
 
 \begin{itemize}
 	\item $\vert C_f \vert \leq \vert C_i \vert $ - não se pode usar mais veículos que os disponíveis
-	\item $\forall v_f ~ \epsilon ~ V_f, \exists v_i ~ \epsilon ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
-	\item $\forall e_f ~ \epsilon ~ E_f, \exists e_i ~ \epsilon ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
-	\item $\forall r_f ~ \epsilon ~ R_f, \exists r_i ~ \epsilon ~ R_i$ tal que $r_f$ e $r_i$ têm os mesmo valores para os atributos $p_d$ e $p_t$
-	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
-	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se for houver um pedido de transporte de prisioneiros
-	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), endHour(s) > startHour(s)$
-	\item $\forall c ~ \epsilon ~ C_f, \forall s ~ \epsilon ~ S(c), startHour(s) < pickupHour(\forall r ~ \epsilon ~ R_f) < endHour(s) ~ \wedge ~ startHour(s) < destHour(\forall r ~ \epsilon ~ R_f) \leq endHour(s)$
+	\item $\forall v_f ~ \in ~ V_f, \exists v_i ~ \in ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall e_f ~ \in ~ E_f, \exists e_i ~ \in ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall r_f ~ \in ~ R_f, \exists r_i ~ \in ~ R_i$ tal que $r_f$ e $r_i$ têm os mesmo valores para os atributos $p_d$ e $p_t$
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se for houver um pedido de transporte de prisioneiros
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), endHour(s) > startHour(s)$
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), startHour(s) < pickupHour(\forall r ~ \in ~ R_f) < endHour(s) ~ \wedge ~ startHour(s) < destHour(\forall r ~ \in ~ R_f) \leq endHour(s)$
 \end{itemize}
 
 \section{Função objetivo}
 
 A solução ótima passa por minizar a soma ponderada da distância percorrida e o tempo do serviço de uma determinada carrinha, que resulta na seguinte função:
 
-$\sum_{c ~ \epsilon ~ C_f} \sum_{s ~ \epsilon ~ S} \sum_{e ~ \epsilon ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
+$\sum_{c ~ \in ~ C_f} \sum_{s ~ \in ~ S} \sum_{e ~ \in ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
 
 \begin{itemize}
 	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de uma carrinha 
@@ -290,7 +293,36 @@ Para poder aplicar este algoritmo é necessário que cada vértice guarde a segu
 	\item $path$ - vértice antecessor no caminho mais curto
 \end{itemize}
 
-O algoritmo de Dijkstra pode utilizar uma $priority queue$ ou um $array$ para inserir os novos vértices. No caso da $priority queue$ possui complexidade de $O(|V|+|E|\log |V|)$ enquanto que no caso do array é $O(V^{2})$
+O algoritmo de Dijkstra pode utilizar uma $priority queue$ ou um $array$ para inserir os novos vértices. 
+Este consiste em inicializar os vértices, o que se pode fazer em tempo linear $O(|V|)$. Seguidamente, inicializar a estrutura auxiliar, que neste caso consideramos a $priority queue$ devido a ter maior eficiência relativamente ao $array$, com o vértice origem.
+
+Processam os vértices que se encontram na queue extraindo-os e seguidamente percorrendo cada aresta do vértice a ser processado. Posteriormente, se o custo relativo ao vértice de destino da aresta for maior do que o custo do caminho atual, terá que se atualizar o vértice de destino e inserindo na $priority queue$ caso ele ainda não esteja na fila de processamento ou fazendo a operação $DECREASE-KEY$ caso este já esteja na fila de processamento.
+
+As operações de inserção, extração e $DECREASE-KEY$ têm complexidade temporal $O(log(N))$. Dado que é necessário percorrer todos os vértices e arestas resulta numa complexidade de $O((|V| + |E|)*log(|V|))$.
+
+Assim podemos concluir que o tempo de execução do algoritmo é $O((|V| + |E|)*log(|V|))$.
+
+O pseudo-código para implementar este algoritmo é o seguinte:
+
+\begin{minted}
+for each v \in V do
+	dist(v) \leftarrow \infty
+	path(v) \leftarrow NULL
+dist(s) \leftarrow 0
+Q \leftarrow \varnothing
+INSERT(Q, (s, 0))
+while Q \neq \varnothing do
+	v \leftarrow EXTRACT-MIN(Q)
+	for each w \in Adj(v) do
+		if dist(w) > dist(v) + weight(v, w) then
+			dist(w) \leftarrow dist(v) + weight(v, w)
+			path(w) \leftarrow v
+			if w \notin Q then
+				INSERT(Q, (w, dist(w)))
+			else
+				DECREASE-KEY(Q, (w, dist(w)))
+
+\end{minted}
 
 \subsubsection{Algoritmo A*}
 
