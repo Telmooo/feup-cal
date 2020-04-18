@@ -9,9 +9,6 @@
 % Encondings
 \usepackage[utf8]{inputenc}
 
-% Code
-\usepackage{minted}
-
 % Language
 \usepackage[portuguese]{babel}
 
@@ -19,8 +16,17 @@
 \usepackage{graphicx}
 	\graphicspath{{../images/}}
 
+% Listings
+\usepackage{listings}
+
+% Color
+\usepackage[dvipsnames]{xcolor}
+
 % Tables
 \usepackage{tabularx}
+
+% Math symbols
+\usepackage{amssymb}
 
 % Paragraph Spacing
 \usepackage{parskip}
@@ -173,6 +179,7 @@ $G_i = (V_i, E_i)$ - grafo dirigido pesado, composto por:
 			\item $ID$ - Identificador único do vértice
 			\item $D$ - Densidade populacional no vértice
 			\item $Adj \subseteq E$ - arestas que saiem do vértice
+			\item $avg-speed$ - velocidade média na área em volta do vértice
 		\end{itemize}
 	\item $E$ - arestas, representando conexão entre dois pontos da rede viária, com:
 		\begin{itemize}
@@ -217,6 +224,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\item $\forall r ~ \in ~ R_i, dest(r)$ deve pertencer ao mesmo componente fortemente conexo do grafo $G_i$ que o vértice $S$, uma vez que o veículo tem de ser capaz de voltar à central
 	\item $\forall r ~ \in ~ R_i, numPris(r) > 0$, uma vez que não faz sentido ter um pedido para transportar zero prisioneiros
 	\item $\forall r ~ \in ~ R_i, p_d \geq 0 \wedge p_t \geq 0 \wedge (p_d \neq 0 \vee p_t \neq 0)$
+	\item $\forall v ~ \in ~ V_i, avg$-$speed(v) > 0$
 	\item $\forall e ~ \in ~ E_i, W_d(e) > 0 \wedge W_t(e) > 0$, uma vez que o peso da aresta representa a distância ou o tempo médio necessário para percorrer a aresta, se esta distância ou tempo forem zero estaremos num ciclo no mesmo vértice
 	\item $\forall e ~ \in ~ E_i, e$ deve ser uma rua ao qual os veículos possam utilizar, ruas que os veículos não tenham permissão para entrar não são incluídas no grafo $G_i$
 	\item $S ~ \in ~ V_i$, uma vez que a central é um vértice do grafo $G_i$
@@ -304,54 +312,277 @@ Assim podemos concluir que o tempo de execução do algoritmo é $O((|V| + |E|)*
 
 O pseudo-código para implementar este algoritmo é o seguinte:
 
-\begin{minted}
-for each v \in V do
-	dist(v) \leftarrow \infty
-	path(v) \leftarrow NULL
-dist(s) \leftarrow 0
-Q \leftarrow \varnothing
-INSERT(Q, (s, 0))
-while Q \neq \varnothing do
-	v \leftarrow EXTRACT-MIN(Q)
-	for each w \in Adj(v) do
-		if dist(w) > dist(v) + weight(v, w) then
-			dist(w) \leftarrow dist(v) + weight(v, w)
-			path(w) \leftarrow v
-			if w \notin Q then
-				INSERT(Q, (w, dist(w)))
-			else
-				DECREASE-KEY(Q, (w, dist(w)))
+\begin{lstlisting}[frame=single, mathescape=true]
+FOR EACH v $\in$ V DO
+  COST(v) $\leftarrow$ $\infty$
+  PATH(v) $\leftarrow$ NULL
 
-\end{minted}
+COST(s) $\leftarrow$ 0
+Q $\leftarrow$ $\varnothing$ // MIN PRIORITY QUEUE
+INSERT(Q, (s, COST(s)))
+WHILE Q $\neq$ $\varnothing$ DO
+  v $\leftarrow$ EXTRACT-MIN(Q)
+  FOR EACH w $\in$ Adj(v) DO
+    IF COST(w) > COST(v) + WEIGHT(v, w) THEN
+      COST(w) $\leftarrow$ COST(v) + WEIGHT(v, w)
+      PATH(w) $\leftarrow$ v
+      IF w $\notin$ Q THEN
+        INSERT(Q, (w, COST(w)))
+      ELSE
+        DECREASE-KEY(Q, (w, COST(w)))
+\end{lstlisting}
 
-\subsubsection{Algoritmo A*}
+Este algoritmo destaca-se pela sua facilidade de implementação, porém o algoritmo pode explorar demasiados vértices desnecessários.
+
+A ineficiência do algoritmo pode ser visto na imagem abaixo:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{dijkstra}
+\caption{\emph{Dijkstra's algorithm}}
+\begin{tabular}{ l r }
+\color{black} $\blacksquare$ \color{black} walls & \color{Periwinkle} $\blacksquare$ \color{black} visited \\
+\color{green} $\blacksquare$ \color{black} origin & \color{red} $\blacksquare$ \color{black} destination \\
+\color{yellow} $\blacksquare$ \color{black} shortest path
+\end{tabular}
+\end{figure}
 
 \subsubsection{Algoritmo de Bellman-Ford}
+O algoritmo de Bellman-Ford corresponde a uma extensão do algoritmo de Dijkstra permitindo a existência de pesos negativos nas arestas, sendo mais lento que o de Dijkstra por esse mesmo motivo.
 
-\subsection{Entre todos os pares de pontos}
+Uma vez que foi imposta a restrição de pesos não negativos nas arestas, este algoritmo não se vê útil, uma vez que não se vê necessário tratar pesos negativos.
 
-\subsubsection{Algoritmo de Floyd-Warshall}
+\subsubsection{Algoritmo A*}
+O algoritmo A*, desenvolvido por \href{https://en.wikipedia.org/wiki/Peter_E._Hart}{Peter Hart}, \href{https://en.wikipedia.org/wiki/Nils_John_Nilsson}{Nils Nilsson} e \href{https://en.wikipedia.org/wiki/Bertram_Raphael}{Bertram Raphael}, pode ser visto como uma extensão do algoritmo de Dijkstra, usando heurística para guiar a sua pesquisa.
 
-\subsubsection{Johnson's??}
+Em cada iteração, o algoritmo precisa decidir qual caminho processar, baseando-se no custo  do caminho desde a origem até ao ponto atual e numa estimativa do custo do caminho desde o vértice adjacente a testar até ao destino, isto é o algoritmo visa minimizar a seguinte função
+\begin{equation}
+f(n) = g(n) + h(n)
+\end{equation}
+onde $n$ é o próximo vértice do caminho, $g(n)$ o custo desde a origem até $n$ e $h(n)$ uma estimativa do custo mínimo desde $n$ até ao destino.
 
-\section{TSP/VRP}
+Uma possível implementação do algoritmo está demonstrada no seguinte pseudo-código:
+\begin{lstlisting}[frame=single, mathescape=true]
+RECONSTRUCT_PATH(current)
+  path $\leftarrow$ {current}
+  WHILE PATH(current) $\neq$ NULL
+    current $\leftarrow$ PATH(current)
+    path.PUSH_FRONT(current)
+  RETURN path
 
-\subsection{Brute-force}
+A_STAR(start, goal, heuristic)
+  FOR EACH v $\in$ V DO
+    G_COST(v) $\leftarrow$ $\infty$
+    F_COST(v) $\leftarrow$ $\infty$
+    PATH(v) $\leftarrow$ NULL
 
-\subsection{Held-Karp}
+  G_COST(start) $\leftarrow$ 0
+  F_COST(start) $\leftarrow$ heuristic(start) // G_COST(start)+heuristic(start)
+  Q $\leftarrow$ $\varnothing$ // MIN PRIORITY QUEUE
+  INSERT(Q, (start, COST(start)))
+  WHILE Q $\neq$ $\varnothing$ DO
+    v $\leftarrow$ EXTRACT-MIN(Q)	
+    IF V = GOAL
+      RETURN RECONSTRUCT_PATH(v)
+    
+    FOR EACH w $\in$ Adj(v) DO
+      IF G_COST(w) > G_COST(V) + WEIGHT(v, w) THEN
+        G_COST(w) $\leftarrow$ G_COST(v) + WEIGHT(v, w)
+        PATH(w) $\leftarrow$ v
+        F_COST(w) $\leftarrow$ G_COST(w) + heuristic(w)
+        IF w $\notin$ Q THEN
+          INSERT(Q, (w, COST(w)))
+        ELSE
+          DECREASE-KEY(Q, (w, COST(w)))
+\end{lstlisting}
 
-\subsection{nearest neighbour}
+O algoritmo A* é um algoritmo de elevada eficiência e otimização, sendo usado em muitos contextos, como nos sistemas de \href{https://en.wikipedia.org/wiki/Journey_planner}{encaminhamento de viagens} que corresponde às duas primeiras iterações do nosso problema.
 
-\subsection{genetic}
+A eficiência deste algoritmo pode ser observada comparando o número de vértices explorados durante a pesquisa com o algoritmo de Dijkstra, como é demonstrado na imagem abaixo:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{pathfinder}
+\caption{\emph{A* algorithm \textbf{vs.} Dijkstra's algorithm}}
+\begin{tabular}{ l r }
+\color{black} $\blacksquare$ \color{black} walls & \color{Periwinkle} $\blacksquare$ \color{black} visited \\
+\color{green} $\blacksquare$ \color{black} origin & \color{red} $\blacksquare$ \color{black} destination \\
+\color{yellow} $\blacksquare$ \color{black} shortest path
+\end{tabular}
+\end{figure}
+
+Embora a eficiência do algoritmo seja maior, o algoritmo A* não garante a solução ótima para todos os casos, ao contrário de algoritmos como o de Dijkstra. Esta desvantagem pode ser observada na imagem abaixo:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{pathfinder2}
+\caption{\emph{A* algorithm \textbf{vs.} Dijkstra's algorithm}}
+\begin{tabular}{ l r }
+\color{black} $\blacksquare$ \color{black} walls & \color{Periwinkle} $\blacksquare$ \color{black} visited \\
+\color{green} $\blacksquare$ \color{black} origin & \color{red} $\blacksquare$ \color{black} destination \\
+\color{yellow} $\blacksquare$ \color{black} shortest path
+\end{tabular}
+\end{figure}
+
+Analisando os resultados obtidos, é possível constatar que o algoritmo de Dijkstra visitou aproxidamente dez vezes mais vértices que o algoritmo A* ($1975 ~ \textbf{vs.} ~ 197$). Porém, o caminho mais curto encontrado pelo algoritmo A* não corresponde ao caminho com menor custo, uma vez que o caminho encontrado pelo algoritmo de Dijkstra possui um custo menor que o algoritmo de A* ($570 ~ \textbf{vs.} ~ 606$).
+
+\subsection{Entre todos os pares de vértices}
+É possível calcular o caminho entre todos os pares de vértices através de algoritmos, como a aplicação repetida do algoritmo de Dijkstra ou a utilização do algoritmo de Floyd-Warshall.
+
+Estes algoritmos são bastante utilizados para pré-processamento de mapas de estradas, porém no nosso problema, como os pesos para a distância e o para o tempo variam de pedido para pedido, o pré-processamento dos caminhos mais curtos para todos os pares de vértices não traria nenhuma vantagem, apenas uma diminuição na eficiência do programa.
+
+\section{Caminho mais curto com vários pedidos}
+Dada a possibilidade de um veículo realizar vários pedidos num único serviço, existirá um conjunto de locais de recolha e locais de destino a serem percorridos.
+
+Deparamo-nos então com um problema similar ao \textbf{Travelling Salesman Problem}, um problema NP-díficil. Como se trata de um grafo dirigido é a versão assimétrica do problema \textbf{Travelling Salesman Problem}
+
+As soluções deste problema podem dividir-se em duas categorias:
+\begin{itemize}
+	\item \textbf{Soluções Exatas} - algoritmos que encontram a solução exata do problema
+	\item \textbf{Soluções Aproximadas} - algoritmos que aproximam a solução do problema através de heurísticas e aproximações
+\end{itemize}
+
+\subsection{Soluções Exatas}
+\subsubsection{Brute-force}
+O método brute-force testa todas as permutações possíveis para o percurso, atualizando o caminho ótimo sempre que encontra um custo menor ao atual, resultando assim numa complexidade $O(n!)$, sendo $n$ o número de vértices a percorrer.
+
+\subsubsection{Held-Karp}
+
+\begin{lstlisting}[frame=single, mathescape=true]
+FALTA EXPLICAR + PSEUDo
+\end{lstlisting}
+
+Analisando as complexidades dos algoritmos apresentados podemos verificar que o método de brute-force é mais eficiente para valores de $n$ menores que sete, sendo o algoritmo de Held-Karp mais eficiente para os restantes valores de $n$, sendo $n$ o número de vértices a percorrer, assim como se pode observar no gráfico seguinte:
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{tsp_exact_complexity}
+\caption{\emph{Brute-force \textbf{vs.} Held-Karp algorithm: Complexities}}
+\begin{tabular}{ l r }
+\color{red} $-$ \color{black} Brute-force ($O(n!)$) & \color{blue} $-$ \color{black} Held-Karp ($O(n^22^n)$)
+\end{tabular}
+\end{figure}
+
+Na implementação do cálculo da solução exata alternaríamos o método utilizado conforme o número de vértices a percorrer, usando brute-force para $n \leq 7$ e o algoritmo Held-Karp para $n > 7$. 
+
+\subsection{Soluções Aproximadas}
+\subsubsection{Nearest Neighbour}
+O algoritmo de \textbf{nearest neighbour} consiste em escolher um vértice aleatório para o ínicio, e de seguida escolher o vértice mais próximo como próximo vértice a percorrer repetindo este passo até visitar todos os vértices a serem percorridos. Trata-se assim de algoritmo ganancioso que encontra uma solução aproximada em tempo reduzido, no entanto esta solução não é garantidamente a solução ótima.
+
+O pseudo-código deste algoritmo é o seguinte:
+\begin{lstlisting}[frame=single, mathescape=true]
+FOR EACH v \in V DO
+  VISITED(v) $\leftarrow$ false
+  PATH(v) $\leftarrow$ NULL
+
+v $\leftarrow$ RANDOM_VERTEX(V) // choose starting point
+VISITED(v) $\leftarrow$ true
+
+WHILE NOT ALL_VISITED(V) DO
+  w $\leftarrow$ CLOSEST_VERTEX(V, v) // get closest vertex to v
+  VISITED(w) $\leftarrow$ v 
+  PATH(w) $\leftarrow$ v
+  v $\leftarrow$ w
+\end{lstlisting}
+
+\subsubsection{Algoritmo Genético}
+Algoritmos genéticos são algoritmos baseados em heurísticas que simulam o processo de evolução de espécies, o processo de \href{https://en.wikipedia.org/wiki/Natural_selection}{\emph{seleção natural}}, selecionando os melhores espécimes de cada geração.
+
+Os algoritmos genéticos podem ser divididos em cinco fases:
+\begin{enumerate}
+	\item Gerar a população
+	\item Calcular a aptidão de cada indivíduo da população
+	\item Escolher os indivíduos mais aptos
+	\item Reproduzir os indivíduos escolhidos (por replicação ou \emph{crossover})
+	\item Mutação dos indivíduos de modo a introduzir pequenas variações na população
+\end{enumerate}
+
+\begin{lstlisting}[frame=single, mathescape=true]
+// calculate  fitness
+CALCULATE_FITNESS(I)
+  fitness $\leftarrow$ 0
+  FOR i $\leftarrow$ 1 TO $\vert VERTICES(I) \vert$
+    // add cost of going from vertex i-1 to vertex i
+    fitness $\leftarrow$ fitness + COST(VERTICES[i-1], VERTICES[i])
+  FITNESS(I) $\leftarrow$ fitness
+
+// Choose the n best individuals
+CULL_POPULATION(P, n)
+  sorted $\leftarrow$ SORT_BY_FITNESS(P) // sort by descending order of fitness
+  best $\leftarrow$ $\varnothing$
+  FOR i $\leftarrow$ 0 TO n
+    INSERT(best, sorted(i))
+  RETURN best
+
+// replicate individual
+REPLICATE(I)
+  return EXACT_COPY(I)
+  
+// create new individual from two parents
+CROSSOVER(parent_A, parent_B)
+  child $\leftarrow$ NEW_INDIVIDUAL()
+  // being N the number of vertices to visit
+  // random integer in [0, N[
+  section_start $\leftarrow$ RANDOM_INT(0, N)
+  // random integer in ]section_start, N[
+  section_end $\leftarrow$ RANDOM_INT(section_start + 1, N)
+  // copy random section from parent A
+  FOR i $\leftarrow$ section_start TO section_end DO
+    VERTICES(child) AT (i) $\leftarrow$ VERTICES(parent_A) AT (i)
+  
+  // fill remaining empty sections with genes from parent B
+  FOR i $\leftarrow$ 0 TO N DO
+    IF VERTICES(child) AT (i) = NULL
+      VERTICES(child) AT (i) $\leftarrow$ VERTICES(parent_B) AT (i)
+  RETURN CHILD
+
+// mutate individual
+MUTATE(I)
+  v $\leftarrow$ RANDOM_VERTEX(VERTICES(I)) // choose random vertex
+  w $\leftarrow$ RANDOM_VERTEX(VERTICES(I)) // choose another random vertex
+  SWAP(v, w)
+
+// using crossover to reproduce (can be done with replication)
+// reproduces population P
+REPRODUCE_POPULATION(P)
+  NEW_P $\leftarrow$ $\varnothing$
+  FOR i $\leftarrow$ 0 TO POPULATION_SIZE DO
+    // choose parents (can be tested to be different parents)
+    parent_A $\leftarrow$ RANDOM_INDIVIDUAL(P)
+    parent_B $\leftarrow$ RANDOM_INDIVIDUAL(P)
+    I $\leftarrow$ CROSSOVER(parent_A, parent_B)
+    random $\leftarrow$ RANDOM_FLOAT(0, 1) // random number between 0 and 1
+    IF random < MUTATION_RATE THEN
+      MUTATE(I)
+    INSERT(NEW_P, I)
+  RETURN NEW_P
+  
+
+// generate random population (random order of vertices to visit)
+P $\leftarrow$ GENERATE_RANDOM_POPULATION(V)
+
+WHILE ... // decide stopping criteria
+  FOR EACH individual $\in$ P
+    CALCULATE_FITNESS(individual)
+  
+  best $\leftarrow$ CULL_POPULATION(P, n)
+  P $\leftarrow$ REPRODUCE_POPULATION(best) // reproduce best individuals
+\end{lstlisting}
 
 \newpage
 \chapter{Bibliografia}
 \begin{itemize}
 	\item Apresentações fornecidas pelo professor Rosaldo José Fernandes Rossetti nas aulas téoricas da cadeira \href{https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=436441}{Conceção e Análise de Algoritmos}
-	\item \href{https://en.wikipedia.org/wiki/Shortest_path_problem}{Shortest Path Problem}
-	\item \href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{Dijkstra's Algorithm}
-	\item \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Traveling Salesman Problem}
-	\item \href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{Vehicle Routing Problem}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Shortest_path_problem}{Shortest Path Problem}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{Dijkstra's Algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Bellman\%E2\%80\%93Ford_algorithm}{Bellman-Ford Algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/A*_search_algorithm}{A* algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Traveling Salesman Problem}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{Vehicle Routing Problem}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Held\%E2\%80\%93Karp_algorithm}{Held-Karp algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm}{Nearest neighbour algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://www.desmos.com/calculator}{Desmos Graphing Tool}} \color{black}
+	\item \color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{Path Finder Visualization Program}} \color{black}
 \end{itemize}
 
 \end{document}
