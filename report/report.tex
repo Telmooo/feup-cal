@@ -282,7 +282,15 @@ Este é o problema referido na primeira e segunda iteração, e trata-se de enco
 Entre os vários algoritmos que existem para calcular o caminho mais curto entre dois pontos destacam-se os seguintes algoritmos:
 
 \subsubsection{Algoritmo de Dijkstra}
-Concebido por \href{https://en.wikipedia.org/wiki/Edsger_W._Dijkstra}{Edsger W. Dijkstra} 
+Este algoritmo foi concebido por \href{https://en.wikipedia.org/wiki/Edsger_W._Dijkstra}{Edsger W. Dijkstra} e resolve problemas do caminho mais curto de uma única origem em grafos que possuam pesos não negativos.
+
+Para poder aplicar este algoritmo é necessário que cada vértice guarde a seguinte informação:
+\begin{itemize}
+	\item $W$ - custo mínimo até ao local da origem (combinação linear da distância e tempo, como visto na função objetivo)
+	\item $path$ - vértice antecessor no caminho mais curto
+\end{itemize}
+
+O algoritmo de Dijkstra pode utilizar uma $priority queue$ ou um $array$ para inserir os novos vértices. No caso da $priority queue$ possui complexidade de $O(|V|+|E|\log |V|)$ enquanto que no caso do array é $O(V^{2})$
 
 \subsubsection{Algoritmo A*}
 
