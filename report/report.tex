@@ -124,27 +124,23 @@
 %----------------------------------------------------------------------------------------
 \chapter[Descrição do Problema][Descrição do Problema]{Descrição do Problema} \label{\thechapter}
 
-Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos usando carrinhas que se encontram adaptadas ao serviço. Estes veículos têm a necessidade de serem altamente resistentes uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
+Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos utilizando veículos que se encontrem adaptados ao serviço. Estes veículos têm a necessidade de serem altamente resistentes uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
 
 Para este projeto, queremos optimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possivel dividir nas seguintes fases:
 
+\subsection{Primeira Iteração - Recolha de prisioneiros utilizando um único veículo}
+	Inicialmente consideramos que só existe uma única camioneta para realizar todos os serviços.
+	Com a primeira iteração pretende-se que apenas um veículo vá recolher os prisioneiros a uma dada localização, tendo em conta a urgência da situação. As situações que sejam mais exigentes serão respondidas primeiro pelos veículos.
 
-\subsection{Primeira Iteração - Recolha não seletiva de prisioneiros utilizando uma única carrinha}
-	Inicialmente considere que só existe uma única camioneta para realizar todos os serviços.
-	Com a primeira iteração pretende-se que apenas uma carrinha vá recolher os prisioneiros a uma dada localização, tendo em conta a urgência da situação. As situações que  sejam mais exigentes serão respondidas primeiro pela carrinha.
-
-	É importante de notar que a recolha só pode ser efetuada se exisrem caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
+	É importante notar que a recolha só pode ser efetuada se existirem caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
 
 	Algumas vezes, obras nas vias públicas podem fazer com que certas zonas tornem-se inacessíveis, inviabilizando o acesso ao destino de alguns prisioneiros. Avalie a conectividade do grafo, a fim de identificar pontos de recolha e de entrega com pouca acessibilidade.
 
-\subsection{Segunda Iteração - Recolha seletiva de prisioneiros utilizando uma única carrinha}
-	Durante a segunda fase, cada prisioneiro irá ser agrupado com outros prisioneiros sempre que seja possivel, de modo a não exceder a capacidade da carrinha.
+\subsection{Segunda Iteração - Recolha de prisioneiros utilizando vários veículos}
+	Durante a segunda  fase vai-se ter em consideração o diverso número de veículos que a frota possui. Alguns veículos vão diferir de outras, tendo cada veículo uma determinada função. Vão existir veículos específicos para transportar prisioneiros até aos aeroportos e linhas de comboio.
 
-
-
-\subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando várias carrinhas}
-
-	Concluindo, nesta ultima fase vai-se ter em consideração o diverso número de carrinhas que a frota possui. Algumas carrinhas vão diferir de outras, tendo cada carrinha uma determinada função. Por exemplo, vão existir carrinhas especificas para transportar prisioneiros até aos aeroportos, linhas de comboio.
+\subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
+	Na terceira e última iteração vamos ter em consideração não só o número de veículos disponíveis, como também o número de pedidos de transporte de prisioneiros que um veículo pode realizar num único serviço. Um único veículo pode sair da central e transportar vários prisioneiros, desde que o número de prisioneiros não ultrapasse a capacidade do veículo.
 
 
 \newpage
@@ -245,13 +241,13 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 
 \section{Função objetivo}
 
-A solução ótima passa por minizar a soma ponderada da distância percorrida e o tempo do serviço de uma determinada carrinha, que resulta na seguinte função:
+A solução ótima passa por minizar a soma ponderada da distância percorrida e o tempo do serviço de um determinado veículo, que resulta na seguinte função:
 
 $\sum_{c ~ \in ~ C_f} \sum_{s ~ \in ~ S} \sum_{e ~ \in ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
 
 \begin{itemize}
-	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de uma carrinha 
-	\item $max(p_t(R_f(s))$ - é o maior valor para o peso do tempo numa determinada sequência de pedidos de um serviço de uma carrinha
+	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de um veículo 
+	\item $max(p_t(R_f(s))$ - é o maior valor para o peso do tempo numa determinada sequência de pedidos de um serviço de um veículo
 \end{itemize}
 
 Deste modo, obtivemos a função objetivo para o nosso problema que se encontra acima.
