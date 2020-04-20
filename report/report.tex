@@ -615,10 +615,35 @@ GET_SCC(G, source)
   DFS_VISIT(source)
 
   GT $\leftarrow$ TRANSPOSE(G)
-
   
-
 \end{lstlisting}
+
+ACABAR ISTO AQUI
+
+
+\section{Casos de Implementação}
+
+Perante a organização dos caminhos a percorrer pelos veículos, é necessário ter em consideração os seguintes aspetos:
+
+- Escolha do melhor percurso para um veículo;
+- Escolha dos pedidos de transporte de prisioneiros para cada veículo
+
+- Agrupar os pedidos de prisioneiros;
+- Agrupamento dos veículos;
+
+Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo atenção aos prisioneiros que se precisam de transportar.
+
+É necessário ter em consideração a urgência do transporte de um prisioneiro, pelo que se devem agrupar os prisioneiros cujos locais de partida e chegada sejam pouco distantes, priorizando sempre o transporte dos prisioneiros mais urgentes.
+
+Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo pedido de transporte de prisioneiros:
+
+- Ordenação dos serviços de modo a que os pedidos de transporte de prisioneiros mais recentes sejam analisados primeiro.  
+
+- Escolha do veículo disponível que possa efetuar os pedidos que foram recebidos num determinado período de tempo.
+
+- Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite.
+
+
 
 \newpage
 \chapter{Bibliografia}
