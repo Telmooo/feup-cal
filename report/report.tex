@@ -176,6 +176,7 @@ $G_i = (V_i, E_i)$ - grafo dirigido pesado, composto por:
 			\item $D$ - Densidade populacional no vértice
 			\item $Adj \subseteq E$ - arestas que saiem do vértice
 			\item $avg-speed$ - velocidade média na área em volta do vértice
+			\item $reachable$ - se o vértice é alcançável a partir da central
 		\end{itemize}
 	\item $E$ - arestas, representando conexão entre dois pontos da rede viária, com:
 		\begin{itemize}
@@ -261,8 +262,9 @@ Deste modo, obtivemos a função objetivo para o nosso problema que se encontra 
 \section{Pré-processamento dos dados de entrada}
 
 \subsection{Grafo}
-Partindo da central todos as arestas que não forem alcançáveis têm a variável $open$ definida como falsa. 
-Além disso, todas os vértices do grafo que não pertencerem à componente fortemente conexa de origem devem ter as arestas que lhe alcançam marcadas como inacessíveis.
+Partindo da central todos os vértices que não forem alcançáveis têm a variável $reachable$ definida como falsa.
+
+Além disso, todas os vértices do grafo que não pertençam à componente fortemente conexa de origem devem ser marcados como inacessíveis ($reachable$ é colocado a falso).
 
 \subsection{Pedidos de transporte de prisioneiros}
 Remover todos os pedidos de transporte de prisioneiros que não pertençam ao grafo pré-processado, isto é, remover aqueles que façam parte de arestas que têm a componente $open$ definida como falsa.
@@ -565,6 +567,59 @@ WHILE ... // decide stopping criteria
   P $\leftarrow$ REPRODUCE_POPULATION(best) // reproduce best individuals
 \end{lstlisting}
 
+%----------------------------------------------------------------------------------------
+%	CHAPTER 3 - Funcionalidades a implementar
+%----------------------------------------------------------------------------------------
+\chapter[Funcionalidades a implementar][Funcionalidades a implementar]{Funcionalidades a implementar} \label{\thechapter}
+
+\section{Pré-processamento dos dados de entrada}
+
+\subsection{Grafo}
+De modo a marcar todas as arestas alcançáveis a partir do vértice da central pode ser utilizada uma estratégia semelhante à procura em profundidade ($Depth-First Search$), começando a visita na central, e marcar todos os vértices que forem visitados como $open$.
+
+O pseudo-código para esta estratégia é o seguinte:
+
+\begin{lstlisting}[frame=single, mathescape=true]
+VISIT(node)
+  reachable(node) $\leftarrow$ true
+  FOR w $\in$ Adj(node) DO
+    IF NOT reachable(w) THEN
+      VISIT(w)
+
+// G - graph
+// source - starting point
+VISIT_FROM_SOURCE(G, source)
+  FOR v $\in$ VERTICES(G) DO
+    reachable(v) $\leftarrow$ false
+
+  VISIT(source)
+\end{lstlisting}
+
+Para a identificação dos vértices do grafo que pertençam à componente fortemente conexa do vértice da central, será necessário analisar a conetividade do grafo e a construção do componente fortemente conexo, para o qual se destacam os algoritmos de Kosaraju e de Tarjan.
+
+\subsubsection{Algoritmo de Kosaraju}
+
+\begin{lstlisting}[frame=single, mathescape=true]
+// S - stack to store vertices in post order
+DFS_VISIT(node, S)
+  visited(node) $\leftarrow$ true
+  FOR w $\in$ Adj(v) DO
+    IF not visited(w) THEN
+      DFS_VISIT(w)
+  INSERT(S, node)
+
+// get strongly connected component of vertex source
+GET_SCC(G, source)
+  S $\leftarrow$ $\varnothing$ // empty stack
+
+  DFS_VISIT(source)
+
+  GT $\leftarrow$ TRANSPOSE(G)
+
+  
+
+\end{lstlisting}
+
 \newpage
 \chapter{Bibliografia}
 \begin{itemize}
@@ -573,10 +628,20 @@ WHILE ... // decide stopping criteria
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{Dijkstra's Algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Bellman\%E2\%80\%93Ford_algorithm}{Bellman-Ford Algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/A*_search_algorithm}{A* algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Admissible_heuristic}{Admissible heuristic}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Traveling Salesman Problem}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{Vehicle Routing Problem}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Held\%E2\%80\%93Karp_algorithm}{Held-Karp algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm}{Nearest neighbour algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Genetic_algorithm}{Genetic Algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Natural_selection}{Natural selection}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/DNA_replication}{DNA replication}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Chromosomal_crossover}{Chromosomal crossover}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Mutation}{Mutation}} \color{black}
+	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/strongly-connected-components}{GeeksForGeeks - Strongly connected components}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Kosaraju\%27s_algorithm}{Kosaraju's algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Tarjan\%27s_strongly_connected_components_algorithm}{Tarjan's algorithm}} \color{black}
+	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}{GeeksForGeeks - Tarjan's algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://www.desmos.com/calculator}{Desmos Graphing Tool}} \color{black}
 	\item \color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{Path Finder Visualization Program}} \color{black}
 \end{itemize}
