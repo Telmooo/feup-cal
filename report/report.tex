@@ -647,10 +647,10 @@ Como no nosso caso apenas interessa saber a componente fortemente conexa a parti
 Perante a organização dos caminhos a percorrer pelos veículos, é necessário ter em consideração os seguintes aspetos:
 
 \begin{itemize}
-\item Escolha do melhor percurso para um veículo
-\item Escolha dos pedidos de transporte de prisioneiros para cada veículo
-\item Agrupar os pedidos de prisioneiros
-\item Agrupamento dos veículos
+	\item Escolha do melhor percurso para um veículo
+	\item Escolha dos pedidos de transporte de prisioneiros para cada veículo
+	\item Agrupar os pedidos de prisioneiros
+	\item Agrupamento dos veículos
 \end{itemize}
 
 Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo atenção aos prisioneiros que se precisam de transportar.
@@ -660,19 +660,43 @@ Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo at
 Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo pedido de transporte de prisioneiros:
 
 \begin{itemize}
-\item Ordenação dos serviços de modo a que os pedidos de transporte de prisioneiros mais antigos sejam analisados primeiro.  
-\item Escolha do veículo disponível que possa efetuar os pedidos que foram recebidos num determinado período de tempo.
-\item Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite.
+	\item Ordenação dos serviços de modo a que os pedidos de transporte de prisioneiros mais antigos sejam analisados primeiro
+	\item Escolha do veículo disponível que possa efetuar os pedidos que foram recebidos num determinado período de tempo
+	\item Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite
 \end{itemize}
 
 \section{Casos de Utilização}
 
+A aplicação a implementar irá incluir um menu de interação com o utilizador (GUI) capaz de navegar entre vários submenus, possibilitando o acesso às seguintes funcionalidades:
+
+\begin{itemize}
+	\item Visualização do grafo que contém o mapa disponibilizado (em GraphViewer)
+	\item Cálculo otimizado do percurso entre dois pontos
+	\item Adição e visualização do número de veículos
+	\item Adição de novos pedidos
+	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
+\end{itemize}
+
 \newpage
 %----------------------------------------------------------------------------------------
-%	CHAPTER 4 - Conclusão
+%	CHAPTER 5 - Conclusão
 %----------------------------------------------------------------------------------------
 \chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
+O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela  atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.  
 
+O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textpf{caminho mais curto entre dois vértices}. Por outro lado, a terceira e última iteração é equiparada aos problemas: \textpf{Vehicle Routing Problem} e o \textpf{Travelling Salesman Problem}.
+
+Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textpf{Dijkstra}, \textpf{A*}, \textpf{Held-Karp}, \textpf{Nearest Neighbour},\textpf{Genético}, \textpf{Kosaraju}, \textpf{Tarjan}.
+
+Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textpf{bruteforce}, \textpf{recursão}, \textpf{programação dinâmica}, \textpf{algoritmos gananciosos} ( \textpf{Dijkstra}, \textpf{A*}, \textpf{Nearest Neighbour}), \textpf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textpf{mutação}, \textpf{crossover}, \textpf{seleção} e outros tópicos associados a grafos, nomeadamente, \textpf{conetividade} e  \textpf{ordem topológica}.
+
+
+Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cada um responsável pelas seguintes partes do projeto:
+\begin{itemize}
+	\item\emph{ Diogo Samuel Fernandes} - Descrição do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a imlpementar),  Conclusão
+	\item\emph{ Hugo Guimarães} -  Perspetiva de solução, Funcionalidades a implementar, Conclusão
+	\item\emph{ Telmo Baptista} - Formalização do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a imlpementar),  Conclusão
+\end{itemize}
 
 \newpage
 \chapter{Bibliografia}
@@ -698,6 +722,7 @@ Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo ped
 	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}{GeeksForGeeks - Tarjan's algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://www.desmos.com/calculator}{Desmos Graphing Tool}} \color{black}
 	\item \color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{Path Finder Visualization Program}} \color{black}
+	\item \color{blue} \underline{\href{ https://en.wikipedia.org/wiki/Branch_and_bound}} \color{black}
 \end{itemize}
 
 \end{document}
