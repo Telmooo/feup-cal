@@ -129,15 +129,15 @@ Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo
 Para este projeto, queremos optimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possivel dividir nas seguintes fases:
 
 \subsection{Primeira Iteração - Recolha de prisioneiros utilizando um único veículo}
-	Inicialmente consideramos que só existe uma única camioneta para realizar todos os serviços.
-	Com a primeira iteração pretende-se que apenas um veículo vá recolher os prisioneiros a uma dada localização, tendo em conta a urgência da situação. As situações que sejam mais exigentes serão respondidas primeiro pelos veículos.
+	Inicialmente consideramos que só existe um único veículo para realizar todos os serviços.
+	Com a primeira iteração pretende-se que apenas um veículo vá recolher os prisioneiros a uma dada localização.
 
 	É importante notar que a recolha só pode ser efetuada se existirem caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
 
-	Algumas vezes, obras nas vias públicas podem fazer com que certas zonas tornem-se inacessíveis, inviabilizando o acesso ao destino de alguns prisioneiros. Avalie a conectividade do grafo, a fim de identificar pontos de recolha e de entrega com pouca acessibilidade.
+	Algumas vezes, obras nas vias públicas podem fazer com que certas zonas tornem-se inacessíveis, inviabilizando o acesso ao destino de alguns prisioneiros. 
 
 \subsection{Segunda Iteração - Recolha de prisioneiros utilizando vários veículos}
-	Durante a segunda  fase vai-se ter em consideração o diverso número de veículos que a frota possui. Alguns veículos vão diferir de outras, tendo cada veículo uma determinada função. Vão existir veículos específicos para transportar prisioneiros até aos aeroportos e linhas de comboio.
+	Durante a segunda  fase vai-se ter em consideração o diverso número de veículos que a frota possui. Alguns veículos vão diferir de outros, tendo cada veículo uma determinada função. Vão existir veículos específicos para transportar prisioneiros até aos aeroportos e linhas de comboio.
 
 \subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
 	Na terceira e última iteração vamos ter em consideração não só o número de veículos disponíveis, como também o número de pedidos de transporte de prisioneiros que um veículo pode realizar num único serviço. Um único veículo pode sair da central e transportar vários prisioneiros, desde que o número de prisioneiros não ultrapasse a capacidade do veículo.
@@ -235,7 +235,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\item $\forall e_f ~ \in ~ E_f, \exists e_i ~ \in ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
 	\item $\forall r_f ~ \in ~ R_f, \exists r_i ~ \in ~ R_i$ tal que $r_f$ e $r_i$ têm os mesmo valores para os atributos $p_d$ e $p_t$
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
-	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se for houver um pedido de transporte de prisioneiros
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se existir mais de um pedido de transporte de prisioneiros
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), endHour(s) > startHour(s)$
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), startHour(s) < pickupHour(\forall r ~ \in ~ R_f) < endHour(s) ~ \wedge ~ startHour(s) < destHour(\forall r ~ \in ~ R_f) \leq endHour(s)$
 \end{itemize}
@@ -267,7 +267,7 @@ Partindo da central todos os vértices que não forem alcançáveis têm a vari�
 Além disso, todas os vértices do grafo que não pertençam à componente fortemente conexa de origem devem ser marcados como inacessíveis ($reachable$ é colocado a falso).
 
 \subsection{Pedidos de transporte de prisioneiros}
-Remover todos os pedidos de transporte de prisioneiros que não pertençam ao grafo pré-processado, isto é, remover aqueles que façam parte de arestas que têm a componente $open$ definida como falsa.
+Remover todos os pedidos de transporte de prisioneiros que não pertençam ao grafo pré-processado, isto é, remover aqueles que façam parte de vértices que têm a componente $reachable$ definida como falsa.
 
 Também devemos organizar os pedidos de transporte de prisioneiros por ordem decrescente do número de prisioneiros a transportar, facilitando depois no alocamento de veículos para o seu transporte.
 
@@ -446,8 +446,11 @@ O método brute-force testa todas as permutações possíveis para o percurso, a
 
 \subsubsection{Held-Karp}
 
+O algoritmo de Held-Karp
+
 \begin{lstlisting}[frame=single, mathescape=true]
-FALTA EXPLICAR + PSEUDo
+Pseudo Codigo
+asdadssda
 \end{lstlisting}
 
 Analisando as complexidades dos algoritmos apresentados podemos verificar que o método de brute-force é mais eficiente para valores de $n$ menores que sete, sendo o algoritmo de Held-Karp mais eficiente para os restantes valores de $n$, sendo $n$ o número de vértices a percorrer, assim como se pode observar no gráfico seguinte:
@@ -599,37 +602,56 @@ Para a identificação dos vértices do grafo que pertençam à componente forte
 
 \subsubsection{Algoritmo de Kosaraju}
 
+O algoritmo de Kosaraju consiste nos seguintes passos:
+\begin{enumerate}
+	\item Realizar uma pesquisa em profundidade no grafo colocando os vértices numa stack após visitar o vértice, obtendo assim os vértices em pós-ordem
+	\item Transpor o grafo (inverter o sentido de todas as arestas)
+	\item Fazer uma pesquisa em profundidade nos vértices pela ordem que estão definidos na stack. Depois de ser feita a pesquisa obtém-se a componente fortemente conexa a que esse vértice pertence
+\end{enumerate}
+
+No entanto, como no nosso caso só interessa saber a componente fortemente conexa relativa à central, podemos apenas percorrer o grafo transposto a partir desse mesmo vértice. \\
+
+
 \begin{lstlisting}[frame=single, mathescape=true]
-// S - stack to store vertices in post order
-DFS_VISIT(node, S)
+// G - graph
+// C - container to store the vertices of the SCC
+DFS_VISIT(G, node, C)
   visited(node) $\leftarrow$ true
   FOR w $\in$ Adj(v) DO
     IF not visited(w) THEN
       DFS_VISIT(w)
-  INSERT(S, node)
-
-// get strongly connected component of vertex source
-GET_SCC(G, source)
-  S $\leftarrow$ $\varnothing$ // empty stack
-
-  DFS_VISIT(source)
+  INSERT(C, node)
 
   GT $\leftarrow$ TRANSPOSE(G)
   
+  SCC $\leftarrow$ $\varnothing$ 
+  
+  DFS_VISIT(GT, source, SCC)
+  
 \end{lstlisting}
 
-ACABAR ISTO AQUI
+A complexidade temporal de uma pesquisa em profundidade, assim como, a complexidade de inverter todas as arestas é proporcional ao tamanho do grafo isto é $O(|V| + |E|)$ sendo $|V|$ o número de vértices e $|E|$ o número de arestas.
 
+Como o algoritmo de Kosaraju se baseia em duas pesquisas em profundidade e numa inversão do grafo realizadas sequencialmente a complexidade do algoritmo também é $O(|V| + |E|)$ (uma vez que a inserção, deleção e a obtenção do topo da stack são realizadas em tempo constante, $O(1)$, não afetando a complexidade temporal do algoritmo).
+
+\subsection{Algoritmo de Tarjan}
+
+O Tarjan é uma versão mais eficiente do algoritmo de Kosaraju, precisando de apenas de realizar uma única pesquisa em profundidade para obter o grafo fortemente conexo. 
+
+Similarmente ao algoritmo de Kosaraju, o algoritmo de Tarjan também executa em tempo linear, $O(|V| + |E|)$, porém, este último baseia-se numa única pesquisa em profundidade, sendo assim mais eficiente.
+
+Como no nosso caso apenas interessa saber a componente fortemente conexa a partir da central, este algoritmo não irá trazer muitas vantagens relativamente ao algoritmo visto anteriormente. Deste modo, a sua implementação não será uma prioridade, podendo ser considerada numa fase futura.
 
 \section{Casos de Implementação}
 
 Perante a organização dos caminhos a percorrer pelos veículos, é necessário ter em consideração os seguintes aspetos:
 
-- Escolha do melhor percurso para um veículo;
-- Escolha dos pedidos de transporte de prisioneiros para cada veículo
-
-- Agrupar os pedidos de prisioneiros;
-- Agrupamento dos veículos;
+\begin{itemize}
+\item Escolha do melhor percurso para um veículo
+\item Escolha dos pedidos de transporte de prisioneiros para cada veículo
+\item Agrupar os pedidos de prisioneiros
+\item Agrupamento dos veículos
+\end{itemize}
 
 Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo atenção aos prisioneiros que se precisam de transportar.
 
@@ -637,12 +659,19 @@ Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo at
 
 Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo pedido de transporte de prisioneiros:
 
-- Ordenação dos serviços de modo a que os pedidos de transporte de prisioneiros mais recentes sejam analisados primeiro.  
+\begin{itemize}
+\item Ordenação dos serviços de modo a que os pedidos de transporte de prisioneiros mais antigos sejam analisados primeiro.  
+\item Escolha do veículo disponível que possa efetuar os pedidos que foram recebidos num determinado período de tempo.
+\item Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite.
+\end{itemize}
 
-- Escolha do veículo disponível que possa efetuar os pedidos que foram recebidos num determinado período de tempo.
+\section{Casos de Utilização}
 
-- Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite.
-
+\newpage
+%----------------------------------------------------------------------------------------
+%	CHAPTER 4 - Conclusão
+%----------------------------------------------------------------------------------------
+\chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
 
 
 \newpage
