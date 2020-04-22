@@ -675,7 +675,7 @@ A aplicação a implementar irá incluir um menu de interação com o utilizador
 	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
 \end{itemize}
 
-Para adicionar novos pedidos, o utilizador terá que indicar o \textpf{local de recolha e destino dos prisioneiros}, o \textpf{número de prisioneiros}, \textpf{tipo de prisioneiros}, \textpf{peso da distância no trajeto} e o \textpf{peso do tempo no trajeto}
+Para adicionar novos pedidos, o utilizador terá que indicar o \textbf{local de recolha e destino dos prisioneiros}, o \textbf{número de prisioneiros}, \textbf{tipo de prisioneiros}, \textbf{peso da distância no trajeto} e o \textbf{peso do tempo no trajeto}
 
 Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e segura o transporte de passageiros entre diversos estabelecimentos, para além de armazenar a informação relativa aos percursos, permitindo a sua visualização.
 
@@ -684,14 +684,24 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 %	CHAPTER 5 - Conclusão
 %----------------------------------------------------------------------------------------
 \chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
+
+A aplicação a implementar irá incluir um menu de interação com o utilizador (GUI) capaz de navegar entre vários submenus, possibilitando o acesso às seguintes funcionalidades:
+
+\begin{itemize}
+	\item Visualização do grafo que contém o mapa disponibilizado (em GraphViewer)
+	\item Cálculo otimizado do percurso entre dois pontos
+	\item Adição e visualização do número de veículos
+	\item Adição de novos pedidos
+	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
+\end{itemize}
+
 O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela  atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.  
 
-O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textpf{caminho mais curto entre dois vértices}. Por outro lado, a terceira e última iteração é equiparada aos problemas: \textpf{Vehicle Routing Problem} e o \textpf{Travelling Salesman Problem}.
+O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. Por outro lado, a terceira e última iteração é equiparada aos problemas: \textbf{Vehicle Routing Problem} e o \textbf{Travelling Salesman Problem}.  
 
-Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textpf{Dijkstra}, \textpf{A*}, \textpf{Held-Karp}, \textpf{Nearest Neighbour},\textpf{Genético}, \textpf{Kosaraju}, \textpf{Tarjan}.
+Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textbf{Dijkstra}, \textbf{A*}, \textbf{Held-Karp}, \textbf{Nearest Neighbour},\textbf{Genético}, \textbf{Kosaraju}, \textbf{Tarjan}.
 
-Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textpf{bruteforce}, \textpf{recursão}, \textpf{programação dinâmica}, \textpf{algoritmos gananciosos} ( \textpf{Dijkstra}, \textpf{A*}, \textpf{Nearest Neighbour}), \textpf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textpf{mutação}, \textpf{crossover}, \textpf{seleção} e outros tópicos associados a grafos, nomeadamente, \textpf{conetividade} e  \textpf{ordem topológica}.
-
+Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textbf{bruteforce}, \textbf{recursão}, \textbf{programação dinâmica}, \textbf{algoritmos gananciosos} ( \textbf{Dijkstra}, \textbf{A*}, \textbf{Nearest Neighbour}), \textbf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textbf{mutação}, \textbf{crossover}, \textbf{seleção} e outros tópicos associados a grafos, nomeadamente, \textbf{conetividade} e  \textbf{ordem topológica}.
 
 Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cada um responsável pelas seguintes partes do projeto:
 \begin{itemize}
@@ -724,7 +734,9 @@ Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cad
 	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}{GeeksForGeeks - Tarjan's algorithm}} \color{black}
 	\item \color{blue} \underline{\href{https://www.desmos.com/calculator}{Desmos Graphing Tool}} \color{black}
 	\item \color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{Path Finder Visualization Program}} \color{black}
-	\item \color{blue} \underline{\href{ https://en.wikipedia.org/wiki/Branch_and_bound}} \color{black}
+	\item \color{blue} \underline{\href{ https://en.wikipedia.org/wiki/Branch_and_bound}{Branch and Bound}} \color{black}
 \end{itemize}
+
+\end{document}
 
 \end{document}
