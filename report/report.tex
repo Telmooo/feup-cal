@@ -240,7 +240,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 
 \section{Função objetivo}
 
-A solução ótima passa por minizar a soma ponderada da distância percorrida e o tempo do serviço de um determinado veículo, que resulta na seguinte função:
+A solução ótima passa por minimizar a soma ponderada da distância percorrida e o tempo do serviço de um determinado veículo, que resulta na seguinte função:
 
 $\sum_{c ~ \in ~ C_f} \sum_{s ~ \in ~ S} \sum_{e ~ \in ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
 
@@ -685,16 +685,6 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 %----------------------------------------------------------------------------------------
 \chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
 
-A aplicação a implementar irá incluir um menu de interação com o utilizador (GUI) capaz de navegar entre vários submenus, possibilitando o acesso às seguintes funcionalidades:
-
-\begin{itemize}
-	\item Visualização do grafo que contém o mapa disponibilizado (em GraphViewer)
-	\item Cálculo otimizado do percurso entre dois pontos
-	\item Adição e visualização do número de veículos
-	\item Adição de novos pedidos
-	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
-\end{itemize}
-
 O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.  
 
 O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. Por outro lado, a terceira e última iteração é equiparada aos problemas: \textbf{Vehicle Routing Problem} e o \textbf{Travelling Salesman Problem}.  
@@ -705,9 +695,9 @@ Estes algoritmos envolvem conhecimentos em várias áreas da programação, tran
 
 Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cada um responsável pelas seguintes partes do projeto:
 \begin{itemize}
-	\item\emph{ Diogo Samuel Fernandes} - Descrição do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a imlpementar),  Conclusão
+	\item\emph{ Diogo Samuel Fernandes} - Descrição do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a implementar),  Conclusão
 	\item\emph{ Hugo Guimarães} -  Perspetiva de solução, Funcionalidades a implementar, Conclusão
-	\item\emph{ Telmo Baptista} - Formalização do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a imlpementar),  Conclusão
+	\item\emph{ Telmo Baptista} - Formalização do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a implementar),  Conclusão
 \end{itemize}
 
 \newpage
