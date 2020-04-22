@@ -124,7 +124,7 @@
 %----------------------------------------------------------------------------------------
 \chapter[Descrição do Problema][Descrição do Problema]{Descrição do Problema} \label{\thechapter}
 
-Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos utilizando veículos que se encontrem adaptados ao serviço. Estes veículos têm a necessidade de serem altamente resistentes uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
+Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos utilizando veículos que se encontrem adaptados ao serviço. Estes veículos têm a necessidade de serem altamente resistentes, uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
 
 Para este projeto, queremos otimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possível dividir o nosso projeto nas seguintes fases:
 
@@ -260,17 +260,17 @@ Deste modo, obtivemos a função objetivo para o nosso problema que se encontra 
 \section{Pré-processamento dos dados de entrada}
 
 \subsection{Grafo}
-Partindo da central todos os vértices que não forem alcançáveis têm a variável $reachable$ definida como falsa.
+Partindo da central, todos os vértices que não forem alcançáveis têm a variável $reachable$ definida como falsa.
 
 Além disso, todas os vértices do grafo que não pertençam à componente fortemente conexa de origem devem ser marcados como inacessíveis ($reachable$ é colocado a falso).
 
 \subsection{Pedidos de transporte de prisioneiros}
 Remover todos os pedidos de transporte de prisioneiros que não pertençam ao grafo pré-processado, isto é, remover aqueles que façam parte de vértices que têm a componente $reachable$ definida como falsa.
 
-Também devemos organizar os pedidos de transporte de prisioneiros por ordem decrescente do número de prisioneiros a transportar, facilitando depois no alocamento de veículos para o seu transporte.
+Também devemos organizar os pedidos de transporte de prisioneiros por ordem decrescente do número de prisioneiros a transportar, facilitando, em seguida, o alocamento de veículos para o seu transporte.
 
 \subsection{Veículos para transporte de prisioneiros}
-Relativamente ao pré-processamento dos veículos de transporte, devemos organizá-los por ordem decrescente de capacidade. Assim, como também temos os pedidos de transporte de prisioneiros organizados por ordem decrescente do número de prisioneiros a transportar podemos potencialmente minizar o número de veículos utilizados.
+Relativamente ao pré-processamento dos veículos de transporte, devemos organizá-los por ordem decrescente de capacidade. Deste modo, como também temos os pedidos de transporte de prisioneiros organizados por ordem decrescente do número de prisioneiros a transportar podemos potencialmente minizar o número de veículos utilizados.
 
 \section{Identificação do problema}
 
