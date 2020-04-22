@@ -229,8 +229,8 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 
 \begin{itemize}
 	\item $\vert C_f \vert \leq \vert C_i \vert $ - não se pode usar mais veículos que os disponíveis
-	\item $\forall v_f ~ \in ~ V_f, \exists v_i ~ \in ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
-	\item $\forall e_f ~ \in ~ E_f, \exists e_i ~ \in ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos especificos aos algoritmos utilizados
+	\item $\forall v_f ~ \in ~ V_f, \exists v_i ~ \in ~ V_i$ tal que $v_i$ e $v_f$ têm os mesmos valores para todos os atributos, com exceção de atributos específicos aos algoritmos utilizados
+	\item $\forall e_f ~ \in ~ E_f, \exists e_i ~ \in ~ E_i$ tal que $e_i$ e $e_f$ têm os mesmo valores para todos os atributos, com exceção de atributos específicos aos algoritmos utilizados
 	\item $\forall r_f ~ \in ~ R_f, \exists r_i ~ \in ~ R_i$ tal que $r_f$ e $r_i$ têm os mesmo valores para os atributos $p_d$ e $p_t$
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), 0 \leq emptySeats < capacity(c)$ pois cada serviço deve ter pelo menos um prisioneiro, e não pode haver sobrelotação do veículo
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se existir mais de um pedido de transporte de prisioneiros
@@ -420,7 +420,7 @@ Embora a eficiência do algoritmo seja maior, o algoritmo A* não garante a solu
 \end{tabular}
 \end{figure}
 
-Analisando os resultados obtidos, é possível constatar que o algoritmo de Dijkstra visitou aproxidamente dez vezes mais vértices que o algoritmo A* ($1975 ~ \textbf{vs.} ~ 197$). Porém, o caminho mais curto encontrado pelo algoritmo A* não corresponde ao caminho com menor custo, uma vez que o caminho encontrado pelo algoritmo de Dijkstra possui um custo menor que o algoritmo de A* ($570 ~ \textbf{vs.} ~ 606$).
+Analisando os resultados obtidos, é possível constatar que o algoritmo de Dijkstra visitou aproximadamente dez vezes mais vértices que o algoritmo A* ($1975 ~ \textbf{vs.} ~ 197$). Porém, o caminho mais curto encontrado pelo algoritmo A* não corresponde ao caminho com menor custo, uma vez que o caminho encontrado pelo algoritmo de Dijkstra possui um custo menor que o algoritmo de A* ($570 ~ \textbf{vs.} ~ 606$).
 
 \subsection{Entre todos os pares de vértices}
 É possível calcular o caminho entre todos os pares de vértices através de algoritmos, como a aplicação repetida do algoritmo de Dijkstra ou a utilização do algoritmo de Floyd-Warshall.
@@ -430,7 +430,7 @@ Estes algoritmos são bastante utilizados para pré-processamento de mapas de es
 \section{Caminho mais curto com vários pedidos}
 Dada a possibilidade de um veículo realizar vários pedidos num único serviço, existirá um conjunto de locais de recolha e locais de destino a serem percorridos.
 
-Deparamo-nos então com um problema similar ao \textbf{Travelling Salesman Problem}, um problema NP-díficil. Como se trata de um grafo dirigido é a versão assimétrica do problema \textbf{Travelling Salesman Problem}
+Deparámo-nos então com um problema similar ao \textbf{Travelling Salesman Problem}, um problema NP-difícil. Como se trata de um grafo dirigido é a versão assimétrica do problema \textbf{Travelling Salesman Problem}
 
 As soluções deste problema podem dividir-se em duas categorias:
 \begin{itemize}
@@ -466,7 +466,7 @@ Na implementação do cálculo da solução exata alternaríamos o método utili
 
 \subsection{Soluções Aproximadas}
 \subsubsection{Nearest Neighbour}
-O algoritmo de \textbf{nearest neighbour} consiste em escolher um vértice aleatório para o ínicio, e de seguida escolher o vértice mais próximo como próximo vértice a percorrer repetindo este passo até visitar todos os vértices a serem percorridos. Trata-se assim de algoritmo ganancioso que encontra uma solução aproximada em tempo reduzido, no entanto esta solução não é garantidamente a solução ótima.
+O algoritmo de \textbf{nearest neighbour} consiste em escolher um vértice aleatório para o início, e de seguida escolher o vértice mais próximo como próximo vértice a percorrer repetindo este passo até visitar todos os vértices a serem percorridos. Trata-se assim de algoritmo ganancioso que encontra uma solução aproximada em tempo reduzido, no entanto esta solução não é garantidamente a solução ótima.
 
 O pseudo-código deste algoritmo é o seguinte:
 \begin{lstlisting}[frame=single, mathescape=true]
@@ -701,7 +701,7 @@ O modelo foi dividido em três iterações, sendo as primeiras duas problemas do
 
 Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textbf{Dijkstra}, \textbf{A*}, \textbf{Held-Karp}, \textbf{Nearest Neighbour},\textbf{Genético}, \textbf{Kosaraju}, \textbf{Tarjan}.
 
-Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textbf{bruteforce}, \textbf{recursão}, \textbf{programação dinâmica}, \textbf{algoritmos gananciosos} ( \textbf{Dijkstra}, \textbf{A*}, \textbf{Nearest Neighbour}), \textbf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textbf{mutação}, \textbf{crossover}, \textbf{seleção} e outros tópicos associados a grafos, nomeadamente, \textbf{conetividade} e  \textbf{ordem topológica}.
+Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textbf{bruteforce}, \textbf{recursão}, \textbf{programação dinâmica}, \textbf{algoritmos gananciosos} (\textbf{Dijkstra}, \textbf{A*}, \textbf{Nearest Neighbour}), \textbf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textbf{mutação}, \textbf{crossover}, \textbf{seleção} e outros tópicos associados a grafos, nomeadamente, \textbf{conetividade} e  \textbf{ordem topológica}.
 
 Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cada um responsável pelas seguintes partes do projeto:
 \begin{itemize}
