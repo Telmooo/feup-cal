@@ -126,22 +126,20 @@
 
 Os transportes de prisioneiros entre diversos estabelecimentos como, por exemplo, as prisões, esquadras e tribunais são feitos utilizando veículos que se encontrem adaptados ao serviço. Estes veículos têm a necessidade de serem altamente resistentes uma vez que é necessário garantir que os prisioneiros não conseguem escapar.
 
-Para este projeto, queremos optimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possivel dividir nas seguintes fases:
+Para este projeto, queremos otimizar o percurso dos veículos de forma a recolher e entregar os prisioneiros nos pontos de interesse. De modo a cumprir o pretendido, é possível dividir o nosso projeto nas seguintes fases:
 
 \subsection{Primeira Iteração - Recolha de prisioneiros utilizando um único veículo}
-	Inicialmente consideramos que só existe um único veículo para realizar todos os serviços.
-	Com a primeira iteração pretende-se que apenas um veículo vá recolher os prisioneiros a uma dada localização.
-
-	É importante notar que a recolha só pode ser efetuada se existirem caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
-
-	Algumas vezes, obras nas vias públicas podem fazer com que certas zonas tornem-se inacessíveis, inviabilizando o acesso ao destino de alguns prisioneiros. 
+	Inicialmente, consideramos que só existe um único veículo para realizar todos os serviços.
+	Com a primeira iteração pretende-se que apenas um veículo recolha os prisioneiros numa dada localização.
+	É necessário ter em consideração obras nas vias públicas, uma vez que estas podem tornar certas zonas inacessíveis, inviabilizando o transporte de prisioneiros. 
+	
+	É importante notar que a recolha só pode ser efetuada caso existam caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
 
 \subsection{Segunda Iteração - Recolha de prisioneiros utilizando vários veículos}
-	Durante a segunda  fase vai-se ter em consideração o diverso número de veículos que a frota possui. Alguns veículos vão diferir de outros, tendo cada veículo uma determinada função. Vão existir veículos específicos para transportar prisioneiros até aos aeroportos e linhas de comboio.
+	Durante a segunda iteração vai-se ter em consideração o diverso número de veículos que a frota possui. Os veículos vão diferir uns dos outros, tendo cada veículo um determinado tipo. Nesta fase do projeto irão existir veículos específicos para transportar tipos específicos de prisioneiros.
 
 \subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
-	Na terceira e última iteração vamos ter em consideração não só o número de veículos disponíveis, como também o número de pedidos de transporte de prisioneiros que um veículo pode realizar num único serviço. Um único veículo pode sair da central e transportar vários prisioneiros, desde que o número de prisioneiros não ultrapasse a capacidade do veículo.
-
+	Na terceira iteração serão considerados não só o número de veículos disponíveis, mas também o número de pedidos de transporte de prisioneiros. Nesta última iteração, um veículo pode transportar vários prisioneiros, desde que o número de prisioneiros não ultrapasse a capacidade do veículo.
 
 \newpage
 
@@ -642,7 +640,9 @@ Similarmente ao algoritmo de Kosaraju, o algoritmo de Tarjan também executa em 
 
 Como no nosso caso apenas interessa saber a componente fortemente conexa a partir da central, este algoritmo não irá trazer muitas vantagens relativamente ao algoritmo visto anteriormente. Deste modo, a sua implementação não será uma prioridade, podendo ser considerada numa fase futura.
 
+
 \section{Casos de Implementação}
+
 
 Perante a organização dos caminhos a percorrer pelos veículos, é necessário ter em consideração os seguintes aspetos:
 
@@ -654,8 +654,6 @@ Perante a organização dos caminhos a percorrer pelos veículos, é necessário
 \end{itemize}
 
 Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo atenção aos prisioneiros que se precisam de transportar.
-
-É necessário ter em consideração a urgência do transporte de um prisioneiro, pelo que se devem agrupar os prisioneiros cujos locais de partida e chegada sejam pouco distantes, priorizando sempre o transporte dos prisioneiros mais urgentes.
 
 Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo pedido de transporte de prisioneiros:
 
@@ -676,6 +674,10 @@ A aplicação a implementar irá incluir um menu de interação com o utilizador
 	\item Adição de novos pedidos
 	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
 \end{itemize}
+
+Para adicionar novos pedidos, o utilizador terá que indicar o \textpf{local de recolha e destino dos prisioneiros}, o \textpf{número de prisioneiros}, \textpf{tipo de prisioneiros}, \textpf{peso da distância no trajeto} e o \textpf{peso do tempo no trajeto}
+
+Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e segura o transporte de passageiros entre diversos estabelecimentos, para além de armazenar a informação relativa aos percursos, permitindo a sua visualização.
 
 \newpage
 %----------------------------------------------------------------------------------------
