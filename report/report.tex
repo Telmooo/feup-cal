@@ -131,15 +131,15 @@ Para este projeto, queremos otimizar o percurso dos veículos de forma a recolhe
 \subsection{Primeira Iteração - Recolha de prisioneiros utilizando um único veículo}
 	Inicialmente, consideramos que só existe um único veículo para realizar todos os serviços.
 	Com a primeira iteração pretende-se que apenas um veículo recolha os prisioneiros numa dada localização.
-	É necessário ter em consideração obras nas vias públicas, uma vez que estas podem tornar certas zonas inacessíveis, inviabilizando o transporte de prisioneiros. 
-	
+	É necessário ter em consideração obras nas vias públicas, uma vez que estas podem tornar certas zonas inacessíveis, inviabilizando o transporte de prisioneiros.
+
 	É importante notar que a recolha só pode ser efetuada caso existam caminhos que liguem todos os pontos de interesse, ou seja, o grafo necessita de ser conexo.
 
 \subsection{Segunda Iteração - Recolha de prisioneiros utilizando vários veículos}
-	Durante a segunda iteração ter-se-à em consideração o diverso número de veículos que a frota possui. Os veículos vão diferir uns dos outros conforme um determinado tipo. Nesta fase do projeto irão existir veículos específicos para transportartipos específicos de prisioneiros.
+	Durante a segunda iteração ter-se-à em consideração o diverso número de veículos que a frota possui. Os veículos vão diferir uns dos outros conforme um determinado tipo. Nesta fase do projeto irão existir veículos específicos para transportar tipos específicos de prisioneiros.
 
 \subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
-	Na terceira iteração serão considerados não só o número de veículos disponíveis, mas também o número de pedidos de transporte de prisioneiros. Nesta última iteração, um veículo pode transportar vários prisioneiros, desde que o número de prisioneiros não ultrapasse a capacidade do veículo.
+	Na terceira iteração serão considerados não só o número de veículos disponíveis, mas também o número de pedidos de transporte de prisioneiros. Nesta última iteração, um veículo pode atender vários pedidos, com diversos pontos de interesse diferentes, desde que não afete o tempo do pedido anterior e não ultrapasse a capacidade do veículo.
 
 \newpage
 
@@ -210,6 +210,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\end{itemize}
 \end{itemize}
 
+\newpage
 \section{Restrições}
 
 \subsection{Sobre os dados de entrada}
@@ -245,7 +246,7 @@ A solução ótima passa por minimizar a soma ponderada da distância percorrida
 $\sum_{c ~ \in ~ C_f} \sum_{s ~ \in ~ S} \sum_{e ~ \in ~ P} (W_d(e) * max(p_d(R_f(s))) + W_t(e) * max(p_t(R_f(s))$
 
 \begin{itemize}
-	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de um veículo 
+	\item $max(p_d(R_f(s))$ - é o maior valor para o peso da distância numa determinada sequência de pedidos de um serviço de um veículo
 	\item $max(p_t(R_f(s))$ - é o maior valor para o peso do tempo numa determinada sequência de pedidos de um serviço de um veículo
 \end{itemize}
 
@@ -274,13 +275,13 @@ Relativamente ao pré-processamento dos veículos de transporte, devemos organiz
 
 \section{Identificação do problema}
 
-A empresa de transporte de prisioneiros Meat Wagons necessita de transportar os prisioneiros  de um ponto de recolha até um determinado destino. De modo a otimizar este transporte, a empresa optou por procurar o caminho mais eficiente para a efetuar a viagem. 
+A empresa de transporte de prisioneiros Meat Wagons necessita de transportar os prisioneiros  de um ponto de recolha até um determinado destino. De modo a otimizar este transporte, a empresa optou por procurar o caminho mais eficiente para a efetuar a viagem.
 
 Na primeira iteração, onde apenas está disponível um veículo, que realiza os pedidos de transporte um de cada vez, este problema trata-se do \textbf{caminho mais curto} entre a origem e o local de recolha seguido do \textbf{caminho mais curto} entre o local de recolha e o destino. A segunda iteração é semelhante à primeira iteração, variando apenas o número de veículos disponíveis para realizar os pedidos.
 
-Na terceira e última iteração, não só varia o número de veículos disponíveis, como também o número de pedidos de transporte que um veículo pode realizar num único serviço, equiparando-se ao problema designado por \textbf{Vehicle Routing Problem}, uma generalização do problema do \textbf{Travelling Salesman Problem}, um problema NP-díficil.
+Na terceira e última iteração, não só varia o número de veículos disponíveis, como também o número de pedidos de transporte que um veículo pode realizar num único serviço, equiparando-se ao problema designado por \textbf{Vehicle Routing Problem}, uma generalização do problema do \textbf{Travelling Salesman Problem}, um problema \emph{NP-díficil}.
 
-Vale também realçar que os veículos devem retornar para a central no fim 
+Vale também realçar que os veículos devem retornar para a central no fim do serviço.
 
 \section{Caminho mais curto}
 Este é o problema referido na primeira e segunda iteração, e trata-se de encontrar o percurso mais curto e eficiente entre dois pontos, ou entre todos os pares de pontos do grafo.
@@ -297,15 +298,16 @@ Para poder aplicar este algoritmo é necessário que cada vértice guarde a segu
 	\item $path$ - vértice antecessor no caminho mais curto
 \end{itemize}
 
-O algoritmo de Dijkstra pode utilizar uma $priority queue$ ou um $array$ para inserir os novos vértices. 
+O algoritmo de Dijkstra pode utilizar uma $priority$ $queue$ ou um $array$ para inserir os novos vértices.
 Este consiste em inicializar os vértices, o que se pode fazer em tempo linear $O(|V|)$. Seguidamente, inicializar a estrutura auxiliar, que neste caso consideramos a $priority queue$ devido a ter maior eficiência relativamente ao $array$, com o vértice origem.
 
-Processam os vértices que se encontram na queue extraindo-os e seguidamente percorrendo cada aresta do vértice a ser processado. Posteriormente, se o custo relativo ao vértice de destino da aresta for maior do que o custo do caminho atual, terá que se atualizar o vértice de destino e inserindo na $priority queue$ caso ele ainda não esteja na fila de processamento ou fazendo a operação $DECREASE-KEY$ caso este já esteja na fila de processamento.
+Processam os vértices que se encontram na $queue$ extraindo-os e seguidamente percorrendo cada aresta do vértice a ser processado. Posteriormente, se o custo relativo ao vértice de destino da aresta for maior do que o custo do caminho atual, terá que se atualizar o vértice de destino e inserindo na $priority$ $queue$ caso ele ainda não esteja na fila de processamento ou fazendo a operação $DECREASE-KEY$ caso este já esteja na fila de processamento.
 
 As operações de inserção, extração e $DECREASE-KEY$ têm complexidade temporal $O(log(N))$. Dado que é necessário percorrer todos os vértices e arestas resulta numa complexidade de $O((|V| + |E|)*log(|V|))$.
 
 Assim podemos concluir que o tempo de execução do algoritmo é $O((|V| + |E|)*log(|V|))$.
 
+\newpage
 O pseudo-código para implementar este algoritmo é o seguinte:
 
 \begin{lstlisting}[frame=single, mathescape=true]
@@ -363,7 +365,7 @@ RECONSTRUCT_PATH(current)
   path $\leftarrow$ {current}
   WHILE PATH(current) $\neq$ NULL
     current $\leftarrow$ PATH(current)
-    path.PUSH_FRONT(current)
+    PREPEND(path, current)
   RETURN path
 
 A_STAR(start, goal, heuristic)
@@ -375,21 +377,21 @@ A_STAR(start, goal, heuristic)
   G_COST(start) $\leftarrow$ 0
   F_COST(start) $\leftarrow$ heuristic(start) // G_COST(start)+heuristic(start)
   Q $\leftarrow$ $\varnothing$ // MIN PRIORITY QUEUE
-  INSERT(Q, (start, COST(start)))
+  INSERT(Q, (start, F_COST(start)))
   WHILE Q $\neq$ $\varnothing$ DO
-    v $\leftarrow$ EXTRACT-MIN(Q)	
+    v $\leftarrow$ EXTRACT-MIN(Q)
     IF V = GOAL
       RETURN RECONSTRUCT_PATH(v)
-    
+
     FOR EACH w $\in$ Adj(v) DO
       IF G_COST(w) > G_COST(V) + WEIGHT(v, w) THEN
         G_COST(w) $\leftarrow$ G_COST(v) + WEIGHT(v, w)
         PATH(w) $\leftarrow$ v
         F_COST(w) $\leftarrow$ G_COST(w) + heuristic(w)
         IF w $\notin$ Q THEN
-          INSERT(Q, (w, COST(w)))
+          INSERT(Q, (w, F_COST(w)))
         ELSE
-          DECREASE-KEY(Q, (w, COST(w)))
+          DECREASE-KEY(Q, (w, F_COST(w)))
 \end{lstlisting}
 
 O algoritmo A* é um algoritmo de elevada eficiência e otimização, sendo usado em muitos contextos, como nos sistemas de \href{https://en.wikipedia.org/wiki/Journey_planner}{encaminhamento de viagens} que corresponde às duas primeiras iterações do nosso problema.
@@ -407,6 +409,7 @@ A eficiência deste algoritmo pode ser observada comparando o número de vértic
 \end{tabular}
 \end{figure}
 
+\newpage
 Embora a eficiência do algoritmo seja maior, o algoritmo A* não garante a solução ótima para todos os casos, ao contrário de algoritmos como o de Dijkstra. Esta desvantagem pode ser observada na imagem abaixo:
 
 \begin{figure}[h]
@@ -427,10 +430,11 @@ Analisando os resultados obtidos, é possível constatar que o algoritmo de Dijk
 
 Estes algoritmos são bastante utilizados para pré-processamento de mapas de estradas, porém no nosso problema, como os pesos para a distância e o para o tempo variam de pedido para pedido, o pré-processamento dos caminhos mais curtos para todos os pares de vértices não traria nenhuma vantagem, apenas uma diminuição na eficiência do programa.
 
+\newpage
 \section{Caminho mais curto com vários pedidos}
 Dada a possibilidade de um veículo realizar vários pedidos num único serviço, existirá um conjunto de locais de recolha e locais de destino a serem percorridos.
 
-Deparámo-nos então com um problema similar ao \textbf{Travelling Salesman Problem}, um problema NP-difícil. Como se trata de um grafo dirigido é a versão assimétrica do problema \textbf{Travelling Salesman Problem}
+Deparámo-nos então com um problema similar ao \textbf{Travelling Salesman Problem}, um problema NP-difícil. Como se trata de um grafo dirigido é a versão assimétrica do problema \textbf{Travelling Salesman Problem}.
 
 As soluções deste problema podem dividir-se em duas categorias:
 \begin{itemize}
@@ -453,16 +457,17 @@ asdadssda
 
 Analisando as complexidades dos algoritmos apresentados podemos verificar que o método de brute-force é mais eficiente para valores de $n$ menores que sete, sendo o algoritmo de Held-Karp mais eficiente para os restantes valores de $n$, sendo $n$ o número de vértices a percorrer, assim como se pode observar no gráfico seguinte:
 
-\begin{figure}
+\begin{figure}[h]
 \centering
-\includegraphics[scale=0.3]{tsp_exact_complexity}
+\includegraphics[scale=0.1]{tsp_exact_complexity}
 \caption{\emph{Brute-force \textbf{vs.} Held-Karp algorithm: Complexities}}
 \begin{tabular}{ l r }
 \color{red} $-$ \color{black} Brute-force ($O(n!)$) & \color{blue} $-$ \color{black} Held-Karp ($O(n^22^n)$)
 \end{tabular}
 \end{figure}
 
-Na implementação do cálculo da solução exata alternaríamos o método utilizado conforme o número de vértices a percorrer, usando brute-force para $n \leq 7$ e o algoritmo Held-Karp para $n > 7$. 
+\newpage
+Na implementação do cálculo da solução exata alternaríamos o método utilizado conforme o número de vértices a percorrer, usando brute-force para $n \leq 7$ e o algoritmo Held-Karp para $n > 7$.
 
 \subsection{Soluções Aproximadas}
 \subsubsection{Nearest Neighbour}
@@ -470,7 +475,7 @@ O algoritmo de \textbf{nearest neighbour} consiste em escolher um vértice aleat
 
 O pseudo-código deste algoritmo é o seguinte:
 \begin{lstlisting}[frame=single, mathescape=true]
-FOR EACH v \in V DO
+FOR EACH v $\in$ V DO
   VISITED(v) $\leftarrow$ false
   PATH(v) $\leftarrow$ NULL
 
@@ -479,13 +484,15 @@ VISITED(v) $\leftarrow$ true
 
 WHILE NOT ALL_VISITED(V) DO
   w $\leftarrow$ CLOSEST_VERTEX(V, v) // get closest vertex to v
-  VISITED(w) $\leftarrow$ v 
+  VISITED(w) $\leftarrow$ v
   PATH(w) $\leftarrow$ v
   v $\leftarrow$ w
 \end{lstlisting}
 
+No nosso problema, o ponto inicial é fixo, sendo este a central, retirando assim a aleatoriedade do ponto inicial do algoritmo.
+
 \subsubsection{Algoritmo Genético}
-Algoritmos genéticos são algoritmos baseados em heurísticas que simulam o processo de evolução de espécies, o processo de \href{https://en.wikipedia.org/wiki/Natural_selection}{\emph{seleção natural}}, selecionando os melhores espécimes de cada geração.
+Algoritmos genéticos são algoritmos baseados em heurísticas que simulam o processo de evolução de espécies, a \href{https://en.wikipedia.org/wiki/Natural_selection}{\emph{seleção natural}}, selecionando os melhores espécimes de cada geração.
 
 Os algoritmos genéticos podem ser divididos em cinco fases:
 \begin{enumerate}
@@ -516,7 +523,7 @@ CULL_POPULATION(P, n)
 // replicate individual
 REPLICATE(I)
   return EXACT_COPY(I)
-  
+
 // create new individual from two parents
 CROSSOVER(parent_A, parent_B)
   child $\leftarrow$ NEW_INDIVIDUAL()
@@ -528,7 +535,7 @@ CROSSOVER(parent_A, parent_B)
   // copy random section from parent A
   FOR i $\leftarrow$ section_start TO section_end DO
     VERTICES(child) AT (i) $\leftarrow$ VERTICES(parent_A) AT (i)
-  
+
   // fill remaining empty sections with genes from parent B
   FOR i $\leftarrow$ 0 TO N DO
     IF VERTICES(child) AT (i) = NULL
@@ -555,7 +562,7 @@ REPRODUCE_POPULATION(P)
       MUTATE(I)
     INSERT(NEW_P, I)
   RETURN NEW_P
-  
+
 
 // generate random population (random order of vertices to visit)
 P $\leftarrow$ GENERATE_RANDOM_POPULATION(V)
@@ -563,13 +570,14 @@ P $\leftarrow$ GENERATE_RANDOM_POPULATION(V)
 WHILE ... // decide stopping criteria
   FOR EACH individual $\in$ P
     CALCULATE_FITNESS(individual)
-  
+
   best $\leftarrow$ CULL_POPULATION(P, n)
   P $\leftarrow$ REPRODUCE_POPULATION(best) // reproduce best individuals
 \end{lstlisting}
 
+\newpage
 %----------------------------------------------------------------------------------------
-%	CHAPTER 3 - Funcionalidades a implementar
+%	CHAPTER 4 - Funcionalidades a implementar
 %----------------------------------------------------------------------------------------
 \chapter[Funcionalidades a implementar][Funcionalidades a implementar]{Funcionalidades a implementar} \label{\thechapter}
 
@@ -609,7 +617,7 @@ O algoritmo de Kosaraju consiste nos seguintes passos:
 
 No entanto, como no nosso caso só interessa saber a componente fortemente conexa relativa à central, podemos apenas percorrer o grafo transposto a partir desse mesmo vértice. \\
 
-
+O pseudo-código para o algoritmo é, então, o seguinte:
 \begin{lstlisting}[frame=single, mathescape=true]
 // G - graph
 // C - container to store the vertices of the SCC
@@ -621,11 +629,11 @@ DFS_VISIT(G, node, C)
   INSERT(C, node)
 
   GT $\leftarrow$ TRANSPOSE(G)
-  
-  SCC $\leftarrow$ $\varnothing$ 
-  
+
+  SCC $\leftarrow$ $\varnothing$
+
   DFS_VISIT(GT, source, SCC)
-  
+
 \end{lstlisting}
 
 A complexidade temporal de uma pesquisa em profundidade, assim como, a complexidade de inverter todas as arestas é proporcional ao tamanho do grafo isto é $O(|V| + |E|)$ sendo $|V|$ o número de vértices e $|E|$ o número de arestas.
@@ -634,23 +642,21 @@ Como o algoritmo de Kosaraju se baseia em duas pesquisas em profundidade e numa 
 
 \subsection{Algoritmo de Tarjan}
 
-O Tarjan é uma versão mais eficiente do algoritmo de Kosaraju, precisando de apenas de realizar uma única pesquisa em profundidade para obter o grafo fortemente conexo. 
+O Tarjan é uma versão mais eficiente do algoritmo de Kosaraju, precisando apenas de realizar uma única pesquisa em profundidade para obter o grafo fortemente conexo.
 
 Similarmente ao algoritmo de Kosaraju, o algoritmo de Tarjan também executa em tempo linear, $O(|V| + |E|)$, porém, este último baseia-se numa única pesquisa em profundidade, sendo assim mais eficiente.
 
 Como no nosso caso apenas interessa saber a componente fortemente conexa a partir da central, este algoritmo não irá trazer muitas vantagens relativamente ao algoritmo visto anteriormente. Deste modo, a sua implementação não será uma prioridade, podendo ser considerada numa fase futura.
 
-
+\newpage
 \section{Casos de Implementação}
-
-
 Perante a organização dos caminhos a percorrer pelos veículos, é necessário ter em consideração os seguintes aspetos:
 
 \begin{itemize}
 	\item Escolha do melhor percurso para um veículo
 	\item Escolha dos pedidos de transporte de prisioneiros para cada veículo
 	\item Agrupar os pedidos de prisioneiros
-	\item Agrupamento dos veículos
+	\item Agrupar os veículos
 \end{itemize}
 
 Deve ter-se como objetivo a atribuição de uma carrinha a um serviço, tendo atenção aos prisioneiros que se precisam de transportar.
@@ -663,6 +669,7 @@ Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo ped
 	\item Verificar se veículos que estão a executar algum pedido estão aptos à existência de novos pedidos de transporte de prisioneiros. Se um veículo puder efetuar esse pedido sem alterar o seu percurso, então o pedido deve ser sempre aceite
 \end{itemize}
 
+\newpage
 \section{Casos de Utilização}
 
 A aplicação a implementar irá incluir um menu de interação com o utilizador (GUI) capaz de navegar entre vários submenus, possibilitando o acesso às seguintes funcionalidades:
@@ -675,7 +682,7 @@ A aplicação a implementar irá incluir um menu de interação com o utilizador
 	\item Atribuição dos serviços tendo em conta os pedidos e as carrinhas disponíveis
 \end{itemize}
 
-Para adicionar novos pedidos, o utilizador terá que indicar o \textbf{local de recolha e destino dos prisioneiros}, o \textbf{número de prisioneiros}, \textbf{tipo de prisioneiros}, \textbf{peso da distância no trajeto} e o \textbf{peso do tempo no trajeto}
+Para adicionar novos pedidos, o utilizador terá que indicar o \textbf{local de recolha} e \textbf{destino dos prisioneiros}, o \textbf{número de prisioneiros}, \textbf{tipo de prisioneiros}, \textbf{peso da distância no trajeto} e o \textbf{peso do tempo no trajeto}.
 
 Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e segura o transporte de passageiros entre diversos estabelecimentos, para além de armazenar a informação relativa aos percursos, permitindo a sua visualização.
 
@@ -685,11 +692,11 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 %----------------------------------------------------------------------------------------
 \chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
 
-O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.  
+O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.
 
-O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. Por outro lado, a terceira e última iteração é equiparada aos problemas: \textbf{Vehicle Routing Problem} e o \textbf{Travelling Salesman Problem}.  
+O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. A terceira e última iteração é equiparada aos problemas: \textbf{Vehicle Routing Problem} e o \textbf{Travelling Salesman Problem}.
 
-Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textbf{Dijkstra}, \textbf{A*}, \textbf{Held-Karp}, \textbf{Nearest Neighbour},\textbf{Genético}, \textbf{Kosaraju}, \textbf{Tarjan}.
+Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textbf{Dijkstra}, \textbf{A*}, \textbf{Held-Karp}, \textbf{Nearest Neighbour},\textbf{Genético}, \textbf{Kosaraju} e \textbf{Tarjan}.
 
 Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textbf{bruteforce}, \textbf{recursão}, \textbf{programação dinâmica}, \textbf{algoritmos gananciosos} (\textbf{Dijkstra}, \textbf{A*}, \textbf{Nearest Neighbour}), \textbf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textbf{mutação}, \textbf{crossover}, \textbf{seleção} e outros tópicos associados a grafos, nomeadamente, \textbf{conetividade} e  \textbf{ordem topológica}.
 
@@ -704,27 +711,48 @@ Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cad
 \chapter{Bibliografia}
 \begin{itemize}
 	\item Apresentações fornecidas pelo professor Rosaldo José Fernandes Rossetti nas aulas téoricas da cadeira \href{https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=436441}{Conceção e Análise de Algoritmos}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Shortest_path_problem}{Shortest Path Problem}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{Dijkstra's Algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Bellman\%E2\%80\%93Ford_algorithm}{Bellman-Ford Algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/A*_search_algorithm}{A* algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Admissible_heuristic}{Admissible heuristic}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Traveling Salesman Problem}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{Vehicle Routing Problem}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Held\%E2\%80\%93Karp_algorithm}{Held-Karp algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm}{Nearest neighbour algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Genetic_algorithm}{Genetic Algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Natural_selection}{Natural selection}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/DNA_replication}{DNA replication}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Chromosomal_crossover}{Chromosomal crossover}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Mutation}{Mutation}} \color{black}
-	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/strongly-connected-components}{GeeksForGeeks - Strongly connected components}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Kosaraju\%27s_algorithm}{Kosaraju's algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://en.wikipedia.org/wiki/Tarjan\%27s_strongly_connected_components_algorithm}{Tarjan's algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}{GeeksForGeeks - Tarjan's algorithm}} \color{black}
-	\item \color{blue} \underline{\href{https://www.desmos.com/calculator}{Desmos Graphing Tool}} \color{black}
-	\item \color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{Path Finder Visualization Program}} \color{black}
-	\item \color{blue} \underline{\href{ https://en.wikipedia.org/wiki/Branch_and_bound}{Branch and Bound}} \color{black}
+	\item Shortest Path Problem,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Shortest_path_problem}{https://en.wikipedia.org/wiki/Shortest\_path\_problem}} \color{black}
+	\item Dijkstra's Algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Dijkstra\%27s_algorithm}{https://en.wikipedia.org/wiki/Dijkstra\%27s\_algorithm}} \color{black}
+	\item Bellman-Ford Algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Bellman\%E2\%80\%93Ford_algorithm}{https://en.wikipedia.org/wiki/Bellman\%E2\%80\%93Ford\_algorithm}} \color{black}
+	\item A* algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/A*_search_algorithm}{https://en.wikipedia.org/wiki/A*\_search\_algorithm}} \color{black}
+	\item Admissible heuristic,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Admissible_heuristic}{https://en.wikipedia.org/wiki/Admissible\_heuristic}} \color{black}
+	\item Traveling Salesman Problem,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{https://en.wikipedia.org/wiki/Travelling\_salesman\_problem}} \color{black}
+	\item Vehicle Routing Problem,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Vehicle_routing_problem}{https://en.wikipedia.org/wiki/Vehicle\_routing\_problem}} \color{black}
+	\item Held-Karp algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Held\%E2\%80\%93Karp_algorithm}{https://en.wikipedia.org/wiki/Held\%E2\%80\%93Karp\_algorithm}} \color{black}
+	\item Nearest neighbour algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm}{https://en.wikipedia.org/wiki/Nearest\_neighbour\_algorithm}} \color{black}
+	\item Genetic Algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Genetic_algorithm}{https://en.wikipedia.org/wiki/Genetic\_algorithm}} \color{black}
+	\item Natural selection,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Natural_selection}{https://en.wikipedia.org/wiki/Natural\_selection}} \color{black}
+	\item DNA replication,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/DNA_replication}{https://en.wikipedia.org/wiki/DNA\_replication}} \color{black}
+	\item Chromosomal crossover,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Chromosomal_crossover}{https://en.wikipedia.org/wiki/Chromosomal\_crossover}} \color{black}
+	\item Mutation,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Mutation}{https://en.wikipedia.org/wiki/Mutation}} \color{black}
+	\item GeeksForGeeks - Strongly connected components,\\
+	\color{blue} \underline{\href{https://www.geeksforgeeks.org/strongly-connected-components}{https://www.geeksforgeeks.org/strongly-connected-components}} \color{black}
+	\item Kosaraju's algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Kosaraju\%27s_algorithm}{https://en.wikipedia.org/wiki/Kosaraju\%27s\_algorithm}} \color{black}
+	\item Tarjan's algorithm,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Tarjan\%27s_strongly_connected_components_algorithm}{https://en.wikipedia.org/wiki/Tarjan\%27s\_strongly\_connected\_components\_algorithm}} \color{black}
+	\item GeeksForGeeks - Tarjan's algorithm,\\
+	\color{blue} \underline{\href{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}{https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components}} \color{black}
+	\item Desmos Graphing Tool,\\
+	\color{blue} \underline{\href{https://www.desmos.com/calculator}{https://www.desmos.com/calculator}} \color{black}
+	\item Path Finder Visualization Program,\\
+	\color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{https://github.com/kevinwang1975/PathFinder}} \color{black}
+	\item Branch and Bound,\\
+	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Branch_and_bound}{https://en.wikipedia.org/wiki/Branch\_and\_bound}} \color{black}
 \end{itemize}
 
 \end{document}
