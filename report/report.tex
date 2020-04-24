@@ -138,8 +138,11 @@ Para este projeto, queremos otimizar o percurso dos veículos de forma a recolhe
 \subsection{Segunda Iteração - Recolha de prisioneiros utilizando vários veículos}
 	Durante a segunda iteração ter-se-à em consideração o diverso número de veículos que a frota possui. Os veículos vão diferir uns dos outros conforme um determinado tipo. Nesta fase do projeto irão existir veículos específicos para transportar tipos específicos de prisioneiros.
 
-\subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
-	Na terceira iteração serão considerados não só o número de veículos disponíveis, mas também o número de pedidos de transporte de prisioneiros. Nesta última iteração, um veículo pode atender vários pedidos, com diversos pontos de interesse diferentes, desde que não afete o tempo do pedido anterior e não ultrapasse a capacidade do veículo.
+\subsection{Terceira Iteração - Recolha seletiva de prisioneiros utilizando um único veículo}
+	Na terceira iteração será considerada a possibilidade de um veículo atender a diferentes pedidos de transporte de prisioneiros, com diversos pontos de interesse diferentes, desde que não afete consideravelmente o tempo de espera do pedido anterior e não ultrapasse a capacidade do veículo.
+	
+\subsection{Quarta Iteração - Recolha seletiva de prisioneiros utilizando vários veículos}
+	A quarta iteração assemelha-se à terceira iteração, mas considerando um número variável de veículos disponíveis, tentando otimizar também o número de veículos utilizados.
 
 \newpage
 
@@ -237,6 +240,7 @@ $C_f$ - sequência de veículos com os serviços a realizar, sendo $C_f(i)$ o se
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \vert R_f(s) \vert > 0$ uma vez que só faz sentido realizar um serviço se existir mais de um pedido de transporte de prisioneiros
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), endHour(s) > startHour(s)$
 	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), startHour(s) < pickupHour(\forall r ~ \in ~ R_f) < endHour(s) ~ \wedge ~ startHour(s) < destHour(\forall r ~ \in ~ R_f) \leq endHour(s)$
+	\item $\forall c ~ \in ~ C_f, \forall s ~ \in ~ S(c), \forall r ~ \in ~ R_f(s), index(dest(r)) > index(pickup(r))$
 \end{itemize}
 
 \section{Função objetivo}
@@ -279,7 +283,9 @@ A empresa de transporte de prisioneiros Meat Wagons necessita de transportar os 
 
 Na primeira iteração, onde apenas está disponível um veículo, que realiza os pedidos de transporte um de cada vez, este problema trata-se do \textbf{caminho mais curto} entre a origem e o local de recolha seguido do \textbf{caminho mais curto} entre o local de recolha e o destino. A segunda iteração é semelhante à primeira iteração, variando apenas o número de veículos disponíveis para realizar os pedidos.
 
-Na terceira e última iteração, não só varia o número de veículos disponíveis, como também o número de pedidos de transporte que um veículo pode realizar num único serviço, equiparando-se ao problema designado por \textbf{Vehicle Routing Problem}, uma generalização do problema do \textbf{Travelling Salesman Problem}, um problema \emph{NP-díficil}.
+Na terceira iteração, um veículo poderá realizar vários pedidos simultâneamente, equiparando-se assim ao \textbf{Travelling Salesman Problem}, com restrições no vértice de origem, e na ordem de visita dos vértices.
+
+Na quarta e última iteração, não só varia o número de veículos disponíveis, como também o número de pedidos de transporte que um veículo pode realizar num único serviço, equiparando-se ao problema designado por \textbf{Vehicle Routing Problem}, uma generalização do \textbf{Travelling Salesman Problem}, um problema \emph{NP-díficil}.
 
 Vale também realçar que os veículos devem retornar para a central no fim do serviço.
 
@@ -447,14 +453,13 @@ As soluções deste problema podem dividir-se em duas categorias:
 O método brute-force testa todas as permutações possíveis para o percurso, atualizando o caminho ótimo sempre que encontra um custo menor ao atual, resultando assim numa complexidade $O(n!)$, sendo $n$ o número de vértices a percorrer.
 
 \subsubsection{Held-Karp}
+O algoritmo de Held-Karp é um algoritmo de programação dinâmica que tem como objetivo resolver o \textbf{Travelling Salesman Problem}, utilizando formulas recursivas para dividir o problema.
 
-O algoritmo de Held-Karp
+O algoritmo apresenta uma complexidade temporal elevada, $O(2^nn^2)$, requirindo, assim, muito poder computacional para obter a solução ótima.
 
-\begin{lstlisting}[frame=single, mathescape=true]
-Pseudo Codigo
-asdadssda
-\end{lstlisting}
+Embora este algoritmo obtenha a solução ótima para o problema, a sua implementação, dada as restrições impostas, pode ser muito complexa, pelo que serão priorizados os algoritmos de soluções aproximadas do problema, dado à sua simplicidade e flexibilidade.
 
+\newpage
 Analisando as complexidades dos algoritmos apresentados podemos verificar que o método de brute-force é mais eficiente para valores de $n$ menores que sete, sendo o algoritmo de Held-Karp mais eficiente para os restantes valores de $n$, sendo $n$ o número de vértices a percorrer, assim como se pode observar no gráfico seguinte:
 
 \begin{figure}[h]
@@ -466,7 +471,6 @@ Analisando as complexidades dos algoritmos apresentados podemos verificar que o 
 \end{tabular}
 \end{figure}
 
-\newpage
 Na implementação do cálculo da solução exata alternaríamos o método utilizado conforme o número de vértices a percorrer, usando brute-force para $n \leq 7$ e o algoritmo Held-Karp para $n > 7$.
 
 \subsection{Soluções Aproximadas}
@@ -574,6 +578,8 @@ WHILE ... // decide stopping criteria
   best $\leftarrow$ CULL_POPULATION(P, n)
   P $\leftarrow$ REPRODUCE_POPULATION(best) // reproduce best individuals
 \end{lstlisting}
+
+De modo a garantir a restrição imposta sobre a ordem de visita dos locais de interesse, isto é, deve ser visitado o local de recolha antes do local de destino, podemos atribuir a aptidão mínima a todos os indíviduos que não respeitem tal restrição.
 
 \newpage
 %----------------------------------------------------------------------------------------
@@ -694,7 +700,7 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 
 O objetivo deste trabalho foi o desenvolvimento de uma estratégia responsável pela atribuição de veículos e rotas, através da criação de um modelo capaz de otimizar a resolução deste problema.
 
-O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. A terceira e última iteração é equiparada aos problemas: \textbf{Vehicle Routing Problem} e o \textbf{Travelling Salesman Problem}.
+O modelo foi dividido em três iterações, sendo as primeiras duas problemas do tipo \textbf{caminho mais curto entre dois vértices}. A terceira e a última iteração são equiparadas aos problemas: \textbf{Travelling Salesman Problem} e \textbf{Vehicle Routing Problem}.
 
 Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, nomeadamente \textbf{Dijkstra}, \textbf{A*}, \textbf{Held-Karp}, \textbf{Nearest Neighbour},\textbf{Genético}, \textbf{Kosaraju} e \textbf{Tarjan}.
 
