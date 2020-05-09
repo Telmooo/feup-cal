@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-GraphReader::GraphReader(GraphViewer * gv, std::string folder) : gv(gv), folder(folder) {}
+GraphReader::GraphReader(GraphViewer * gv, Graph<int> * G, std::string folder) : gv(gv), G(G), folder(folder) {}
 
 void GraphReader::readNodes() {
     std::ifstream nodes("../resources/graphs/" + folder + "/nodes.txt");
@@ -20,7 +20,9 @@ void GraphReader::readNodes() {
         getline(nodes, line);
         std::stringstream ss(line);
 
-        ss >> garbage >> idn >> garbage >> garbage >> x >> garbage >> garbage >> y >> garbage;
+        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
+
+        G->addVertex(idn);
         gv->addNode(idn, x, y);
     }
 
@@ -35,6 +37,8 @@ void GraphReader::readEdges() {
     getline(edges, line);
     int MAX = stoi(line);
 
+    int WEIGHT_CHANGE_THIS = 1;
+
     for(int i = 0; i < MAX; i++) {
         int idn1, idn2;
         char garbage;
@@ -42,7 +46,10 @@ void GraphReader::readEdges() {
         getline(edges, line);
         stringstream ss(line);
 
-        ss >> garbage >> idn1 >> garbage >> garbage >> idn2 >> garbage;
+        ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
+
+        G->addEdge(idn1, idn2, WEIGHT_CHANGE_THIS);
+
         gv->addEdge(i, idn1, idn2, EdgeType::UNDIRECTED);
     }
 

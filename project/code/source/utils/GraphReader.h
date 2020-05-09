@@ -2,13 +2,15 @@
 #define MEATWAGONS_GRAPHREADER_H
 
 #include <graphviewer.h>
+#include "../graph/graph.h"
 
 class GraphReader {
 private:
+    Graph<int> * G;
     GraphViewer * gv;
     std::string folder;
 public:
-    GraphReader(GraphViewer * gv, std::string folder);
+    GraphReader(GraphViewer * gv, Graph<int> * G, std::string folder);
 
     void readNodes();
 

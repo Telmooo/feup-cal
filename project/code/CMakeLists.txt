@@ -9,4 +9,4 @@ link_libraries(ws2_32 wsock32)
 
 include_directories(lib)
 include_directories(resources)
-add_executable(meatwagons main.cpp lib/connection.cpp lib/graphviewer.cpp utils/GraphReader.cpp utils/GraphReader.h)
+add_executable(meatwagons main.cpp lib/connection.cpp lib/graphviewer.cpp source/utils/GraphReader.cpp source/utils/GraphReader.h source/utils/MutablePriorityQueue.h source/graph/graph.h source/Service/Waggon.cpp source/Service/Waggon.h)
