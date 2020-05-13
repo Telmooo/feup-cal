@@ -3,6 +3,115 @@
 //
 #include "graph.h"
 
+/// VERTEX
+template<class T>
+Vertex<T>::Vertex(T in): info(in) {}
+
+/*
+ * Auxiliary function to add an outgoing edge to a vertex (this),
+ * with a given destination vertex (d) and edge weight (w).
+ */
+template<class T>
+void Vertex<T>::addEdge(Vertex<T> *d, double w) {
+    adj.push_back(Edge(d, w));
+}
+
+template<class T>
+bool Vertex<T>::operator<(Vertex<T> & vertex) const {
+    return this->dist < vertex.dist;
+}
+
+template<class T>
+T Vertex<T>::getInfo() const {
+    return this->info;
+}
+
+template<class T>
+double Vertex<T>::getDist() const {
+    return this->dist;
+}
+
+template<class T>
+void Vertex<T>::setDist(double dist) {
+    Vertex::dist = dist;
+}
+
+template<class T>
+Vertex<T> *Vertex<T>::getPath() const {
+    return this->path;
+}
+
+template<class T>
+void Vertex<T>::setInfo(T info) {
+    Vertex::info = info;
+}
+
+template<class T>
+void Vertex<T>::setAdj(const vector<Edge> &adj) {
+    Vertex::adj = adj;
+}
+
+template<class T>
+void Vertex<T>::setPath(Vertex<T> *path) {
+    Vertex::path = path;
+}
+
+template<class T>
+void Vertex<T>::setQueueIndex(int queueIndex) {
+    Vertex::queueIndex = queueIndex;
+}
+
+template<class T>
+void Vertex<T>::setVisited(bool visited) {
+    Vertex::visited = visited;
+}
+
+template<class T>
+void Vertex<T>::setProcessing(bool processing) {
+    Vertex::processing = processing;
+}
+
+template<class T>
+const vector<Edge> &Vertex<T>::getAdj() const {
+    return adj;
+}
+
+template<class T>
+int Vertex<T>::getQueueIndex() const {
+    return queueIndex;
+}
+
+template<class T>
+bool Vertex<T>::isVisited() const {
+    return visited;
+}
+
+template<class T>
+bool Vertex<T>::isProcessing() const {
+    return processing;
+}
+
+/// EDGE
+
+Edge::Edge(Vertex<int> *d, double w): dest(d), weight(w) {}
+
+Vertex<int> *Edge::getDest() const {
+    return dest;
+}
+
+void Edge::setDest(Vertex<int> *dest) {
+    Edge::dest = dest;
+}
+
+double Edge::getWeight() const {
+    return weight;
+}
+
+void Edge::setWeight(double weight) {
+    Edge::weight = weight;
+}
+
+/// GRAPH
 int Graph::getNumVertex() const {
     return vertexSet.size();
 }
@@ -62,7 +171,7 @@ void Graph::unweightedShortestPath(const int &orig) {
     while (!q.empty()) {
         Vertex<int> *v = q.front();
         q.pop();
-        for (Edge<int> edge : v->getAdj()) {
+        for (Edge edge : v->getAdj()) {
             Vertex<int> *w = edge.dest;
             if (w->dist == INF) {
                 q.push(w);
@@ -85,7 +194,7 @@ void Graph::dijkstraShortestPath(const int &origin) {
 
     while (!q.empty()) {
         Vertex<int> *v = q.extractMin();
-        for (Edge<int> edge : v->getAdj()) {
+        for (Edge edge : v->getAdj()) {
             Vertex<int> *w = edge.dest;
             if (w->dist > v->dist + edge.weight) {
                 w->dist = v->dist + edge.weight;
@@ -109,7 +218,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
     start->dist = 0;
     for (int i = 1; i < vertexSet.size(); i++) {
         for (Vertex<int> *v : vertexSet) {
-            for (Edge<int> edge : v->adj) {
+            for (Edge edge : v->adj) {
                 Vertex<int> *w = edge.dest;
                 if (w->dist > v->dist + edge.weight) {
                     w->dist = v->dist + edge.weight;
@@ -119,7 +228,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
         }
     }
     for (Vertex<int> *v : vertexSet) {
-        for (Edge<int> edge : v->adj) {
+        for (Edge edge : v->adj) {
             if (v->dist + edge.weight < (edge.dest)->dist) {
                 cerr << "there are cycles of negative weight\n";
                 return;
