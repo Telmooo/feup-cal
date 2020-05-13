@@ -147,7 +147,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  * at the destination for directed edges.
  * <li/>"show edges": only edges of the checked types are drawn.
  * <li/>"show arrows": only arrows whose edges are of the checked types are drawn.
- * <li/>"edge weight highlighting": if checked, edges with weight greater than
+ * <li/>"edge weightDistance highlighting": if checked, edges with weightDistance greater than
  * a threshold value are drawn using thick solid lines, and other edges are drawn
  * using thin gray dotted lines.  (This combines edge stroke and paint.) Otherwise,
  * all edges are drawn with thin solid lines.
@@ -157,7 +157,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  * <li/>Miscellaneous (center panel)
  * <ul>
  * <li/>"bold text": if checked, all vertex and edge labels are drawn using a
- * boldface font.  Otherwise, a normal-weight font is used.  (Has no effect if
+ * boldface font.  Otherwise, a normal-weightDistance font is used.  (Has no effect if
  * no labels are currently visible.)
  * <li/>zoom controls: 
  * <ul>
@@ -491,7 +491,7 @@ public class PluggableRendererDemo extends JApplet implements ActionListener
         shape_panel.setOpaque(true);
         e_color = new JCheckBox("highlight edge weights");
         e_color.addActionListener(this);
-        e_labels = new JCheckBox("show edge weight values");
+        e_labels = new JCheckBox("show edge weightDistance values");
         e_labels.addActionListener(this);
         e_uarrow_pred = new JCheckBox("undirected");
         e_uarrow_pred.addActionListener(this);

@@ -419,8 +419,8 @@ public class GraphViewerController extends javax.swing.JApplet {
 		g.addVertex(k);
 	}
 
-	public void setEdgeWeight(int k, int weight) {
-		edgeWeights.put(k, weight);
+	public void setEdgeWeight(int k, int weightDistance) {
+		edgeWeights.put(k, weightDistance);
 		updateEdgeLabel(k);
 	}
 
@@ -440,15 +440,15 @@ public class GraphViewerController extends javax.swing.JApplet {
 	}
 
 	public void updateEdgeLabel(int k) {
-		Number weight, flow;
+		Number weightDistance, flow;
 		String caption, label;
 		label = new String();
-		weight = edgeWeights.get(k);
+		weightDistance = edgeWeights.get(k);
 		flow = edgeFlows.get(k);
 		caption = edgeCaptions.get(k);
 
-		if(weight != null)
-			label += "w: " + weight;
+		if(weightDistance != null)
+			label += "w: " + weightDistance;
 		if(flow != null)
 			label += " f: " + flow;
 		if(caption != null)

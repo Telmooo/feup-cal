@@ -1,9 +1,7 @@
-//
-// Created by diogo on 13/05/2020.
-//
 #include "graph.h"
 
-/// VERTEX
+/*************************** Vertex Functions **************************/
+
 Vertex::Vertex(int in): id(in) {}
 
 /*
@@ -75,9 +73,9 @@ bool Vertex::isProcessing() const {
     return processing;
 }
 
-/// EDGE
+/*************************** Edge Functions **************************/
 
-Edge::Edge(Vertex *d, double w): dest(d), weight(w) {}
+Edge::Edge(Vertex *d, double w): dest(d), weightDistance(w) {}
 
 Vertex *Edge::getDest() const {
     return dest;
@@ -87,15 +85,16 @@ void Edge::setDest(Vertex *dest) {
     Edge::dest = dest;
 }
 
-double Edge::getWeight() const {
-    return weight;
+double Edge::getWeightDistance() const {
+    return weightDistance;
 }
 
-void Edge::setWeight(double weight) {
-    Edge::weight = weight;
+void Edge::setWeightDistance(double weight) {
+    Edge::weightDistance = weight;
 }
 
-/// GRAPH
+/*************************** Graph Functions **************************/
+
 int Graph::getNumVertex() const {
     return vertexSet.size();
 }
@@ -180,8 +179,8 @@ void Graph::dijkstraShortestPath(const int &origin) {
         Vertex *v = q.extractMin();
         for (Edge edge : v->getAdj()) {
             Vertex *w = edge.dest;
-            if (w->dist > v->dist + edge.weight) {
-                w->dist = v->dist + edge.weight;
+            if (w->dist > v->dist + edge.weightDistance) {
+                w->dist = v->dist + edge.weightDistance;
                 w->path = v;
                 if (w->getQueueIndex() == 0)
                     q.insert(w);
@@ -204,8 +203,8 @@ void Graph::bellmanFordShortestPath(const int &orig) {
         for (Vertex *v : vertexSet) {
             for (Edge edge : v->adj) {
                 Vertex *w = edge.dest;
-                if (w->dist > v->dist + edge.weight) {
-                    w->dist = v->dist + edge.weight;
+                if (w->dist > v->dist + edge.weightDistance) {
+                    w->dist = v->dist + edge.weightDistance;
                     w->path = v;
                 }
             }
@@ -213,7 +212,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
     }
     for (Vertex *v : vertexSet) {
         for (Edge edge : v->adj) {
-            if (v->dist + edge.weight < (edge.dest)->dist) {
+            if (v->dist + edge.weightDistance < (edge.dest)->dist) {
                 cerr << "there are cycles of negative weight\n";
                 return;
             }

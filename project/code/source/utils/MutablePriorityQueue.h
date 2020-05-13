@@ -11,13 +11,11 @@
 
 #include <vector>
 
-
 using namespace std;
 
 /**
  * class T must have: (i) accessible field int queueIndex; (ii) operator< defined.
  */
-
 template <class T>
 class MutablePriorityQueue {
     vector<T *> H;

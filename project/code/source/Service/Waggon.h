@@ -1,10 +1,5 @@
-//
-// Created by diogo on 09/05/2020.
-//
-
 #ifndef MEATWAGONS_WAGGON_H
 #define MEATWAGONS_WAGGON_H
-
 
 class Waggon {
 private:

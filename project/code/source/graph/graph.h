@@ -1,6 +1,3 @@
-/*
- * Graph.h
- */
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
@@ -24,7 +21,8 @@ class Graph;
 /************************* Vertex  **************************/
 class Vertex {
     int id;						// content of the vertex
-    vector<Edge > adj;		// outgoing edges
+
+    vector<Edge > adj;		    // outgoing edges
 
     double dist = 0;
     Vertex *path = NULL;
@@ -32,6 +30,10 @@ class Vertex {
 
     bool visited = false;		// auxiliary field
     bool processing = false;	// auxiliary field
+
+    int density;                // Densidade populacional no vértice
+    int averageSpeed;           // Velocidade média no vértice
+    bool reachable;             // Seo  vértice é alcançavel
 
 public:
     Vertex(int in);
@@ -65,8 +67,6 @@ public:
 
     bool isProcessing() const;
 
-
-
     // // required by MutablePriorityQueue
     friend class MutablePriorityQueue<Vertex>;
     friend class Graph;
@@ -75,8 +75,12 @@ public:
 
 /********************** Edge  ****************************/
 class Edge {
-    Vertex * dest;      // destination vertex
-    double weight;         // edge weight
+    int id;                         // edge identifier
+    Vertex * dest;                  // destination vertex
+    double weightDistance;          // edge weight distance
+    double weightTime;              // edge weight time
+    bool open;                      // if the conection is open
+
 public:
     Edge(Vertex *d, double w);
 
@@ -84,9 +88,9 @@ public:
 
     void setDest(Vertex *dest);
 
-    double getWeight() const;
+    double getWeightDistance() const;
 
-    void setWeight(double weight);
+    void setWeightDistance(double weight);
 
     friend class Vertex;
     friend class Graph;
@@ -99,6 +103,7 @@ class Graph {
     vector<Vertex *> vertexSet;    // vertex set
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;  // path matrix
+
 public:
     Vertex *findVertex(const int &in) const;
     bool addVertex(const int &in);
@@ -119,7 +124,5 @@ public:
     friend class Vertex;
     friend class Edge;
 };
-
-
 
 #endif /* GRAPH_H_ */
