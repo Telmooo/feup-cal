@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-GraphReader::GraphReader(GraphViewer * gv, Graph<int> * G, std::string folder) : gv(gv), G(G), folder(folder) {}
+GraphReader::GraphReader(GraphViewer * gv, Graph * G, std::string folder) : gv(gv), G(G), folder(folder) {}
 
 void GraphReader::readNodes() {
     std::ifstream nodes("../resources/graphs/" + folder + "/nodes.txt");

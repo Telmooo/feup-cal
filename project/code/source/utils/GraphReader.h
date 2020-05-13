@@ -6,11 +6,11 @@
 
 class GraphReader {
 private:
-    Graph<int> * G;
+    Graph * G;
     GraphViewer * gv;
     std::string folder;
 public:
-    GraphReader(GraphViewer * gv, Graph<int> * G, std::string folder);
+    GraphReader(GraphViewer * gv, Graph * G, std::string folder);
 
     void readNodes();
 

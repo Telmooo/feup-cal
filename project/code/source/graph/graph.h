@@ -16,14 +16,14 @@
 using namespace std;
 
 template <class T> class Edge;
-template <class T> class Graph;
 template <class T> class Vertex;
+
+class Graph;
 
 #define INF std::numeric_limits<double>::infinity()
 
 /************************* Vertex  **************************/
-
-template <class T>
+template<class T>
 class Vertex {
     T info;						// content of the vertex
     vector<Edge<T> > adj;		// outgoing edges
@@ -71,7 +71,7 @@ public:
 
     // // required by MutablePriorityQueue
     friend class MutablePriorityQueue<Vertex<T>>;
-    friend class Graph<T>;
+    friend class Graph;
 };
 
 
@@ -163,8 +163,7 @@ bool Vertex<T>::isProcessing() const {
 }
 
 /********************** Edge  ****************************/
-
-template <class T>
+template<class T>
 class Edge {
     Vertex<T> * dest;      // destination vertex
     double weight;         // edge weight
@@ -180,10 +179,9 @@ public:
     void setWeight(double weight);
 
     friend class Vertex<T>;
-    friend class Graph<T>;
+    friend class Graph;
 };
-
-template <class T>
+template<class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
 
 template<class T>
@@ -208,252 +206,31 @@ void Edge<T>::setWeight(double weight) {
 
 /*************************** Graph  **************************/
 
-template <class T>
 class Graph {
-    vector<Vertex<T> *> vertexSet;    // vertex set
+    vector<Vertex<int> *> vertexSet;    // vertex set
     vector<vector<double>> D;      // minimum distance matrix
-    vector<vector<Vertex<T>*>> P;  // path matrix
+    vector<vector<Vertex<int>*>> P;  // path matrix
 public:
-    Vertex<T> *findVertex(const T &in) const;
-    bool addVertex(const T &in);
-    bool addEdge(const T &sourc, const T &dest, double w);
+    Vertex<int> *findVertex(const int &in) const;
+    bool addVertex(const int &in);
+    bool addEdge(const int &sourc, const int &dest, double w);
     int getNumVertex() const;
-    vector<Vertex<T> *> getVertexSet() const;
+    vector<Vertex<int> *> getVertexSet() const;
 
     // Fp05 - single source
-    void unweightedShortestPath(const T &s);
-    void dijkstraShortestPath(const T &s);
-    void bellmanFordShortestPath(const T &s);
-    vector<T> getPathTo(const T &dest) const;
+    void unweightedShortestPath(const int &s);
+    void dijkstraShortestPath(const int &s);
+    void bellmanFordShortestPath(const int &s);
+    vector<int> getPathTo(const int &dest) const;
 
     // Fp05 - all pairs
     void floydWarshallShortestPath();
-    vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
+    vector<int> getfloydWarshallPath(const int &origin, const int &dest) const;
 
-    friend class Vertex<T>;
-    friend class Edge<T>;
+    friend class Vertex<int>;
+    friend class Edge<int>;
 };
 
-template <class T>
-int Graph<T>::getNumVertex() const {
-    return vertexSet.size();
-}
 
-template <class T>
-vector<Vertex<T> *> Graph<T>::getVertexSet() const {
-    return vertexSet;
-}
-
-/*
- * Auxiliary function to find a vertex with a given content.
- */
-template <class T>
-Vertex<T> * Graph<T>::findVertex(const T &in) const {
-    for (auto v : vertexSet)
-        if (v->info == in)
-            return v;
-    return NULL;
-}
-
-/*
- *  Adds a vertex with a given content or info (in) to a graph (this).
- *  Returns true if successful, and false if a vertex with that content already exists.
- */
-template <class T>
-bool Graph<T>::addVertex(const T &in) {
-    if ( findVertex(in) != NULL)
-        return false;
-    vertexSet.push_back(new Vertex<T>(in));
-    return true;
-}
-
-/*
- * Adds an edge to a graph (this), given the contents of the source and
- * destination vertices and the edge weight (w).
- * Returns true if successful, and false if the source or destination vertex does not exist.
- */
-template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
-    auto v1 = findVertex(sourc);
-    auto v2 = findVertex(dest);
-    if (v1 == NULL || v2 == NULL)
-        return false;
-    v1->addEdge(v2,w);
-    return true;
-}
-
-
-/**************** Single Source Shortest Path algorithms ************/
-
-template<class T>
-void Graph<T>::unweightedShortestPath(const T &orig) {
-    for (Vertex<T> *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-    }
-    Vertex<T> *start = findVertex(orig);
-    start->dist = 0;
-    queue<Vertex<T>*> q;
-    q.push(start);
-
-    while (!q.empty()) {
-        Vertex<T> *v = q.front();
-        q.pop();
-        for (Edge<T> edge : v->getAdj()) {
-            Vertex<T> *w = edge.dest;
-            if (w->dist == INF) {
-                q.push(w);
-                w->dist = v->dist + 1;
-                w->path = v;
-            }
-        }
-    }
-}
-
-template<class T>
-void Graph<T>::dijkstraShortestPath(const T &origin) {
-    for (Vertex<T> *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-    }
-    Vertex<T> *start = findVertex(origin);
-    start->dist = 0;
-    MutablePriorityQueue<Vertex<T>> q;
-    q.insert(start);
-
-    while (!q.empty()) {
-        Vertex<T> *v = q.extractMin();
-        for (Edge<T> edge : v->getAdj()) {
-            Vertex<T> *w = edge.dest;
-            if (w->dist > v->dist + edge.weight) {
-                w->dist = v->dist + edge.weight;
-                w->path = v;
-                if (w->getQueueIndex() == 0)
-                    q.insert(w);
-                else
-                    q.decreaseKey(w);
-            }
-        }
-    }
-}
-
-
-template<class T>
-void Graph<T>::bellmanFordShortestPath(const T &orig) {
-    for (Vertex<T> *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-    }
-    Vertex<T> *start = findVertex(orig);
-    start->dist = 0;
-    for (int i = 1; i < vertexSet.size(); i++) {
-        for (Vertex<T> *v : vertexSet) {
-            for (Edge<T> edge : v->adj) {
-                Vertex<T> *w = edge.dest;
-                if (w->dist > v->dist + edge.weight) {
-                    w->dist = v->dist + edge.weight;
-                    w->path = v;
-                }
-            }
-        }
-    }
-    for (Vertex<T> *v : vertexSet) {
-        for (Edge<T> edge : v->adj) {
-            if (v->dist + edge.weight < (edge.dest)->dist) {
-                cerr << "there are cycles of negative weight\n";
-                return;
-            }
-        }
-    }
-}
-
-
-template<class T>
-vector<T> Graph<T>::getPathTo(const T &dest) const{
-    vector<T> res;
-    Vertex<T> *v = findVertex(dest);
-    while (v != NULL) {
-        res.insert(res.begin(), v->info);
-        v = v->path;
-    }
-    return res;
-}
-
-
-
-/**************** All Pairs Shortest Path  ***************/
-
-template<class T>
-void Graph<T>::floydWarshallShortestPath() {
-
-    const int SIZE = vertexSet.size();
-
-    D.resize(SIZE); P.resize(SIZE);
-    for (int i = 0; i < SIZE; i++) {
-        D[i].resize(SIZE); P[i].resize(SIZE);
-        Vertex<T> *v = vertexSet[i];
-        for (int j = 0; j < SIZE; j++) {
-            if (i == j) { D[i][j] = 0; P[i][j] = v; continue; }
-            D[i][j] = INF; P[i][j] = NULL;
-            Vertex<T> *w = vertexSet[j];
-            for (Edge<T> edge : v->adj) {
-                if (edge.dest == w) {
-                    D[i][j] = edge.weight;
-                    P[i][j] = edge.dest;
-                    break;
-                }
-            }
-        }
-    }
-
-    for (int k = 0; k < SIZE; k++) {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (D[i][k] + D[k][j] < D[i][j]) {
-                    D[i][j] = D[i][k] + D[k][j];
-                    P[i][j] = P[i][k];
-                }
-            }
-        }
-    }
-}
-
-template<class T>
-vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const {
-    vector<T> res;
-
-    int pos_orig = -1, pos_dest = -1;
-    Vertex<T> *origV, *destV;
-    for (int i = 0; i < vertexSet.size(); i++) {
-        Vertex<T> *v = vertexSet[i];
-        if (pos_orig == -1 && v->info == orig) {
-            pos_orig = i;
-            origV = v;
-        }
-        if (pos_dest == -1 && v->info == dest) {
-            pos_dest = i;
-            destV = v;
-        }
-        if (pos_orig != -1 && pos_dest != -1) break;
-    }
-
-    if (pos_orig == -1 || pos_dest == -1) return res;
-
-    if (D[pos_orig][pos_dest] == INF) return res;
-
-    res.push_back(origV->info);
-    while (pos_orig != pos_dest) {
-        origV = P[pos_orig][pos_dest];
-        res.push_back(origV->info);
-        for (int i = 0; i < vertexSet.size(); i++) {
-            if (vertexSet[i] == origV) {
-                pos_orig = i;
-                break;
-            }
-        }
-    }
-
-    return res;
-}
 
 #endif /* GRAPH_H_ */

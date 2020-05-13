@@ -28,7 +28,7 @@ void drawGraphFromFile(string fileName) {
     GraphViewer * gv = new GraphViewer(1000, 1000, false);
     gv->createWindow(500,500);
 
-    Graph<int> G;
+    Graph G;
     GraphReader gr(gv, &G, fileName);
 
     gr.readNodes();
