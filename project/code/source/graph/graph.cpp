@@ -4,102 +4,86 @@
 #include "graph.h"
 
 /// VERTEX
-template<class T>
-Vertex<T>::Vertex(T in): info(in) {}
+Vertex::Vertex(int in): id(in) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-template<class T>
-void Vertex<T>::addEdge(Vertex<T> *d, double w) {
+void Vertex::addEdge(Vertex *d, double w) {
     adj.push_back(Edge(d, w));
 }
 
-template<class T>
-bool Vertex<T>::operator<(Vertex<T> & vertex) const {
+
+bool Vertex::operator<(Vertex & vertex) const {
     return this->dist < vertex.dist;
 }
 
-template<class T>
-T Vertex<T>::getInfo() const {
-    return this->info;
+int Vertex::getId() const {
+    return this->id;
 }
 
-template<class T>
-double Vertex<T>::getDist() const {
+double Vertex::getDist() const {
     return this->dist;
 }
 
-template<class T>
-void Vertex<T>::setDist(double dist) {
+void Vertex::setDist(double dist) {
     Vertex::dist = dist;
 }
 
-template<class T>
-Vertex<T> *Vertex<T>::getPath() const {
+Vertex *Vertex::getPath() const {
     return this->path;
 }
 
-template<class T>
-void Vertex<T>::setInfo(T info) {
-    Vertex::info = info;
+void Vertex::setInfo(int info) {
+    Vertex::id = info;
 }
 
-template<class T>
-void Vertex<T>::setAdj(const vector<Edge> &adj) {
+void Vertex::setAdj(const vector<Edge> &adj) {
     Vertex::adj = adj;
 }
 
-template<class T>
-void Vertex<T>::setPath(Vertex<T> *path) {
+void Vertex::setPath(Vertex *path) {
     Vertex::path = path;
 }
 
-template<class T>
-void Vertex<T>::setQueueIndex(int queueIndex) {
+void Vertex::setQueueIndex(int queueIndex) {
     Vertex::queueIndex = queueIndex;
 }
 
-template<class T>
-void Vertex<T>::setVisited(bool visited) {
+void Vertex::setVisited(bool visited) {
     Vertex::visited = visited;
 }
 
-template<class T>
-void Vertex<T>::setProcessing(bool processing) {
+void Vertex::setProcessing(bool processing) {
     Vertex::processing = processing;
 }
 
-template<class T>
-const vector<Edge> &Vertex<T>::getAdj() const {
+const vector<Edge> &Vertex::getAdj() const {
     return adj;
 }
 
-template<class T>
-int Vertex<T>::getQueueIndex() const {
+int Vertex::getQueueIndex() const {
     return queueIndex;
 }
 
-template<class T>
-bool Vertex<T>::isVisited() const {
+bool Vertex::isVisited() const {
     return visited;
 }
 
-template<class T>
-bool Vertex<T>::isProcessing() const {
+bool Vertex::isProcessing() const {
     return processing;
 }
 
 /// EDGE
 
-Edge::Edge(Vertex<int> *d, double w): dest(d), weight(w) {}
+Edge::Edge(Vertex *d, double w): dest(d), weight(w) {}
 
-Vertex<int> *Edge::getDest() const {
+Vertex *Edge::getDest() const {
     return dest;
 }
 
-void Edge::setDest(Vertex<int> *dest) {
+void Edge::setDest(Vertex *dest) {
     Edge::dest = dest;
 }
 
@@ -116,16 +100,16 @@ int Graph::getNumVertex() const {
     return vertexSet.size();
 }
 
-vector<Vertex<int> *> Graph::getVertexSet() const {
+vector<Vertex *> Graph::getVertexSet() const {
     return vertexSet;
 }
 
 /*
  * Auxiliary function to find a vertex with a given content.
  */
-Vertex<int> * Graph::findVertex(const int &in) const {
+Vertex * Graph::findVertex(const int &in) const {
     for (auto v : vertexSet)
-        if (v->info == in)
+        if (v->id == in)
             return v;
     return NULL;
 }
@@ -137,7 +121,7 @@ Vertex<int> * Graph::findVertex(const int &in) const {
 bool Graph::addVertex(const int &in) {
     if ( findVertex(in) != NULL)
         return false;
-    vertexSet.push_back(new Vertex<int>(in));
+    vertexSet.push_back(new Vertex(in));
     return true;
 }
 
@@ -159,20 +143,20 @@ bool Graph::addEdge(const int &sourc, const int &dest, double w) {
 /**************** Single Source Shortest Path algorithms ************/
 
 void Graph::unweightedShortestPath(const int &orig) {
-    for (Vertex<int> *v : vertexSet) {
+    for (Vertex *v : vertexSet) {
         v->dist = INF;
         v->path = NULL;
     }
-    Vertex<int> *start = findVertex(orig);
+    Vertex *start = findVertex(orig);
     start->dist = 0;
-    queue<Vertex<int>*> q;
+    queue<Vertex*> q;
     q.push(start);
 
     while (!q.empty()) {
-        Vertex<int> *v = q.front();
+        Vertex *v = q.front();
         q.pop();
         for (Edge edge : v->getAdj()) {
-            Vertex<int> *w = edge.dest;
+            Vertex *w = edge.dest;
             if (w->dist == INF) {
                 q.push(w);
                 w->dist = v->dist + 1;
@@ -183,19 +167,19 @@ void Graph::unweightedShortestPath(const int &orig) {
 }
 
 void Graph::dijkstraShortestPath(const int &origin) {
-    for (Vertex<int> *v : vertexSet) {
+    for (Vertex *v : vertexSet) {
         v->dist = INF;
         v->path = NULL;
     }
-    Vertex<int> *start = findVertex(origin);
+    Vertex *start = findVertex(origin);
     start->dist = 0;
-    MutablePriorityQueue<Vertex<int>> q;
+    MutablePriorityQueue<Vertex> q;
     q.insert(start);
 
     while (!q.empty()) {
-        Vertex<int> *v = q.extractMin();
+        Vertex *v = q.extractMin();
         for (Edge edge : v->getAdj()) {
-            Vertex<int> *w = edge.dest;
+            Vertex *w = edge.dest;
             if (w->dist > v->dist + edge.weight) {
                 w->dist = v->dist + edge.weight;
                 w->path = v;
@@ -210,16 +194,16 @@ void Graph::dijkstraShortestPath(const int &origin) {
 
 
 void Graph::bellmanFordShortestPath(const int &orig) {
-    for (Vertex<int> *v : vertexSet) {
+    for (Vertex *v : vertexSet) {
         v->dist = INF;
         v->path = NULL;
     }
-    Vertex<int> *start = findVertex(orig);
+    Vertex *start = findVertex(orig);
     start->dist = 0;
     for (int i = 1; i < vertexSet.size(); i++) {
-        for (Vertex<int> *v : vertexSet) {
+        for (Vertex *v : vertexSet) {
             for (Edge edge : v->adj) {
-                Vertex<int> *w = edge.dest;
+                Vertex *w = edge.dest;
                 if (w->dist > v->dist + edge.weight) {
                     w->dist = v->dist + edge.weight;
                     w->path = v;
@@ -227,7 +211,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
             }
         }
     }
-    for (Vertex<int> *v : vertexSet) {
+    for (Vertex *v : vertexSet) {
         for (Edge edge : v->adj) {
             if (v->dist + edge.weight < (edge.dest)->dist) {
                 cerr << "there are cycles of negative weight\n";
@@ -240,9 +224,9 @@ void Graph::bellmanFordShortestPath(const int &orig) {
 
 vector<int> Graph::getPathTo(const int &dest) const{
     vector<int> res;
-    Vertex<int> *v = findVertex(dest);
+    Vertex *v = findVertex(dest);
     while (v != NULL) {
-        res.insert(res.begin(), v->info);
+        res.insert(res.begin(), v->id);
         v = v->path;
     }
     return res;

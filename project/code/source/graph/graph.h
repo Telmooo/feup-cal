@@ -15,43 +15,41 @@
 
 using namespace std;
 
-
-template <class T> class Vertex;
+class Vertex;
 class Edge;
 class Graph;
 
 #define INF std::numeric_limits<double>::infinity()
 
 /************************* Vertex  **************************/
-template<class T>
 class Vertex {
-    T info;						// content of the vertex
+    int id;						// content of the vertex
     vector<Edge > adj;		// outgoing edges
 
     double dist = 0;
-    Vertex<T> *path = NULL;
+    Vertex *path = NULL;
     int queueIndex = 0; 		// required by MutablePriorityQueue
 
     bool visited = false;		// auxiliary field
     bool processing = false;	// auxiliary field
 
 public:
-    Vertex(T in);
-    T getInfo() const;
+    Vertex(int in);
+    int getId() const;
     double getDist() const;
     Vertex *getPath() const;
 
-    void addEdge(Vertex<T> *dest, double w);
+    void addEdge(Vertex *dest, double w);
 
-    bool operator<(Vertex<T> & vertex) const;
+    bool operator<(Vertex & vertex) const;
 
     void setDist(double dist);
 
-    void setInfo(T info);
+    void setInfo(int info);
 
     void setAdj(const vector<Edge> &adj);
 
-    void setPath(Vertex<T> *path);
+    void setPath(Vertex *path);
 
     void setQueueIndex(int queueIndex);
 
@@ -70,27 +68,27 @@ public:
 
 
     // // required by MutablePriorityQueue
-    friend class MutablePriorityQueue<Vertex<T>>;
+    friend class MutablePriorityQueue<Vertex>;
     friend class Graph;
 };
 
 
 /********************** Edge  ****************************/
 class Edge {
-    Vertex<int> * dest;      // destination vertex
+    Vertex * dest;      // destination vertex
     double weight;         // edge weight
 public:
-    Edge(Vertex<int> *d, double w);
+    Edge(Vertex *d, double w);
 
-    Vertex<int> *getDest() const;
+    Vertex *getDest() const;
 
-    void setDest(Vertex<int> *dest);
+    void setDest(Vertex *dest);
 
     double getWeight() const;
 
     void setWeight(double weight);
 
-    friend class Vertex<int>;
+    friend class Vertex;
     friend class Graph;
 };
 
@@ -98,15 +96,15 @@ public:
 /*************************** Graph  **************************/
 
 class Graph {
-    vector<Vertex<int> *> vertexSet;    // vertex set
+    vector<Vertex *> vertexSet;    // vertex set
     vector<vector<double>> D;      // minimum distance matrix
-    vector<vector<Vertex<int>*>> P;  // path matrix
+    vector<vector<Vertex *>> P;  // path matrix
 public:
-    Vertex<int> *findVertex(const int &in) const;
+    Vertex *findVertex(const int &in) const;
     bool addVertex(const int &in);
     bool addEdge(const int &sourc, const int &dest, double w);
     int getNumVertex() const;
-    vector<Vertex<int> *> getVertexSet() const;
+    vector<Vertex *> getVertexSet() const;
 
     // Fp05 - single source
     void unweightedShortestPath(const int &s);
@@ -118,7 +116,7 @@ public:
     void floydWarshallShortestPath();
     vector<int> getfloydWarshallPath(const int &origin, const int &dest) const;
 
-    friend class Vertex<int>;
+    friend class Vertex;
     friend class Edge;
 };
 
