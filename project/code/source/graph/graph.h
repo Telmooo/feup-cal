@@ -35,13 +35,18 @@ class Vertex {
     int averageSpeed;           // Velocidade média no vértice
     bool reachable;             // Seo  vértice é alcançavel
 
+    int x;                      // x position
+    int y;                      // y position
+
 public:
-    Vertex(int in);
+    Vertex(int in, int x, int y);
     int getId() const;
+    int getX() const;
+    int getY() const;
     double getDist() const;
     Vertex *getPath() const;
 
-    void addEdge(Vertex *dest, double w);
+    void addEdge(int edgeId, Vertex *dest, double w);
 
     bool operator<(Vertex & vertex) const;
 
@@ -82,7 +87,9 @@ class Edge {
     bool open;                      // if the conection is open
 
 public:
-    Edge(Vertex *d, double w);
+    Edge(int id, Vertex *d, double w);
+
+    int getId();
 
     Vertex *getDest() const;
 
@@ -102,12 +109,12 @@ public:
 class Graph {
     vector<Vertex *> vertexSet;    // vertex set
     vector<vector<double>> D;      // minimum distance matrix
-    vector<vector<Vertex *>> P;  // path matrix
+    vector<vector<Vertex *>> P;     // path matrix
 
 public:
     Vertex *findVertex(const int &in) const;
-    bool addVertex(const int &in);
-    bool addEdge(const int &sourc, const int &dest, double w);
+    bool addVertex(const int &in, int x, int y);
+    bool addEdge(int edgeId, const int &sourc, const int &dest, double w);
     int getNumVertex() const;
     vector<Vertex *> getVertexSet() const;
 

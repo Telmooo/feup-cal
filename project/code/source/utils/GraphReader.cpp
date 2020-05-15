@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-GraphReader::GraphReader(GraphViewer * gv, Graph * G, std::string folder) : gv(gv), G(G), folder(folder) {}
+GraphReader::GraphReader(Graph * g, std::string folder) : g(g), folder(folder) {}
 
 void GraphReader::readNodes() {
     std::ifstream nodes("../resources/graphs/" + folder + "/nodes.txt");
@@ -22,8 +22,7 @@ void GraphReader::readNodes() {
 
         ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
 
-        G->addVertex(idn);
-        gv->addNode(idn, x, y);
+        g->addVertex(idn, x, y);
     }
 
     nodes.close();
@@ -48,9 +47,7 @@ void GraphReader::readEdges() {
 
         ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
 
-        G->addEdge(idn1, idn2, WEIGHT_CHANGE_THIS);
-
-        gv->addEdge(i, idn1, idn2, EdgeType::UNDIRECTED);
+        g->addEdge(i, idn1, idn2, WEIGHT_CHANGE_THIS);
     }
 
     edges.close();

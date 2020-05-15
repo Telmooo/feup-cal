@@ -1,15 +1,15 @@
-#include "graph.h"
+#include "Graph.h"
 
 /*************************** Vertex Functions **************************/
 
-Vertex::Vertex(int in): id(in) {}
+Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-void Vertex::addEdge(Vertex *d, double w) {
-    adj.push_back(Edge(d, w));
+void Vertex::addEdge(int edgeId, Vertex *d, double w) {
+    adj.push_back(Edge(edgeId, d, w));
 }
 
 
@@ -19,6 +19,14 @@ bool Vertex::operator<(Vertex & vertex) const {
 
 int Vertex::getId() const {
     return this->id;
+}
+
+int Vertex::getX() const {
+    return this->x;
+}
+
+int Vertex::getY() const {
+    return this->y;
 }
 
 double Vertex::getDist() const {
@@ -75,7 +83,12 @@ bool Vertex::isProcessing() const {
 
 /*************************** Edge Functions **************************/
 
-Edge::Edge(Vertex *d, double w): dest(d), weightDistance(w) {}
+Edge::Edge(int id, Vertex *d, double w): id(id), dest(d), weightDistance(w) {}
+
+int Edge::getId() {
+    return id;
+}
+
 
 Vertex *Edge::getDest() const {
     return dest;
@@ -117,10 +130,10 @@ Vertex * Graph::findVertex(const int &in) const {
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
  */
-bool Graph::addVertex(const int &in) {
+bool Graph::addVertex(const int &in, int x, int y) {
     if ( findVertex(in) != NULL)
         return false;
-    vertexSet.push_back(new Vertex(in));
+    vertexSet.push_back(new Vertex(in, x, y));
     return true;
 }
 
@@ -129,12 +142,12 @@ bool Graph::addVertex(const int &in) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const int &sourc, const int &dest, double w) {
+bool Graph::addEdge(int edgeId, const int &sourc, const int &dest, double w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == NULL || v2 == NULL)
         return false;
-    v1->addEdge(v2,w);
+    v1->addEdge(edgeId,v2,w);
     return true;
 }
 
