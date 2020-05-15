@@ -1,8 +1,14 @@
 #include "Graph.h"
 
+#include <unordered_map>
+#include <exception>
+#include <algorithm>
+
 /*************************** Vertex Functions **************************/
 
-Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {}
+Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {
+
+}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
@@ -112,7 +118,9 @@ Vertex::~Vertex() {
 
 /*************************** Edge Functions **************************/
 
-Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {}
+Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {
+    open = false;
+}
 
 int Edge::getId() {
     return id;
@@ -230,15 +238,117 @@ double Graph::getMinY() {
     return minY;
 }
 
-/** -------------------------------------------------------------------------------------------------------------------/
-/                                                  Transpose                                                           /
-/---------------------------------------------------------------------------------------------------------------------*/
-
-Graph Graph::transpose() {
-    return *this;
+void Graph::resetConnections() {
+    for (Vertex *obj : vertexSet) {
+        obj->setVisited(false);
+        for (Edge *edge : obj->getAdj()) {
+            edge->setOpen(false);
+        }
+    }
 }
 
-/**************** Single Source Shortest Path algorithms ************/
+/*
+ * Performs a depth-first search (dfs) in a graph (this).
+ * Returns a vector with the contents of the vertices by dfs order.
+ * Follows the algorithm described in theoretical classes.
+ */
+vector<int> Graph::dfsFromOrigin(int origin) {
+    vector<int> res;
+    resetConnections();
+    Vertex *start = findVertex(origin);
+    if (start == NULL) return res;
+
+    dfsVisit(start, res);
+    return res;
+}
+
+/*
+ * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively.
+ * Updates a parameter with the list of visited node contents.
+ */
+void Graph::dfsVisit(Vertex *v, vector<int> & res) {
+    v->setVisited(true);
+    res.push_back(v->getId());
+    for (Edge *edge : v->adj) {
+        edge->setOpen(true);
+        if (!(edge->getDest())->visited)
+            dfsVisit(edge->getDest(), res);
+    }
+}
+
+/* -------------------------------------------------------------------------
+                            TRANSPOSE
+/-------------------------------------------------------------------------*/
+
+Graph Graph::transpose() {
+    Graph transposed;
+
+    unordered_map<Vertex*, Vertex*> vertexMap;
+
+    for (Vertex *v : vertexSet) {
+        if (transposed.addVertex(v->getId(), v->getX(), v->getY())) {
+            vertexMap.insert(pair<Vertex*, Vertex*> (v, transposed.vertexSet.back()));
+        }
+    }
+
+    for (Vertex *v : vertexSet) {
+        Vertex *transposedV = vertexMap.at(v);
+        for (Edge *e : v->adj) {
+            Vertex *transposedDest = vertexMap.at(e->getDest());
+            transposedDest->addEdge(e->getId(), transposedV);
+        }
+    }
+
+    return transposed;
+}
+
+/* -------------------------------------------------------------------------
+                Strongly Connected Components - Kosaraju
+/-------------------------------------------------------------------------*/
+
+void Graph::kosarajuSCC(int origin) {
+    Graph transposed = transpose();
+
+    vector<int> fromOrigin = dfsFromOrigin(origin);
+
+    vector<int> toOrigin = transposed.dfsFromOrigin(origin);
+
+    vector<int> scc;
+    for (int id : fromOrigin) {
+        if (find(toOrigin.begin(), toOrigin.end(), id) != toOrigin.end()) {
+            scc.push_back(id);
+        }
+    }
+
+    resetConnections();
+
+    for (int id : scc){
+        Vertex *v  = findVertex(id);
+        v->setVisited(true);
+    }
+
+    for (Vertex *v : vertexSet) {
+        if (v->isVisited()) {
+            for (Edge *e : v->getAdj()) {
+                Vertex *dest = e->getDest();
+                if (dest->isVisited()) e->setOpen(true);
+            }
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------
+                                    Pre-process
+/-------------------------------------------------------------------------*/
+
+void Graph::preProcess() {
+    if (centralVertex == NULL) return;
+    kosarajuSCC(centralVertex->getId());
+}
+
+/* -------------------------------------------------------------------------
+                Single Source Shortest Path algorithms
+/-------------------------------------------------------------------------*/
 
 void Graph::unweightedShortestPath(const int &orig) {
     for (Vertex *v : vertexSet) {

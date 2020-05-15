@@ -136,7 +136,7 @@ private:
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;     // path matrix
 
-    Vertex * centralVertex;
+    Vertex * centralVertex = NULL;
     vector<Vertex *> catchPoints;
     Vertex * destinationVertex;
 
@@ -162,7 +162,17 @@ public:
     void addCatchPoint(int position);
     void setDestinationVertex(int position);
 
+    void resetConnections();
+
     Graph transpose();
+
+    vector<int> dfsFromOrigin(int origin);
+
+    void dfsVisit(Vertex *v, vector<int> & res);
+
+    void kosarajuSCC(int origin);
+
+    void preProcess();
 
     // Fp05 - single source
     void unweightedShortestPath(const int &s);

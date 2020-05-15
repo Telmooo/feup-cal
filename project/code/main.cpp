@@ -20,6 +20,9 @@ int main(int argc, char *argv[]) {
 
     Graph graph;
     readGraph(&graph, fileName);
+
+    graph.preProcess();
+
     drawGraph(&graph);
 
     /*
