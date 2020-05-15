@@ -8,10 +8,17 @@ GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {}
 
 void GraphDrawer::draw() {
     // Draw Vertex
+    double yPercent, xPercent;
+
     vector<Vertex *> vertexVec = g->getVertexSet();
     for(int i = 0; i < vertexVec.size(); i++) {
         Vertex *vert = vertexVec.at(i);
-        gv->addNode(vert->getId(), vert->getX(), vert->getY());
+
+        yPercent = 1.0 - ((vert->getY()- g->getMinY())/(g->getMaxY() - g->getMinY())*0.9 + 0.05);
+        xPercent = (vert->getX() - g->getMinX())/(g->getMaxX() - g->getMinX())*0.9 + 0.05;
+
+
+        gv->addNode(vert->getId(), (int) (xPercent * 1920), (int) (yPercent * 1080));
     }
 
     // Draw Edges

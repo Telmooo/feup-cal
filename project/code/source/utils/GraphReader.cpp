@@ -20,7 +20,16 @@ void GraphReader::readNodes() {
         getline(nodes, line);
         std::stringstream ss(line);
 
-        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
+        //ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
+
+        size_t pos = line.find(',');
+        idn = stoi(line.substr(1, pos));
+        line.erase(0, pos + 2);
+        pos = line.find(',');
+        x = stof(line.substr(0, pos));
+        line.erase(0, pos + 2);
+        pos = line.find(')');
+        y = stof(line.substr(0, pos));
 
         g->addVertex(idn, x, y);
     }
@@ -45,7 +54,13 @@ void GraphReader::readEdges() {
         getline(edges, line);
         stringstream ss(line);
 
-        ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
+        //ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
+
+        size_t pos = line.find(',');
+        idn1 = stoi(line.substr(1, pos));
+        line.erase(0, pos + 2);
+        pos = line.find(')');
+        idn2 = stoi(line.substr(0, pos));
 
         g->addEdge(i, idn1, idn2, WEIGHT_CHANGE_THIS);
     }

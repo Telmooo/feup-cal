@@ -11,19 +11,19 @@ void readGraph(Graph * graph, string fileName);
 void drawGraph(Graph * graph);
 
 int main() {
-    string fileName;
-    std::cout << "File Name:" << std::endl;
-    std::cin >> fileName;
-    std::cin.ignore(1000, '\n');
+    // To Do : User Input
+    string fileName = "Fafe";
 
     Graph graph;
     readGraph(&graph, fileName);
     drawGraph(&graph);
 
+    /*
     string algorithm;
     std::cout << "Algorithm: " << std::endl;
     std::cin >> algorithm;
     std::cin.ignore(1000, '\n');
+    */
 
     getchar();
 
@@ -37,8 +37,8 @@ void readGraph(Graph * graph, string fileName) {
 }
 
 void drawGraph(Graph * graph) {
-    GraphViewer * gView = new GraphViewer(1000, 1000, false);
-    gView->createWindow(500,500);
+    GraphViewer * gView = new GraphViewer(1920,1080, false);
+    gView->createWindow(1920,1080);
     GraphDrawer draw(gView, graph);
 
     draw.draw();

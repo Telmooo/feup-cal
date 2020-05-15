@@ -133,6 +133,23 @@ Vertex * Graph::findVertex(const int &in) const {
 bool Graph::addVertex(const int &in, int x, int y) {
     if ( findVertex(in) != NULL)
         return false;
+    Vertex* toAdd = new Vertex(in, x, y);
+    if (vertexSet.empty()) {
+        this->minY = toAdd->getY();
+        this->minX = toAdd->getX();
+        this->maxX = toAdd->getX();
+        this->maxY = toAdd->getY();
+    }
+    else {
+        if(toAdd->getX() > maxX)
+            maxX = toAdd->getX();
+        else if(toAdd->getX() < minX)
+            minX = toAdd->getX();
+        if(toAdd->getY() > maxY)
+            maxY = toAdd->getY();
+        else if (toAdd->getY() < minY)
+            minY = toAdd->getY();
+    }
     vertexSet.push_back(new Vertex(in, x, y));
     return true;
 }

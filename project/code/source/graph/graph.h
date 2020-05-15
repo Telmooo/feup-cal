@@ -107,6 +107,11 @@ public:
 /*************************** Graph  **************************/
 
 class Graph {
+    double maxX;
+    double minX;
+    double maxY;
+    double minY;
+
     vector<Vertex *> vertexSet;    // vertex set
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;     // path matrix
@@ -128,6 +133,19 @@ public:
     void floydWarshallShortestPath();
     vector<int> getfloydWarshallPath(const int &origin, const int &dest) const;
 
+    // Other
+    double getMaxX(){
+        return maxX;
+    }
+    double getMinX(){
+        return minX;
+    }
+    double getMaxY(){
+        return maxY;
+    }
+    double getMinY(){
+        return minY;
+    }
     friend class Vertex;
     friend class Edge;
 };
