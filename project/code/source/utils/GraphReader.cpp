@@ -14,24 +14,15 @@ void GraphReader::readNodes() {
     int MAX = stoi(line);
 
     for(int i = 0; i < MAX; i++) {
-        int idn, x, y;
+        double idn, x, y;
         char garbage;
 
         getline(nodes, line);
         std::stringstream ss(line);
 
-        //ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
+        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
 
-        size_t pos = line.find(',');
-        idn = stoi(line.substr(1, pos));
-        line.erase(0, pos + 2);
-        pos = line.find(',');
-        x = stof(line.substr(0, pos));
-        line.erase(0, pos + 2);
-        pos = line.find(')');
-        y = stof(line.substr(0, pos));
-
-        g->addVertex(idn, x, y);
+        g->addVertex(idn, (int) x, (int) y);
     }
 
     nodes.close();
@@ -54,16 +45,22 @@ void GraphReader::readEdges() {
         getline(edges, line);
         stringstream ss(line);
 
-        //ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
+        ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
 
-        size_t pos = line.find(',');
-        idn1 = stoi(line.substr(1, pos));
-        line.erase(0, pos + 2);
-        pos = line.find(')');
-        idn2 = stoi(line.substr(0, pos));
-
-        g->addEdge(i, idn1, idn2, WEIGHT_CHANGE_THIS);
+        g->addEdge(i, idn1, idn2);
     }
 
     edges.close();
+}
+
+void GraphReader::loadElements() {
+    int centralPoint = rand() % g->getNumVertex();
+    int catchPoint;
+
+    do {
+        catchPoint = rand() % g->getNumVertex();
+    } while(catchPoint == centralPoint);
+
+    g->setCentralVertex(centralPoint);
+    g->addCatchPoint(catchPoint);
 }

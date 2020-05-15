@@ -14,9 +14,16 @@ void GraphDrawer::draw() {
     for(int i = 0; i < vertexVec.size(); i++) {
         Vertex *vert = vertexVec.at(i);
 
-        yPercent = 1.0 - ((vert->getY()- g->getMinY())/(g->getMaxY() - g->getMinY())*0.9 + 0.05);
-        xPercent = (vert->getX() - g->getMinX())/(g->getMaxX() - g->getMinX())*0.9 + 0.05;
+        yPercent = 1.0 - ((vert->getY()- g->getMinY())/(g->getMaxY() - g->getMinY()) * 0.9 + 0.05);
+        xPercent = (vert->getX() - g->getMinX())/(g->getMaxX() - g->getMinX()) * 0.9 + 0.05;
 
+        if(vert->getCentral()) {
+            gv->setVertexColor(vert->getId(), "green");
+        }
+
+        if(vert->getCatchPoint()) {
+            gv->setVertexColor(vert->getId(), "red");
+        }
 
         gv->addNode(vert->getId(), (int) (xPercent * 1920), (int) (yPercent * 1080));
     }
@@ -28,7 +35,8 @@ void GraphDrawer::draw() {
 
         for(int j = 0; j < adj.size(); j++) {
             Edge currentEdge = adj.at(j);
-            gv->addEdge(currentEdge.getId(), vert->getId(), currentEdge.getDest()->getId(), EdgeType::DIRECTED);
+
+            gv->addEdge(currentEdge.getId(), vert->getId(), currentEdge.getDest()->getId(), EdgeType::UNDIRECTED);
         }
     }
 }

@@ -14,6 +14,8 @@ public:
     void readNodes();
 
     void readEdges();
+
+    void loadElements();
 };
 
 

@@ -31,6 +31,9 @@ class Vertex {
     bool visited = false;		// auxiliary field
     bool processing = false;	// auxiliary field
 
+    bool central = false;       // se é o centro
+    bool catchPoint = false;    // Pickup
+
     int density;                // Densidade populacional no vértice
     int averageSpeed;           // Velocidade média no vértice
     bool reachable;             // Seo  vértice é alcançavel
@@ -43,14 +46,18 @@ public:
     int getId() const;
     int getX() const;
     int getY() const;
+
     double getDist() const;
+
     Vertex *getPath() const;
 
-    void addEdge(int edgeId, Vertex *dest, double w);
+    void addEdge(int edgeId, Vertex *dest);
 
     bool operator<(Vertex & vertex) const;
 
     void setDist(double dist);
+
+    void setCentral(bool ctr);
 
     void setInfo(int info);
 
@@ -72,6 +79,12 @@ public:
 
     bool isProcessing() const;
 
+    bool getCentral();
+
+    void setCatchPoint(bool b);
+
+    bool getCatchPoint();
+
     // // required by MutablePriorityQueue
     friend class MutablePriorityQueue<Vertex>;
     friend class Graph;
@@ -87,17 +100,21 @@ class Edge {
     bool open;                      // if the conection is open
 
 public:
-    Edge(int id, Vertex *d, double w);
+    Edge(int id, Vertex *d);
 
     int getId();
 
-    Vertex *getDest() const;
-
     void setDest(Vertex *dest);
+    Vertex * getDest() const;
+
+    void setOpen(bool op);
+    bool getOpen();
 
     double getWeightDistance() const;
-
     void setWeightDistance(double weight);
+
+    double getWeightTime() const;
+    void setWeightTime(double weight);
 
     friend class Vertex;
     friend class Graph;
@@ -107,21 +124,31 @@ public:
 /*************************** Graph  **************************/
 
 class Graph {
+private:
+    vector<Vertex *> vertexSet;    // vertex set
+    vector<vector<double>> D;      // minimum distance matrix
+    vector<vector<Vertex *>> P;     // path matrix
+
+    Vertex * centralVertex;
+    vector<Vertex *> catchPoints;
+
     double maxX;
     double minX;
     double maxY;
     double minY;
 
-    vector<Vertex *> vertexSet;    // vertex set
-    vector<vector<double>> D;      // minimum distance matrix
-    vector<vector<Vertex *>> P;     // path matrix
-
 public:
     Vertex *findVertex(const int &in) const;
+
     bool addVertex(const int &in, int x, int y);
-    bool addEdge(int edgeId, const int &sourc, const int &dest, double w);
-    int getNumVertex() const;
+
+    bool addEdge(int edgeId, const int &sourc, const int &dest);
+
     vector<Vertex *> getVertexSet() const;
+    int getNumVertex() const;
+
+    void setCentralVertex(int position);
+    void addCatchPoint(int position);
 
     // Fp05 - single source
     void unweightedShortestPath(const int &s);
@@ -134,18 +161,11 @@ public:
     vector<int> getfloydWarshallPath(const int &origin, const int &dest) const;
 
     // Other
-    double getMaxX(){
-        return maxX;
-    }
-    double getMinX(){
-        return minX;
-    }
-    double getMaxY(){
-        return maxY;
-    }
-    double getMinY(){
-        return minY;
-    }
+    double getMaxX();
+    double getMinX();
+    double getMaxY();
+    double getMinY();
+
     friend class Vertex;
     friend class Edge;
 };

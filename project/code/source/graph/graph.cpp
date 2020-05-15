@@ -8,8 +8,8 @@ Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {}
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-void Vertex::addEdge(int edgeId, Vertex *d, double w) {
-    adj.push_back(Edge(edgeId, d, w));
+void Vertex::addEdge(int edgeId, Vertex *d) {
+    adj.push_back(Edge(edgeId, d));
 }
 
 
@@ -41,6 +41,13 @@ Vertex *Vertex::getPath() const {
     return this->path;
 }
 
+bool Vertex::getCentral() {
+    return central;
+}
+
+void Vertex::setCentral(bool ctr) {
+    central = ctr;
+}
 void Vertex::setInfo(int info) {
     Vertex::id = info;
 }
@@ -81,9 +88,17 @@ bool Vertex::isProcessing() const {
     return processing;
 }
 
+void Vertex::setCatchPoint(bool b) {
+    catchPoint = b;
+}
+
+bool Vertex::getCatchPoint() {
+    return catchPoint;
+}
+
 /*************************** Edge Functions **************************/
 
-Edge::Edge(int id, Vertex *d, double w): id(id), dest(d), weightDistance(w) {}
+Edge::Edge(int id, Vertex *d): id(id), dest(d) {}
 
 int Edge::getId() {
     return id;
@@ -104,6 +119,14 @@ double Edge::getWeightDistance() const {
 
 void Edge::setWeightDistance(double weight) {
     Edge::weightDistance = weight;
+}
+
+void Edge::setOpen(bool op) {
+    open = op;
+}
+
+bool Edge::getOpen() {
+    return open;
 }
 
 /*************************** Graph Functions **************************/
@@ -133,22 +156,22 @@ Vertex * Graph::findVertex(const int &in) const {
 bool Graph::addVertex(const int &in, int x, int y) {
     if ( findVertex(in) != NULL)
         return false;
-    Vertex* toAdd = new Vertex(in, x, y);
+    Vertex* add = new Vertex(in, x, y);
     if (vertexSet.empty()) {
-        this->minY = toAdd->getY();
-        this->minX = toAdd->getX();
-        this->maxX = toAdd->getX();
-        this->maxY = toAdd->getY();
+        this->minY = add->getY();
+        this->minX = add->getX();
+        this->maxX = add->getX();
+        this->maxY = add->getY();
     }
     else {
-        if(toAdd->getX() > maxX)
-            maxX = toAdd->getX();
-        else if(toAdd->getX() < minX)
-            minX = toAdd->getX();
-        if(toAdd->getY() > maxY)
-            maxY = toAdd->getY();
-        else if (toAdd->getY() < minY)
-            minY = toAdd->getY();
+        if(add->getX() > maxX)
+            maxX = add->getX();
+        else if(add->getX() < minX)
+            minX = add->getX();
+        if(add->getY() > maxY)
+            maxY = add->getY();
+        else if (add->getY() < minY)
+            minY = add->getY();
     }
     vertexSet.push_back(new Vertex(in, x, y));
     return true;
@@ -159,15 +182,30 @@ bool Graph::addVertex(const int &in, int x, int y) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(int edgeId, const int &sourc, const int &dest, double w) {
+bool Graph::addEdge(int edgeId, const int &sourc, const int &dest) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == NULL || v2 == NULL)
         return false;
-    v1->addEdge(edgeId,v2,w);
+    v1->addEdge(edgeId,v2);
     return true;
 }
 
+double Graph::getMaxX() {
+    return maxX;
+}
+
+double Graph::getMinX() {
+    return minX;
+}
+
+double Graph::getMaxY() {
+    return maxY;
+}
+
+double Graph::getMinY() {
+    return minY;
+}
 
 /**************** Single Source Shortest Path algorithms ************/
 
@@ -261,6 +299,15 @@ vector<int> Graph::getPathTo(const int &dest) const{
     return res;
 }
 
+void Graph::setCentralVertex(int position) {
+    centralVertex = vertexSet.at(position);
+    vertexSet.at(position)->setCentral(true);
+}
+
+void Graph::addCatchPoint(int position) {
+    catchPoints.push_back(vertexSet.at(position));
+    vertexSet.at(position)->setCatchPoint(true);
+}
 
 
 /**************** All Pairs Shortest Path  ***************/

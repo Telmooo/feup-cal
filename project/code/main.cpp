@@ -10,9 +10,12 @@ void readGraph(Graph * graph, string fileName);
 
 void drawGraph(Graph * graph);
 
-int main() {
-    // To Do : User Input
-    string fileName = "Fafe";
+int main(int argc, char *argv[]) {
+    if(argc != 2) {
+        cout << "Vai a outro lado" << endl;
+    }
+
+    string fileName = argv[1];
 
     Graph graph;
     readGraph(&graph, fileName);
@@ -34,6 +37,7 @@ void readGraph(Graph * graph, string fileName) {
     GraphReader gReader(graph, fileName);
     gReader.readNodes();
     gReader.readEdges();
+    gReader.loadElements();
 }
 
 void drawGraph(Graph * graph) {
