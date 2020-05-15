@@ -37,6 +37,7 @@ void readGraph(Graph * graph, string fileName) {
     GraphReader gReader(graph, fileName);
     gReader.readNodes();
     gReader.readEdges();
+    gReader.readTags();
     gReader.loadElements();
 }
 

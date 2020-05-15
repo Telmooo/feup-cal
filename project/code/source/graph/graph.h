@@ -22,7 +22,7 @@ class Graph;
 class Vertex {
     int id;						// content of the vertex
 
-    vector<Edge > adj;		    // outgoing edges
+    vector<Edge> adj;		    // outgoing edges
 
     double dist = 0;
     Vertex *path = NULL;
@@ -31,8 +31,9 @@ class Vertex {
     bool visited = false;		// auxiliary field
     bool processing = false;	// auxiliary field
 
-    bool central = false;       // se é o centro
-    bool catchPoint = false;    // Pickup
+    bool central = false;       // Central de Waggons
+    bool catchPoint = false;    // Local a recolher os prinsioneiros
+    bool destination = false;    // Local a entregar os prisioneiros
 
     int density;                // Densidade populacional no vértice
     int averageSpeed;           // Velocidade média no vértice
@@ -81,6 +82,10 @@ public:
 
     bool getCentral();
 
+    bool getDestination();
+
+    void setDestination(bool b);
+
     void setCatchPoint(bool b);
 
     bool getCatchPoint();
@@ -94,7 +99,7 @@ public:
 /********************** Edge  ****************************/
 class Edge {
     int id;                         // edge identifier
-    Vertex * dest;                  // destination vertex
+    Vertex * destinationVertex;     // destination vertex
     double weightDistance;          // edge weight distance
     double weightTime;              // edge weight time
     bool open;                      // if the conection is open
@@ -110,11 +115,10 @@ public:
     void setOpen(bool op);
     bool getOpen();
 
-    double getWeightDistance() const;
-    void setWeightDistance(double weight);
+    void setWeight(double distance, double time);
 
+    double getWeightDistance() const;
     double getWeightTime() const;
-    void setWeightTime(double weight);
 
     friend class Vertex;
     friend class Graph;
@@ -131,6 +135,7 @@ private:
 
     Vertex * centralVertex;
     vector<Vertex *> catchPoints;
+    Vertex * destinationVertex;
 
     double maxX;
     double minX;
@@ -149,6 +154,7 @@ public:
 
     void setCentralVertex(int position);
     void addCatchPoint(int position);
+    void setDestinationVertex(int position);
 
     // Fp05 - single source
     void unweightedShortestPath(const int &s);

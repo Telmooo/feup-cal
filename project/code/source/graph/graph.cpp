@@ -96,9 +96,17 @@ bool Vertex::getCatchPoint() {
     return catchPoint;
 }
 
+void Vertex::setDestination(bool b){
+    destination = b;
+}
+
+bool Vertex::getDestination() {
+    return destination;
+}
+
 /*************************** Edge Functions **************************/
 
-Edge::Edge(int id, Vertex *d): id(id), dest(d) {}
+Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {}
 
 int Edge::getId() {
     return id;
@@ -106,20 +114,27 @@ int Edge::getId() {
 
 
 Vertex *Edge::getDest() const {
-    return dest;
+    return destinationVertex;
 }
 
 void Edge::setDest(Vertex *dest) {
-    Edge::dest = dest;
+    Edge::destinationVertex = dest;
 }
+
+void Edge::setWeight(double distance, double time) {
+    Edge::weightDistance = distance;
+    Edge::weightTime = time;
+}
+
 
 double Edge::getWeightDistance() const {
     return weightDistance;
 }
 
-void Edge::setWeightDistance(double weight) {
-    Edge::weightDistance = weight;
+double Edge::getWeightTime() const {
+    return weightTime;
 }
+
 
 void Edge::setOpen(bool op) {
     open = op;
@@ -128,6 +143,8 @@ void Edge::setOpen(bool op) {
 bool Edge::getOpen() {
     return open;
 }
+
+
 
 /*************************** Graph Functions **************************/
 
@@ -223,7 +240,7 @@ void Graph::unweightedShortestPath(const int &orig) {
         Vertex *v = q.front();
         q.pop();
         for (Edge edge : v->getAdj()) {
-            Vertex *w = edge.dest;
+            Vertex *w = edge.destinationVertex;
             if (w->dist == INF) {
                 q.push(w);
                 w->dist = v->dist + 1;
@@ -246,7 +263,7 @@ void Graph::dijkstraShortestPath(const int &origin) {
     while (!q.empty()) {
         Vertex *v = q.extractMin();
         for (Edge edge : v->getAdj()) {
-            Vertex *w = edge.dest;
+            Vertex *w = edge.destinationVertex;
             if (w->dist > v->dist + edge.weightDistance) {
                 w->dist = v->dist + edge.weightDistance;
                 w->path = v;
@@ -270,7 +287,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
     for (int i = 1; i < vertexSet.size(); i++) {
         for (Vertex *v : vertexSet) {
             for (Edge edge : v->adj) {
-                Vertex *w = edge.dest;
+                Vertex *w = edge.destinationVertex;
                 if (w->dist > v->dist + edge.weightDistance) {
                     w->dist = v->dist + edge.weightDistance;
                     w->path = v;
@@ -280,7 +297,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
     }
     for (Vertex *v : vertexSet) {
         for (Edge edge : v->adj) {
-            if (v->dist + edge.weightDistance < (edge.dest)->dist) {
+            if (v->dist + edge.weightDistance < (edge.destinationVertex)->dist) {
                 cerr << "there are cycles of negative weight\n";
                 return;
             }
@@ -307,6 +324,11 @@ void Graph::setCentralVertex(int position) {
 void Graph::addCatchPoint(int position) {
     catchPoints.push_back(vertexSet.at(position));
     vertexSet.at(position)->setCatchPoint(true);
+}
+
+void Graph::setDestinationVertex(int position) {
+    destinationVertex = vertexSet.at(position);
+    vertexSet.at(position)->setDestination(true);
 }
 
 

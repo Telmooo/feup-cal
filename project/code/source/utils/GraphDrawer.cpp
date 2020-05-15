@@ -20,9 +20,11 @@ void GraphDrawer::draw() {
         if(vert->getCentral()) {
             gv->setVertexColor(vert->getId(), "green");
         }
-
-        if(vert->getCatchPoint()) {
+        else if(vert->getCatchPoint()) {
             gv->setVertexColor(vert->getId(), "red");
+        }
+        else if(vert->getDestination()) {
+            gv->setVertexColor(vert->getId(), "blue");
         }
 
         gv->addNode(vert->getId(), (int) (xPercent * 1920), (int) (yPercent * 1080));
@@ -35,7 +37,7 @@ void GraphDrawer::draw() {
 
         for(int j = 0; j < adj.size(); j++) {
             Edge currentEdge = adj.at(j);
-
+            cout << currentEdge.getWeightDistance() << endl;
             gv->addEdge(currentEdge.getId(), vert->getId(), currentEdge.getDest()->getId(), EdgeType::UNDIRECTED);
         }
     }

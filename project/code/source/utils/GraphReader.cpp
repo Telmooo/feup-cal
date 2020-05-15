@@ -36,8 +36,6 @@ void GraphReader::readEdges() {
     getline(edges, line);
     int MAX = stoi(line);
 
-    int WEIGHT_CHANGE_THIS = 1;
-
     for(int i = 0; i < MAX; i++) {
         int idn1, idn2;
         char garbage;
@@ -49,18 +47,58 @@ void GraphReader::readEdges() {
 
         g->addEdge(i, idn1, idn2);
     }
-
     edges.close();
 }
 
+void GraphReader::readTags() {
+    std::ifstream tags("../resources/graphs/" + folder + "/tag.txt");
+    std::string line;
+
+    getline(tags, line);
+    int MAX = stoi(line);
+
+    for(int i = 0; i < MAX; i++) {
+        getline(tags, line);
+        if(line == "Central") {
+            getline(tags, line);
+            int MAX_TAG = stoi(line);
+            for(int j = 0; j < MAX_TAG; j++) {
+                getline(tags, line);
+                g->setCentralVertex(stoi(line));
+            }
+        }
+        else if(line == "Catch") {
+            getline(tags, line);
+            int MAX_TAG = stoi(line);
+            for(int j = 0; j < MAX_TAG; j++) {
+                getline(tags, line);
+                g->addCatchPoint(stoi(line));
+            }
+        }
+        else if(line == "Destination") {
+            getline(tags, line);
+            int MAX_TAG = stoi(line);
+            for(int j = 0; j < MAX_TAG; j++) {
+                getline(tags, line);
+                g->setDestinationVertex(stoi(line));
+            }
+        }
+    }
+
+    tags.close();
+}
+
 void GraphReader::loadElements() {
-    int centralPoint = rand() % g->getNumVertex();
-    int catchPoint;
+    for(Vertex * current : g->getVertexSet()) {
+        // Densidade populacional
+        // Average Speed
+        // Reachable
+        // Draw Edges
 
-    do {
-        catchPoint = rand() % g->getNumVertex();
-    } while(catchPoint == centralPoint);
-
-    g->setCentralVertex(centralPoint);
-    g->addCatchPoint(catchPoint);
+        for(Edge adj : current->getAdj()) {
+            // Weight Time
+            // Weight Distance
+            adj.setWeight(1, 1);
+        }
+    }
 }

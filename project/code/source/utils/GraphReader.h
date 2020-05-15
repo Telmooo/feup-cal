@@ -15,6 +15,8 @@ public:
 
     void readEdges();
 
+    void readTags();
+
     void loadElements();
 };
 
