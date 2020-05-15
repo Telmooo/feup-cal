@@ -44,6 +44,9 @@ class Vertex {
 
 public:
     Vertex(int in, int x, int y);
+
+    virtual ~Vertex();
+
     int getId() const;
     int getX() const;
     int getY() const;
@@ -143,6 +146,9 @@ private:
     double minY;
 
 public:
+
+    virtual ~Graph();
+
     Vertex *findVertex(const int &in) const;
 
     bool addVertex(const int &in, int x, int y);
@@ -155,6 +161,8 @@ public:
     void setCentralVertex(int position);
     void addCatchPoint(int position);
     void setDestinationVertex(int position);
+
+    Graph transpose();
 
     // Fp05 - single source
     void unweightedShortestPath(const int &s);

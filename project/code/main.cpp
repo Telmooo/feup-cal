@@ -13,6 +13,7 @@ void drawGraph(Graph * graph);
 int main(int argc, char *argv[]) {
     if(argc != 2) {
         cout << "Vai a outro lado" << endl;
+        return -1;
     }
 
     string fileName = argv[1];

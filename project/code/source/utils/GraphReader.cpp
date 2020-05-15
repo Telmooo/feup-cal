@@ -52,6 +52,11 @@ void GraphReader::readEdges() {
 
 void GraphReader::readTags() {
     std::ifstream tags("../resources/graphs/" + folder + "/tag.txt");
+
+    if (!tags.is_open()) {
+        return;
+    }
+
     std::string line;
 
     getline(tags, line);

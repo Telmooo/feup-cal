@@ -104,6 +104,12 @@ bool Vertex::getDestination() {
     return destination;
 }
 
+Vertex::~Vertex() {
+    for (Edge *e : adj) {
+        delete e;
+    }
+}
+
 /*************************** Edge Functions **************************/
 
 Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {}
@@ -224,6 +230,14 @@ double Graph::getMinY() {
     return minY;
 }
 
+/** -------------------------------------------------------------------------------------------------------------------/
+/                                                  Transpose                                                           /
+/---------------------------------------------------------------------------------------------------------------------*/
+
+Graph Graph::transpose() {
+    return *this;
+}
+
 /**************** Single Source Shortest Path algorithms ************/
 
 void Graph::unweightedShortestPath(const int &orig) {
@@ -329,6 +343,12 @@ void Graph::addCatchPoint(int position) {
 void Graph::setDestinationVertex(int position) {
     destinationVertex = vertexSet.at(position);
     vertexSet.at(position)->setDestination(true);
+}
+
+Graph::~Graph() {
+    for (Vertex *v : vertexSet) {
+        delete v;
+    }
 }
 
 
