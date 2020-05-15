@@ -33,12 +33,12 @@ void GraphDrawer::draw() {
     // Draw Edges
     for(int i = 0; i < vertexVec.size(); i++) {
         Vertex *vert = vertexVec.at(i);
-        vector<Edge> adj = vert->getAdj();
+        vector<Edge *> adj = vert->getAdj();
 
         for(int j = 0; j < adj.size(); j++) {
-            Edge currentEdge = adj.at(j);
-            cout << currentEdge.getWeightDistance() << endl;
-            gv->addEdge(currentEdge.getId(), vert->getId(), currentEdge.getDest()->getId(), EdgeType::UNDIRECTED);
+            Edge * currentEdge = adj.at(j);
+            cout << currentEdge->getWeightDistance() << endl;
+            gv->addEdge(currentEdge->getId(), vert->getId(), currentEdge->getDest()->getId(), EdgeType::UNDIRECTED);
         }
     }
 }

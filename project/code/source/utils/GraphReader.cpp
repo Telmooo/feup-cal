@@ -95,10 +95,10 @@ void GraphReader::loadElements() {
         // Reachable
         // Draw Edges
 
-        for(Edge adj : current->getAdj()) {
+        for(Edge * adj : current->getAdj()) {
             // Weight Time
             // Weight Distance
-            adj.setWeight(1, 1);
+            adj->setWeight(1, 1);
         }
     }
 }

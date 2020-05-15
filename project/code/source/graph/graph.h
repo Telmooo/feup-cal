@@ -22,7 +22,7 @@ class Graph;
 class Vertex {
     int id;						// content of the vertex
 
-    vector<Edge> adj;		    // outgoing edges
+    vector<Edge *> adj;		    // outgoing edges
 
     double dist = 0;
     Vertex *path = NULL;
@@ -62,7 +62,7 @@ public:
 
     void setInfo(int info);
 
-    void setAdj(const vector<Edge> &adj);
+    void setAdj(const vector<Edge *> &adj);
 
     void setPath(Vertex *path);
 
@@ -72,7 +72,7 @@ public:
 
     void setProcessing(bool processing);
 
-    const vector<Edge> &getAdj() const;
+    const vector<Edge *> &getAdj() const;
 
     int getQueueIndex() const;
 

@@ -9,7 +9,7 @@ Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {}
  * with a given destination vertex (d) and edge weight (w).
  */
 void Vertex::addEdge(int edgeId, Vertex *d) {
-    adj.push_back(Edge(edgeId, d));
+    adj.push_back(new Edge(edgeId, d));
 }
 
 
@@ -52,7 +52,7 @@ void Vertex::setInfo(int info) {
     Vertex::id = info;
 }
 
-void Vertex::setAdj(const vector<Edge> &adj) {
+void Vertex::setAdj(const vector<Edge *> &adj) {
     Vertex::adj = adj;
 }
 
@@ -72,7 +72,7 @@ void Vertex::setProcessing(bool processing) {
     Vertex::processing = processing;
 }
 
-const vector<Edge> &Vertex::getAdj() const {
+const vector<Edge *> &Vertex::getAdj() const {
     return adj;
 }
 
@@ -239,8 +239,8 @@ void Graph::unweightedShortestPath(const int &orig) {
     while (!q.empty()) {
         Vertex *v = q.front();
         q.pop();
-        for (Edge edge : v->getAdj()) {
-            Vertex *w = edge.destinationVertex;
+        for (Edge * edge : v->getAdj()) {
+            Vertex *w = edge->destinationVertex;
             if (w->dist == INF) {
                 q.push(w);
                 w->dist = v->dist + 1;
@@ -262,10 +262,10 @@ void Graph::dijkstraShortestPath(const int &origin) {
 
     while (!q.empty()) {
         Vertex *v = q.extractMin();
-        for (Edge edge : v->getAdj()) {
-            Vertex *w = edge.destinationVertex;
-            if (w->dist > v->dist + edge.weightDistance) {
-                w->dist = v->dist + edge.weightDistance;
+        for (Edge * edge : v->getAdj()) {
+            Vertex *w = edge->destinationVertex;
+            if (w->dist > v->dist + edge->weightDistance) {
+                w->dist = v->dist + edge->weightDistance;
                 w->path = v;
                 if (w->getQueueIndex() == 0)
                     q.insert(w);
@@ -286,18 +286,18 @@ void Graph::bellmanFordShortestPath(const int &orig) {
     start->dist = 0;
     for (int i = 1; i < vertexSet.size(); i++) {
         for (Vertex *v : vertexSet) {
-            for (Edge edge : v->adj) {
-                Vertex *w = edge.destinationVertex;
-                if (w->dist > v->dist + edge.weightDistance) {
-                    w->dist = v->dist + edge.weightDistance;
+            for (Edge * edge : v->adj) {
+                Vertex *w = edge->destinationVertex;
+                if (w->dist > v->dist + edge->weightDistance) {
+                    w->dist = v->dist + edge->weightDistance;
                     w->path = v;
                 }
             }
         }
     }
     for (Vertex *v : vertexSet) {
-        for (Edge edge : v->adj) {
-            if (v->dist + edge.weightDistance < (edge.destinationVertex)->dist) {
+        for (Edge * edge : v->adj) {
+            if (v->dist + edge->weightDistance < (edge->destinationVertex)->dist) {
                 cerr << "there are cycles of negative weight\n";
                 return;
             }
