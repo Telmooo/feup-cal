@@ -15,6 +15,7 @@ class Vertex {
     vector<Edge *> adj;		    // Outgoing Edges
 
     double dist = 0;
+    double gCost = 0;
     Vertex *path = NULL;
 
     bool central = false;       // Central de Waggons
@@ -27,6 +28,8 @@ class Vertex {
 
     int x;                      // x position
     int y;                      // y position
+
+    bool open = false;
 
     bool visited = false;		// auxiliary field
     bool processing = false;	// auxiliary field
@@ -53,6 +56,10 @@ public:
 
     void setDist(double dist);
 
+    double getGCost() const;
+
+    void setGCost(double gCost);
+
     void setCentral(bool ctr);
 
     void setInfo(int info);
@@ -62,6 +69,10 @@ public:
     void setPath(Vertex *path);
 
     void setQueueIndex(int queueIndex);
+
+    bool isOpen() const;
+
+    void setOpen(bool open);
 
     void setVisited(bool visited);
 

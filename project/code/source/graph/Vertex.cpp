@@ -51,6 +51,14 @@ bool Vertex::getCentral() {
     return central;
 }
 
+double Vertex::getGCost() const {
+    return gCost;
+}
+
+void Vertex::setGCost(double gCost) {
+    this->gCost = gCost;
+}
+
 void Vertex::setCentral(bool ctr) {
     central = ctr;
 }
@@ -70,12 +78,20 @@ void Vertex::setQueueIndex(int queueIndex) {
     Vertex::queueIndex = queueIndex;
 }
 
+bool Vertex::isOpen() const {
+    return open;
+}
+
+void Vertex::setOpen(bool open) {
+    this->open = open;
+}
+
 void Vertex::setVisited(bool visited) {
-    Vertex::visited = visited;
+    this->visited = visited;
 }
 
 void Vertex::setProcessing(bool processing) {
-    Vertex::processing = processing;
+    this->processing = processing;
 }
 
 const vector<Edge *> &Vertex::getAdj() const {

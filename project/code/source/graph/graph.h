@@ -6,7 +6,6 @@
 #include <list>
 #include <limits>
 #include <cmath>
-#include <afxres.h>
 #include <iostream>
 #include "../utils/MutablePriorityQueue.h"
 
@@ -81,6 +80,11 @@ public:
     void unweightedShortestPath(const int &s);
     void dijkstraShortestPath(const int &s);
     void bellmanFordShortestPath(const int &s);
+
+    // --- A*
+    double heuristic(Vertex *v, Vertex *d);
+    Vertex* initAstar(int origin);
+    void AStar(int from, int to);
 
     // -- All pairs
     void floydWarshallShortestPath();

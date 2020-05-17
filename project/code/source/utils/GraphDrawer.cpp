@@ -26,7 +26,7 @@ void GraphDrawer::drawGraph() {
         else if(vert->getDestination()) {
             gv->setVertexColor(vert->getId(), "blue");
         }
-        else if (!vert->isVisited()) {
+        else if (!vert->isOpen()) {
             gv->setVertexColor(vert->getId(), "red");
         } else {
             gv->setVertexColor(vert->getId(), "green");

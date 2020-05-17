@@ -121,6 +121,7 @@ bool Graph::addEdge(int edgeId, const int &sourc, const int &dest) {
 void Graph::resetConnections() {
     for (Vertex *obj : vertexSet) {
         obj->setVisited(false);
+        obj->setOpen(false);
         for (Edge *edge : obj->getAdj()) {
             edge->setOpen(false);
         }
@@ -205,14 +206,14 @@ void Graph::kosarajuSCC(int origin) {
 
     for (int id : scc){
         Vertex *v  = findVertex(id);
-        v->setVisited(true);
+        v->setOpen(true);
     }
 
     for (Vertex *v : vertexSet) {
-        if (v->isVisited()) {
+        if (v->isOpen()) {
             for (Edge *e : v->getAdj()) {
                 Vertex *dest = e->getDest();
-                if (dest->isVisited()) e->setOpen(true);
+                if (dest->isOpen()) e->setOpen(true);
             }
         }
     }
@@ -322,6 +323,69 @@ vector<Vertex *> Graph::getPathVertexTo(int dest) const {
     reverse(res.begin(), res.end());
     return res;
 }
+
+/* -------------------------------------------------------------------------
+                                    A*
+/-------------------------------------------------------------------------*/
+double Graph::heuristic(Vertex *v, Vertex *d) { // euclidean distance for now
+    return sqrt(pow(v->getX() - d->getX(), 2) + pow(v->getY() - d->getY(), 2));
+}
+
+Vertex* Graph::initAstar(int origin) {
+    for (Vertex *v : vertexSet) {
+        v->setVisited(false);
+        v->setDist(INF); // dist is fCost of A*
+        v->setGCost(INF);
+        v->path = NULL;
+    }
+
+    Vertex *start = findVertex(origin);
+    start->setDist(0);
+    start->setGCost(0);
+    return start;
+}
+
+void Graph::AStar(int from, int to) {
+    Vertex* start = initAstar(from);
+    Vertex* dest = findVertex(to);
+
+    start->setDist(heuristic(start, dest));
+
+    MutablePriorityQueue<Vertex> q;
+    q.insert(start);
+
+    while (!q.empty()) {
+        Vertex *v = q.extractMin();
+        v->setVisited(true);
+
+        if (v->getId() == dest->getId()) {
+            break;
+        }
+
+
+        for (Edge *e : v->getAdj()) {
+            Vertex *neighbour = e->getDest();
+
+            if (neighbour->isVisited()) continue;
+
+            double tempCost = v->getGCost() + e->getWeightDistance();
+
+            if (neighbour->getGCost() > tempCost) {
+                neighbour->setPath(v);
+                neighbour->setGCost(tempCost);
+                neighbour->setDist(neighbour->getGCost() + heuristic(neighbour, dest));
+                if (neighbour->getQueueIndex() == 0)
+                    q.insert(neighbour);
+                else
+                    q.decreaseKey(neighbour);
+            }
+        }
+    }
+    while (!q.empty()) {
+        q.extractMin();
+    }
+}
+
 
 /**************** All Pairs Shortest Path  ***************/
 /*
