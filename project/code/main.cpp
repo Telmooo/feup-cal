@@ -5,10 +5,11 @@
 #include "graphviewer.h"
 #include "source/utils/GraphReader.h"
 #include "source/utils/GraphDrawer.h"
+#include "source/Service/Waggon.h"
 
 void readGraph(Graph * graph, string fileName);
 
-void applyAlgorithmGraph(Graph * graph, GraphDrawer draw, string algorithm);
+void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, string algorithm);
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
@@ -19,28 +20,29 @@ int main(int argc, char *argv[]) {
     }
 
     string fileName = argv[1];
+    string iteration = "one";
     string algorithm = "dijkstra";
 
+    // Init Screen
     GraphViewer * gView = new GraphViewer(1920,1080, false);
     gView->createWindow(1920,1080);
 
+    // Init Graph
     Graph graph;
-    // Read map information from files
     readGraph(&graph, fileName);
-    // Pre Process map
+
+    // PreProcess and Draw
     graph.preProcess();
 
-    // Draw
     GraphDrawer drawer(gView, &graph);
-
     drawer.drawGraph();
     gView->rearrange();
 
-    // Algorithm
-    applyAlgorithmGraph(&graph, drawer, algorithm);
+    // Apply Algorithm
+    if(iteration == "one")
+        algorithmFirstIter(&graph, gView, drawer, algorithm);
 
     getchar();
-
     return 0;
 }
 
@@ -52,22 +54,45 @@ void readGraph(Graph * graph, string fileName) {
     gReader.loadElements();
 }
 
-void applyAlgorithmGraph(Graph * graph, GraphDrawer draw, string algorithm) {
-    // first iteration - entre dois pontos
+void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, string algorithm) {
+    Waggon unique = Waggon(1);
+
     if(algorithm == "dijkstra") {
+        if(graph->getPickUpPoint().empty()) {
+            cout << "Map without pickUp Points" << endl;
+            return;
+        }
+        if (graph->getCentralVertex() == NULL) {
+            cout << "Map without Central Vertex" << endl;
+            return;
+        }
         int centralVertexID = graph->getCentralVertex()->getId();
-        int pickUpID = graph->getPickUpPoint().at(0)->getId(); // Check if there is any pick up point.
-                                                                    // Should be only one cuz it is first iteration
+
+        if (graph->getDestinationVertex() == NULL) {
+            cout << "Map without destination" << endl;
+            return;
+        }
         int destinationID = graph->getDestinationVertex()->getId();
 
-        graph->dijkstraShortestPath(centralVertexID);
-        draw.drawPath(graph->getPathEdgeTo(pickUpID));
+        for(Vertex * pickUP : graph->getPickUpPoint()) {
+            cout << "Press any key to next pick up one thief" << endl;
+            getchar();
+            cin.ignore(1000, '\n');
 
-        graph->dijkstraShortestPath(pickUpID);
-        draw.drawPath(graph->getPathEdgeTo(destinationID));
+            draw.cleanLastWaggonPath();
 
-        graph->dijkstraShortestPath(destinationID);
-        draw.drawPath(graph->getPathEdgeTo(centralVertexID));
+            int pickUpID = pickUP->getId();
+            graph->dijkstraShortestPath(centralVertexID);
+            draw.drawPath(graph->getPathVertexTo(pickUpID));
+
+            graph->dijkstraShortestPath(pickUpID);
+            draw.drawPath(graph->getPathVertexTo(destinationID));
+
+            graph->dijkstraShortestPath(destinationID);
+            draw.drawPath(graph->getPathVertexTo(centralVertexID));
+
+            gView->rearrange();
+        }
     }
     else if(algorithm == "a-star") {
 

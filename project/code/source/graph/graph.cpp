@@ -312,35 +312,16 @@ void Graph::bellmanFordShortestPath(const int &orig) {
 }
 
 
-vector<Vertex> Graph::getPathVertexTo(int dest) const {
-    vector<Vertex> res;
+vector<Vertex *> Graph::getPathVertexTo(int dest) const {
+    vector<Vertex * > res;
     Vertex * v = findVertex(dest);
     if (v == nullptr || v->dist == INF)
         return res;
     for ( ; v != nullptr; v = v->path)
-        res.push_back(*v);
+        res.push_back(v);
     reverse(res.begin(), res.end());
     return res;
 }
-
-vector<Edge> Graph::getPathEdgeTo(int dest) const {
-    vector<Edge> res;
-    Vertex * v = findVertex(dest);
-    if (v == nullptr || v->dist == INF)
-        return res;
-    while(v->path != nullptr) {
-        for(Edge * e : v->getAdj()) {
-            if(e->getDest() == v->path) {
-                v = v->path;
-                res.push_back(*e);
-            }
-        }
-    }
-    reverse(res.begin(), res.end());
-    return res;
-}
-
-
 
 /**************** All Pairs Shortest Path  ***************/
 /*

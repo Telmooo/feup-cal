@@ -58,10 +58,10 @@ public:
     Vertex * getCentralVertex();
     vector<Vertex *> getPickUpPoint();
     Vertex * getDestinationVertex();
+
     // -- Depth First Search
     vector<int> dfsFromOrigin(int origin);
     void dfsVisit(Vertex *v, vector<int> & res);
-
 
     /* PreProcessGraph */
     void preProcess();
@@ -73,11 +73,9 @@ public:
     // --- Strongly Connected Components
     void kosarajuSCC(int origin);
 
-
     /* Shortest Path ALgorithms */
     // --- Get Path From Dest
-    vector<Vertex> getPathVertexTo(int dest) const;
-    vector<Edge> getPathEdgeTo(int dest) const;
+    vector<Vertex *> getPathVertexTo(int dest) const;
 
     // --- Single source
     void unweightedShortestPath(const int &s);

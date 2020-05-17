@@ -53,11 +53,22 @@ void GraphDrawer::drawGraph() {
     }
 }
 
-void GraphDrawer::drawPath(vector<Edge> path) {
-    for(int i = 0; i < path.size(); i++) {
-        for(Edge e : path) {
-            gv->setEdgeColor(e.getId(), "black");
+void GraphDrawer::drawPath(vector<Vertex *> path) {
+    for(int i = 0; i < path.size() - 1; i++) {
+        for(Edge * e : path.at(i)->getAdj()) {
+            if(e->getDest()->getId() == path.at(i+1)->getId()) {
+                edgesLastWaggon.push_back(*e);
+                gv->setEdgeColor(e->getId(), "black");
+            }
+
         }
+    }
+}
+
+void GraphDrawer::cleanLastWaggonPath() {
+    for(Edge e : edgesLastWaggon) {
+        edgesLastWaggon.push_back(e);
+        gv->setEdgeColor(e.getId(), "green");
     }
 }
 
