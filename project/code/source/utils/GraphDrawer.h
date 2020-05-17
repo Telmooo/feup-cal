@@ -17,7 +17,9 @@ private:
 public:
     GraphDrawer(GraphViewer * gv, Graph * g);
 
-    void draw();
+    void drawGraph();
+
+    void drawPath(vector<Edge> path);
 };
 
 

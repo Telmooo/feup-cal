@@ -6,7 +6,7 @@
 
 GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {}
 
-void GraphDrawer::draw() {
+void GraphDrawer::drawGraph() {
     // Draw Vertex
     double yPercent, xPercent;
 
@@ -49,6 +49,14 @@ void GraphDrawer::draw() {
             }
 
             gv->addEdge(currentEdge->getId(), vert->getId(), currentEdge->getDest()->getId(), EdgeType::DIRECTED);
+        }
+    }
+}
+
+void GraphDrawer::drawPath(vector<Edge> path) {
+    for(int i = 0; i < path.size(); i++) {
+        for(Edge e : path) {
+            gv->setEdgeColor(e.getId(), "black");
         }
     }
 }

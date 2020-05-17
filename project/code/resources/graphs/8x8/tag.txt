@@ -2,7 +2,7 @@
 Central
 1
 4
-Catch
+PickUp
 1
 10
 Destination

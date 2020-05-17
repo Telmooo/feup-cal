@@ -72,12 +72,12 @@ void GraphReader::readTags() {
                 g->setCentralVertex(stoi(line));
             }
         }
-        else if(line == "Catch") {
+        else if(line == "PickUp") {
             getline(tags, line);
             int MAX_TAG = stoi(line);
             for(int j = 0; j < MAX_TAG; j++) {
                 getline(tags, line);
-                g->addCatchPoint(stoi(line));
+                g->addPickUpPoint(stoi(line));
             }
         }
         else if(line == "Destination") {

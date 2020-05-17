@@ -1,173 +1,15 @@
 #include "Graph.h"
 
 #include <unordered_map>
-#include <exception>
 #include <algorithm>
 
-/*************************** Vertex Functions **************************/
-
-Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {
-
-}
-
-/*
- * Auxiliary function to add an outgoing edge to a vertex (this),
- * with a given destination vertex (d) and edge weight (w).
- */
-void Vertex::addEdge(int edgeId, Vertex *d) {
-    adj.push_back(new Edge(edgeId, d));
-}
-
-
-bool Vertex::operator<(Vertex & vertex) const {
-    return this->dist < vertex.dist;
-}
-
-int Vertex::getId() const {
-    return this->id;
-}
-
-int Vertex::getX() const {
-    return this->x;
-}
-
-int Vertex::getY() const {
-    return this->y;
-}
-
-double Vertex::getDist() const {
-    return this->dist;
-}
-
-void Vertex::setDist(double dist) {
-    Vertex::dist = dist;
-}
-
-Vertex *Vertex::getPath() const {
-    return this->path;
-}
-
-bool Vertex::getCentral() {
-    return central;
-}
-
-void Vertex::setCentral(bool ctr) {
-    central = ctr;
-}
-void Vertex::setInfo(int info) {
-    Vertex::id = info;
-}
-
-void Vertex::setAdj(const vector<Edge *> &adj) {
-    Vertex::adj = adj;
-}
-
-void Vertex::setPath(Vertex *path) {
-    Vertex::path = path;
-}
-
-void Vertex::setQueueIndex(int queueIndex) {
-    Vertex::queueIndex = queueIndex;
-}
-
-void Vertex::setVisited(bool visited) {
-    Vertex::visited = visited;
-}
-
-void Vertex::setProcessing(bool processing) {
-    Vertex::processing = processing;
-}
-
-const vector<Edge *> &Vertex::getAdj() const {
-    return adj;
-}
-
-int Vertex::getQueueIndex() const {
-    return queueIndex;
-}
-
-bool Vertex::isVisited() const {
-    return visited;
-}
-
-bool Vertex::isProcessing() const {
-    return processing;
-}
-
-void Vertex::setCatchPoint(bool b) {
-    catchPoint = b;
-}
-
-bool Vertex::getCatchPoint() {
-    return catchPoint;
-}
-
-void Vertex::setDestination(bool b){
-    destination = b;
-}
-
-bool Vertex::getDestination() {
-    return destination;
-}
-
-Vertex::~Vertex() {
-    for (Edge *e : adj) {
+Graph::~Graph() {
+    for (Vertex *v : vertexSet) {
+        delete v;
+    }
+    for (Edge *e : edgeSet) {
         delete e;
     }
-}
-
-/*************************** Edge Functions **************************/
-
-Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {
-    open = false;
-}
-
-int Edge::getId() {
-    return id;
-}
-
-
-Vertex *Edge::getDest() const {
-    return destinationVertex;
-}
-
-void Edge::setDest(Vertex *dest) {
-    Edge::destinationVertex = dest;
-}
-
-void Edge::setWeight(double distance, double time) {
-    Edge::weightDistance = distance;
-    Edge::weightTime = time;
-}
-
-
-double Edge::getWeightDistance() const {
-    return weightDistance;
-}
-
-double Edge::getWeightTime() const {
-    return weightTime;
-}
-
-
-void Edge::setOpen(bool op) {
-    open = op;
-}
-
-bool Edge::getOpen() {
-    return open;
-}
-
-
-
-/*************************** Graph Functions **************************/
-
-int Graph::getNumVertex() const {
-    return vertexSet.size();
-}
-
-vector<Vertex *> Graph::getVertexSet() const {
-    return vertexSet;
 }
 
 /*
@@ -180,6 +22,57 @@ Vertex * Graph::findVertex(const int &in) const {
     return NULL;
 }
 
+/* -------------------------------------------------------------------------
+            Edges and Vertex setters and getters
+/-------------------------------------------------------------------------*/
+
+int Graph::getNumEdges() const {
+    return edgeSet.size();
+}
+
+vector<Edge *> Graph::getEdgeSet() const {
+    return edgeSet;
+}
+
+int Graph::getNumVertex() const {
+    return vertexSet.size();
+}
+
+vector<Vertex *> Graph::getVertexSet() const {
+    return vertexSet;
+}
+
+/* -------------------------------------------------------------------------
+            Central, PickUp and Destination setters and getters
+/-------------------------------------------------------------------------*/
+
+void Graph::setCentralVertex(int position) {
+    centralVertex = vertexSet.at(position);
+    vertexSet.at(position)->setCentral(true);
+}
+
+void Graph::addPickUpPoint(int position) {
+    pickUpPoints.push_back(vertexSet.at(position));
+    vertexSet.at(position)->setCatchPoint(true);
+}
+
+void Graph::setDestinationVertex(int position) {
+    destinationVertex = vertexSet.at(position);
+    vertexSet.at(position)->setDestination(true);
+}
+
+Vertex * Graph::getCentralVertex() {
+    return centralVertex;
+}
+
+vector<Vertex *> Graph::getPickUpPoint() {
+    return pickUpPoints;
+}
+
+Vertex *Graph::getDestinationVertex() {
+    return destinationVertex;
+}
+
 /*
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
@@ -187,6 +80,7 @@ Vertex * Graph::findVertex(const int &in) const {
 bool Graph::addVertex(const int &in, int x, int y) {
     if ( findVertex(in) != NULL)
         return false;
+
     Vertex* add = new Vertex(in, x, y);
     if (vertexSet.empty()) {
         this->minY = add->getY();
@@ -218,24 +112,10 @@ bool Graph::addEdge(int edgeId, const int &sourc, const int &dest) {
     auto v2 = findVertex(dest);
     if (v1 == NULL || v2 == NULL)
         return false;
-    v1->addEdge(edgeId,v2);
+    Edge * e = new Edge(edgeId, v2);
+    edgeSet.push_back(e);
+    v1->addEdge(e);
     return true;
-}
-
-double Graph::getMaxX() {
-    return maxX;
-}
-
-double Graph::getMinX() {
-    return minX;
-}
-
-double Graph::getMaxY() {
-    return maxY;
-}
-
-double Graph::getMinY() {
-    return minY;
 }
 
 void Graph::resetConnections() {
@@ -295,7 +175,8 @@ Graph Graph::transpose() {
         Vertex *transposedV = vertexMap.at(v);
         for (Edge *e : v->adj) {
             Vertex *transposedDest = vertexMap.at(e->getDest());
-            transposedDest->addEdge(e->getId(), transposedV);
+            Edge * newEdge = new Edge(e->getId(), transposedV);
+            transposedDest->addEdge(newEdge);
         }
     }
 
@@ -379,6 +260,7 @@ void Graph::dijkstraShortestPath(const int &origin) {
         v->dist = INF;
         v->path = NULL;
     }
+
     Vertex *start = findVertex(origin);
     start->dist = 0;
     MutablePriorityQueue<Vertex> q;
@@ -430,36 +312,34 @@ void Graph::bellmanFordShortestPath(const int &orig) {
 }
 
 
-vector<int> Graph::getPathTo(const int &dest) const{
-    vector<int> res;
-    Vertex *v = findVertex(dest);
-    while (v != NULL) {
-        res.insert(res.begin(), v->id);
-        v = v->path;
-    }
+vector<Vertex> Graph::getPathVertexTo(int dest) const {
+    vector<Vertex> res;
+    Vertex * v = findVertex(dest);
+    if (v == nullptr || v->dist == INF)
+        return res;
+    for ( ; v != nullptr; v = v->path)
+        res.push_back(*v);
+    reverse(res.begin(), res.end());
     return res;
 }
 
-void Graph::setCentralVertex(int position) {
-    centralVertex = vertexSet.at(position);
-    vertexSet.at(position)->setCentral(true);
-}
-
-void Graph::addCatchPoint(int position) {
-    catchPoints.push_back(vertexSet.at(position));
-    vertexSet.at(position)->setCatchPoint(true);
-}
-
-void Graph::setDestinationVertex(int position) {
-    destinationVertex = vertexSet.at(position);
-    vertexSet.at(position)->setDestination(true);
-}
-
-Graph::~Graph() {
-    for (Vertex *v : vertexSet) {
-        delete v;
+vector<Edge> Graph::getPathEdgeTo(int dest) const {
+    vector<Edge> res;
+    Vertex * v = findVertex(dest);
+    if (v == nullptr || v->dist == INF)
+        return res;
+    while(v->path != nullptr) {
+        for(Edge * e : v->getAdj()) {
+            if(e->getDest() == v->path) {
+                v = v->path;
+                res.push_back(*e);
+            }
+        }
     }
+    reverse(res.begin(), res.end());
+    return res;
 }
+
 
 
 /**************** All Pairs Shortest Path  ***************/
@@ -537,3 +417,19 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const {
     return res;
 }
  */
+
+double Graph::getMaxX() {
+    return maxX;
+}
+
+double Graph::getMinX() {
+    return minX;
+}
+
+double Graph::getMaxY() {
+    return maxY;
+}
+
+double Graph::getMinY() {
+    return minY;
+}
