@@ -22,14 +22,14 @@ class Edge;
 
 class Graph {
 private:
-    vector<Vertex *> vertexSet;    // vertex set
-    vector<Edge *> edgeSet;        // vertex set
+    vector<Vertex*> vertexSet;    // vertex set
+    vector<Edge*> edgeSet;        // vertex set
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;    // path matrix
 
-    Vertex * centralVertex = NULL;
-    vector<Vertex *> pickUpPoints;
-    Vertex * destinationVertex;
+    Vertex* centralVertex = NULL;
+    vector<Vertex*> pickUpPoints;
+    Vertex* destinationVertex;
 
     double maxX;
     double minX;
@@ -37,12 +37,14 @@ private:
     double minY;
 
 public:
+    Graph();
+
     virtual ~Graph();
 
     Vertex *findVertex(const int &in) const;
 
     bool addVertex(const int &in, int x, int y);
-    bool addEdge(int edgeId, const int &sourc, const int &dest);
+    bool addEdge(int edgeId, const int &source, const int &dest);
 
     vector<Vertex *> getVertexSet() const;
     int getNumVertex() const;
@@ -69,6 +71,8 @@ public:
     // --- Transpose Graph
     Graph transpose();
 
+    void clearAuxiliary();
+
     // --- Strongly Connected Components
     void kosarajuSCC(int origin);
 
@@ -79,6 +83,7 @@ public:
     // --- Single source
     void unweightedShortestPath(const int &s);
     void dijkstraShortestPath(const int &s);
+    void dijkstraShortestPath(int origin, int dest);
     void bellmanFordShortestPath(const int &s);
 
     // --- A*

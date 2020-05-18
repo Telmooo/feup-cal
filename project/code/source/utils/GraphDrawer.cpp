@@ -14,25 +14,25 @@ void GraphDrawer::drawGraph() {
     for(int i = 0; i < vertexVec.size(); i++) {
         Vertex *vert = vertexVec.at(i);
 
-        yPercent = 1.0 - ((vert->getY()- g->getMinY())/(g->getMaxY() - g->getMinY()) * 0.9 + 0.05);
-        xPercent = (vert->getX() - g->getMinX())/(g->getMaxX() - g->getMinX()) * 0.9 + 0.05;
+        yPercent = 1.0 - ((vert->getPosition().getY() - g->getMinY())/(g->getMaxY() - g->getMinY()) * 0.9 + 0.05);
+        xPercent = (vert->getPosition().getX() - g->getMinX())/(g->getMaxX() - g->getMinX()) * 0.9 + 0.05;
 
-        if (vert->getCentral()) {
-            gv->setVertexColor(vert->getId(), "yellow");
+        if (vert->isCentral()) {
+            gv->setVertexColor(vert->getID(), "yellow");
         }
-        else if(vert->getCatchPoint()) {
-            gv->setVertexColor(vert->getId(), "pink");
+        else if(vert->isPickUp()) {
+            gv->setVertexColor(vert->getID(), "pink");
         }
-        else if(vert->getDestination()) {
-            gv->setVertexColor(vert->getId(), "blue");
+        else if(vert->isDestination()) {
+            gv->setVertexColor(vert->getID(), "blue");
         }
-        else if (!vert->isOpen()) {
-            gv->setVertexColor(vert->getId(), "red");
+        else if (!vert->isReachable()) {
+            gv->setVertexColor(vert->getID(), "red");
         } else {
-            gv->setVertexColor(vert->getId(), "green");
+            gv->setVertexColor(vert->getID(), "green");
         }
 
-        gv->addNode(vert->getId(), (int) (xPercent * 1920), (int) (yPercent * 1080));
+        gv->addNode(vert->getID(), (int) (xPercent * 1920), (int) (yPercent * 1080));
     }
 
     // Draw Edges
@@ -43,12 +43,12 @@ void GraphDrawer::drawGraph() {
         for(int j = 0; j < adj.size(); j++) {
             Edge * currentEdge = adj.at(j);
             if (currentEdge->getOpen()) {
-                gv->setEdgeColor(currentEdge->getId(), "green");
+                gv->setEdgeColor(currentEdge->getID(), "green");
             } else {
-                gv->setEdgeColor(currentEdge->getId(), "red");
+                gv->setEdgeColor(currentEdge->getID(), "red");
             }
 
-            gv->addEdge(currentEdge->getId(), vert->getId(), currentEdge->getDest()->getId(), EdgeType::DIRECTED);
+            gv->addEdge(currentEdge->getID(), vert->getID(), currentEdge->getDest()->getID(), EdgeType::DIRECTED);
         }
     }
 }
@@ -56,9 +56,9 @@ void GraphDrawer::drawGraph() {
 void GraphDrawer::drawPath(vector<Vertex *> path) {
     for(int i = 0; i < path.size() - 1; i++) {
         for(Edge * e : path.at(i)->getAdj()) {
-            if(e->getDest()->getId() == path.at(i+1)->getId()) {
+            if(e->getDest()->getID() == path.at(i+1)->getID()) {
                 edgesLastWaggon.push_back(*e);
-                gv->setEdgeColor(e->getId(), "black");
+                gv->setEdgeColor(e->getID(), "black");
             }
 
         }
@@ -68,7 +68,7 @@ void GraphDrawer::drawPath(vector<Vertex *> path) {
 void GraphDrawer::cleanLastWaggonPath() {
     for(Edge e : edgesLastWaggon) {
         edgesLastWaggon.push_back(e);
-        gv->setEdgeColor(e.getId(), "green");
+        gv->setEdgeColor(e.getID(), "green");
     }
 }
 

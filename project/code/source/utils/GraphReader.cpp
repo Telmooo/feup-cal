@@ -22,7 +22,7 @@ void GraphReader::readNodes() {
 
         ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
 
-        g->addVertex(idn, (int) x, (int) y);
+        g->addVertex(idn, x, y);
     }
 
     nodes.close();

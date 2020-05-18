@@ -9,26 +9,23 @@ class Vertex;
 
 class Edge {
     int id;                         // edge identifier
-    Vertex * destinationVertex;     // destination vertex
-    double weightDistance;          // edge weight distance
-    double weightTime;              // edge weight time
+    Vertex *destinationVertex;      // destination vertex
+    double weightDistance;          // edge weight - distance
+    double weightTime;              // edge weight - time
     bool open;                      // if the conection is open
 
 public:
     Edge(int id, Vertex *d);
 
-    int getId();
-
-    void setDest(Vertex *dest);
-    Vertex * getDest() const;
-
-    void setOpen(bool op);
-    bool getOpen();
-
-    void setWeight(double distance, double time);
-
+    int getID();
+    Vertex* getDest() const;
     double getWeightDistance() const;
     double getWeightTime() const;
+    bool getOpen();
+
+    void setDest(Vertex *dest);
+    void setWeight(double distance, double time);
+    void setOpen(bool open);
 
     friend class Vertex;
     friend class Graph;

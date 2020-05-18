@@ -2,25 +2,21 @@
 
 Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {
     open = false;
+    weightDistance = INF;
+    weightTime = INF;
 }
 
-int Edge::getId() {
+/* -------------------------------------------------------------------------
+                                GETTERS
+/-------------------------------------------------------------------------*/
+
+int Edge::getID() {
     return id;
 }
 
 Vertex *Edge::getDest() const {
     return destinationVertex;
 }
-
-void Edge::setDest(Vertex *dest) {
-    Edge::destinationVertex = dest;
-}
-
-void Edge::setWeight(double distance, double time) {
-    Edge::weightDistance = distance;
-    Edge::weightTime = time;
-}
-
 
 double Edge::getWeightDistance() const {
     return weightDistance;
@@ -30,11 +26,23 @@ double Edge::getWeightTime() const {
     return weightTime;
 }
 
-
-void Edge::setOpen(bool op) {
-    open = op;
-}
-
 bool Edge::getOpen() {
     return open;
+}
+
+/* -------------------------------------------------------------------------
+                                SETTERS
+/-------------------------------------------------------------------------*/
+
+void Edge::setDest(Vertex *dest) {
+    this->destinationVertex = dest;
+}
+
+void Edge::setWeight(double distance, double time) {
+    this->weightDistance = distance;
+    this->weightTime = time;
+}
+
+void Edge::setOpen(bool open) {
+    this->open = open;
 }

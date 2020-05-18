@@ -1,13 +1,17 @@
-//
-// Created by diogo on 17/05/2020.
-//
-
 #include "Vertex.h"
 
 /*************************** Vertex Functions **************************/
 
-Vertex::Vertex(int in, int x, int y): id(in), x(x), y(y) {
+Vertex::Vertex(int in, int x, int y) :
+    id(in), position(x, y), fCost(INF), gCost(INF),
+    path(NULL), central(false), pickUpPoint(false), destination(false),
+    popDensity(0.0), avgSpeed(0.0), reachable(false), visited(false),
+    processing(false), queueIndex(0) { }
 
+Vertex::~Vertex() {
+    for (Edge *e : adj) {
+        delete e;
+    }
 }
 
 /*
@@ -20,114 +24,65 @@ void Vertex::addEdge(Edge * e) {
 
 
 bool Vertex::operator<(Vertex & vertex) const {
-    return this->dist < vertex.dist;
+    return this->fCost < vertex.fCost;
 }
 
-int Vertex::getId() const {
-    return this->id;
-}
+/* -------------------------------------------------------------------------
+                                GETTERS
+/-------------------------------------------------------------------------*/
+int Vertex::getID() const { return id; }
 
-int Vertex::getX() const {
-    return this->x;
-}
+const Position& Vertex::getPosition() const { return position; }
 
-int Vertex::getY() const {
-    return this->y;
-}
+const std::vector<Edge*>& Vertex::getAdj() const { return adj; }
 
-double Vertex::getDist() const {
-    return this->dist;
-}
+double Vertex::getFCost() const { return fCost; }
 
-void Vertex::setDist(double dist) {
-    Vertex::dist = dist;
-}
+double Vertex::getGCost() const { return gCost; }
 
-Vertex *Vertex::getPath() const {
-    return this->path;
-}
+const Vertex* Vertex::getPath() const { return path; }
 
-bool Vertex::getCentral() {
-    return central;
-}
+bool Vertex::isCentral() const { return central; }
 
-double Vertex::getGCost() const {
-    return gCost;
-}
+bool Vertex::isPickUp() const { return pickUpPoint; }
 
-void Vertex::setGCost(double gCost) {
-    this->gCost = gCost;
-}
+bool Vertex::isDestination() const { return destination; }
 
-void Vertex::setCentral(bool ctr) {
-    central = ctr;
-}
-void Vertex::setInfo(int info) {
-    Vertex::id = info;
-}
+bool Vertex::isReachable() const { return reachable; }
 
-void Vertex::setAdj(const vector<Edge *> &adj) {
-    Vertex::adj = adj;
-}
+double Vertex::getPopulationDensity() const { return popDensity; }
 
-void Vertex::setPath(Vertex *path) {
-    Vertex::path = path;
-}
+double Vertex::getAvgSpeed() const { return avgSpeed; }
 
-void Vertex::setQueueIndex(int queueIndex) {
-    Vertex::queueIndex = queueIndex;
-}
+bool Vertex::isVisited() const { return visited; }
 
-bool Vertex::isOpen() const {
-    return open;
-}
+bool Vertex::isProcessing() const { return processing; }
 
-void Vertex::setOpen(bool open) {
-    this->open = open;
-}
+int Vertex::getQueueIndex() const { return queueIndex; }
 
-void Vertex::setVisited(bool visited) {
-    this->visited = visited;
-}
+/* -------------------------------------------------------------------------
+                                SETTERS
+/-------------------------------------------------------------------------*/
+void Vertex::setPosition(Position position) { this->position = position; }
 
-void Vertex::setProcessing(bool processing) {
-    this->processing = processing;
-}
+void Vertex::setFCost(double fCost) { this->fCost = fCost; }
 
-const vector<Edge *> &Vertex::getAdj() const {
-    return adj;
-}
+void Vertex::setGCost(double gCost) { this->gCost = gCost; }
 
-int Vertex::getQueueIndex() const {
-    return queueIndex;
-}
+void Vertex::setPath(Vertex *path) { this->path = path; }
 
-bool Vertex::isVisited() const {
-    return visited;
-}
+void Vertex::setCentral(bool central) { this->central = central; }
 
-bool Vertex::isProcessing() const {
-    return processing;
-}
+void Vertex::setPickUp(bool pickUp) { this->pickUpPoint = pickUp; }
 
-void Vertex::setCatchPoint(bool b) {
-    pickUpPoint = b;
-}
+void Vertex::setDestination(bool destination) { this->destination = destination; }
 
-bool Vertex::getCatchPoint() {
-    return pickUpPoint;
-}
+void Vertex::setReachable(bool reachable) { this->reachable = reachable; }
 
-void Vertex::setDestination(bool b){
-    destination = b;
-}
+void Vertex::setPopulationDensity(double popDensity) { this->popDensity = popDensity; }
 
-bool Vertex::getDestination() {
-    return destination;
-}
+void Vertex::setAvgSpeed(double avgSpeed) { this->avgSpeed = avgSpeed; }
 
-Vertex::~Vertex() {
-    for (Edge *e : adj) {
-        delete e;
-    }
-}
+void Vertex::setVisited(bool visited) { this->visited = visited; }
+
+void Vertex::setProcessing(bool processing) { this->processing = processing; }

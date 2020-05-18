@@ -3,6 +3,9 @@
 #include <unordered_map>
 #include <algorithm>
 
+Graph::Graph() : centralVertex(NULL),
+                 maxX(0), minX(0), maxY(0), minY(0) { }
+
 Graph::~Graph() {
     for (Vertex *v : vertexSet) {
         delete v;
@@ -47,18 +50,24 @@ vector<Vertex *> Graph::getVertexSet() const {
 /-------------------------------------------------------------------------*/
 
 void Graph::setCentralVertex(int position) {
-    centralVertex = vertexSet.at(position);
-    vertexSet.at(position)->setCentral(true);
+    if (position < vertexSet.size()) {
+        centralVertex = vertexSet.at(position);
+        vertexSet.at(position)->setCentral(true);
+    }
 }
 
 void Graph::addPickUpPoint(int position) {
-    pickUpPoints.push_back(vertexSet.at(position));
-    vertexSet.at(position)->setCatchPoint(true);
+    if (position < vertexSet.size()) {
+        pickUpPoints.push_back(vertexSet.at(position));
+        vertexSet.at(position)->setPickUp(true);
+    }
 }
 
 void Graph::setDestinationVertex(int position) {
-    destinationVertex = vertexSet.at(position);
-    vertexSet.at(position)->setDestination(true);
+    if (position < vertexSet.size()) {
+        destinationVertex = vertexSet.at(position);
+        vertexSet.at(position)->setDestination(true);
+    }
 }
 
 Vertex * Graph::getCentralVertex() {
@@ -78,25 +87,20 @@ Vertex *Graph::getDestinationVertex() {
  *  Returns true if successful, and false if a vertex with that content already exists.
  */
 bool Graph::addVertex(const int &in, int x, int y) {
-    if ( findVertex(in) != NULL)
+    if (findVertex(in) != NULL)
         return false;
 
-    Vertex* add = new Vertex(in, x, y);
     if (vertexSet.empty()) {
-        this->minY = add->getY();
-        this->minX = add->getX();
-        this->maxX = add->getX();
-        this->maxY = add->getY();
+        this->minY = y;
+        this->minX = x;
+        this->maxX = x;
+        this->maxY = y;
     }
     else {
-        if(add->getX() > maxX)
-            maxX = add->getX();
-        else if(add->getX() < minX)
-            minX = add->getX();
-        if(add->getY() > maxY)
-            maxY = add->getY();
-        else if (add->getY() < minY)
-            minY = add->getY();
+        maxX = (x > maxX) ? x : maxX;
+        maxY = (y > maxY) ? y : maxY;
+        minX = (x < minX) ? x : minX;
+        minY = (y < minY) ? y : minY;
     }
     vertexSet.push_back(new Vertex(in, x, y));
     return true;
@@ -107,8 +111,8 @@ bool Graph::addVertex(const int &in, int x, int y) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(int edgeId, const int &sourc, const int &dest) {
-    auto v1 = findVertex(sourc);
+bool Graph::addEdge(int edgeId, const int &source, const int &dest) {
+    auto v1 = findVertex(source);
     auto v2 = findVertex(dest);
     if (v1 == NULL || v2 == NULL)
         return false;
@@ -121,7 +125,7 @@ bool Graph::addEdge(int edgeId, const int &sourc, const int &dest) {
 void Graph::resetConnections() {
     for (Vertex *obj : vertexSet) {
         obj->setVisited(false);
-        obj->setOpen(false);
+        obj->setReachable(false);
         for (Edge *edge : obj->getAdj()) {
             edge->setOpen(false);
         }
@@ -149,10 +153,9 @@ vector<int> Graph::dfsFromOrigin(int origin) {
  */
 void Graph::dfsVisit(Vertex *v, vector<int> & res) {
     v->setVisited(true);
-    res.push_back(v->getId());
-    for (Edge *edge : v->adj) {
-        edge->setOpen(true);
-        if (!(edge->getDest())->visited)
+    res.push_back(v->getID());
+    for (Edge *edge : v->getAdj()) {
+        if (!(edge->getDest())->isVisited())
             dfsVisit(edge->getDest(), res);
     }
 }
@@ -167,7 +170,7 @@ Graph Graph::transpose() {
     unordered_map<Vertex*, Vertex*> vertexMap;
 
     for (Vertex *v : vertexSet) {
-        if (transposed.addVertex(v->getId(), v->getX(), v->getY())) {
+        if (transposed.addVertex(v->getID(), v->getPosition().getX(), v->getPosition().getY())) {
             vertexMap.insert(pair<Vertex*, Vertex*> (v, transposed.vertexSet.back()));
         }
     }
@@ -176,7 +179,7 @@ Graph Graph::transpose() {
         Vertex *transposedV = vertexMap.at(v);
         for (Edge *e : v->adj) {
             Vertex *transposedDest = vertexMap.at(e->getDest());
-            Edge * newEdge = new Edge(e->getId(), transposedV);
+            Edge * newEdge = new Edge(e->getID(), transposedV);
             transposedDest->addEdge(newEdge);
         }
     }
@@ -206,14 +209,14 @@ void Graph::kosarajuSCC(int origin) {
 
     for (int id : scc){
         Vertex *v  = findVertex(id);
-        v->setOpen(true);
+        v->setReachable(true);
     }
 
     for (Vertex *v : vertexSet) {
-        if (v->isOpen()) {
+        if (v->isReachable()) {
             for (Edge *e : v->getAdj()) {
                 Vertex *dest = e->getDest();
-                if (dest->isOpen()) e->setOpen(true);
+                if (dest->isReachable()) e->setOpen(true);
             }
         }
     }
@@ -225,20 +228,29 @@ void Graph::kosarajuSCC(int origin) {
 
 void Graph::preProcess() {
     if (centralVertex == NULL) return;
-    kosarajuSCC(centralVertex->getId());
+    kosarajuSCC(centralVertex->getID());
 }
 
 /* -------------------------------------------------------------------------
                 Single Source Shortest Path algorithms
 /-------------------------------------------------------------------------*/
+void Graph::clearAuxiliary() {
+    for (Vertex *v : vertexSet) {
+        v->setVisited(false);
+        v->setFCost(INF);
+        v->setGCost(INF);
+        v->setPath(NULL);
+    }
+}
+
 
 void Graph::unweightedShortestPath(const int &orig) {
-    for (Vertex *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-    }
+    clearAuxiliary();
+
     Vertex *start = findVertex(orig);
-    start->dist = 0;
+    if (start == NULL) return;
+
+    start->setFCost(0);
     queue<Vertex*> q;
     q.push(start);
 
@@ -246,34 +258,34 @@ void Graph::unweightedShortestPath(const int &orig) {
         Vertex *v = q.front();
         q.pop();
         for (Edge * edge : v->getAdj()) {
-            Vertex *w = edge->destinationVertex;
-            if (w->dist == INF) {
+            Vertex *w = edge->getDest();
+            if (w->getFCost() == INF) {
                 q.push(w);
-                w->dist = v->dist + 1;
-                w->path = v;
+                w->setFCost(v->getFCost() + 1);
+                w->setPath(v);
             }
         }
     }
 }
 
 void Graph::dijkstraShortestPath(const int &origin) {
-    for (Vertex *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
-    }
+    clearAuxiliary();
 
     Vertex *start = findVertex(origin);
-    start->dist = 0;
+    start->setFCost(0);
     MutablePriorityQueue<Vertex> q;
     q.insert(start);
 
     while (!q.empty()) {
         Vertex *v = q.extractMin();
-        for (Edge * edge : v->getAdj()) {
-            Vertex *w = edge->destinationVertex;
-            if (w->dist > v->dist + edge->weightDistance) {
-                w->dist = v->dist + edge->weightDistance;
-                w->path = v;
+        v->setVisited(true);
+
+        for (Edge *edge : v->getAdj()) {
+            Vertex *w = edge->getDest();
+            double tempCost = v->getFCost() + edge->getWeightDistance();
+            if (w->getFCost() > tempCost) {
+                w->setFCost(tempCost);
+                w->setPath(v);
                 if (w->getQueueIndex() == 0)
                     q.insert(w);
                 else
@@ -284,27 +296,61 @@ void Graph::dijkstraShortestPath(const int &origin) {
 }
 
 
-void Graph::bellmanFordShortestPath(const int &orig) {
-    for (Vertex *v : vertexSet) {
-        v->dist = INF;
-        v->path = NULL;
+
+void Graph::dijkstraShortestPath(int origin, int dest) {
+    clearAuxiliary();
+
+    Vertex *start = findVertex(origin);
+    start->setFCost(0);
+    MutablePriorityQueue<Vertex> q;
+    q.insert(start);
+
+    while (!q.empty()) {
+        Vertex *v = q.extractMin();
+        v->setVisited(true);
+
+        if (v->getID() == dest) break;
+
+        for (Edge *edge : v->getAdj()) {
+            Vertex *w = edge->getDest();
+            double tempCost = v->getFCost() + edge->getWeightDistance();
+            if (w->getFCost() > tempCost) {
+                w->setFCost(tempCost);
+                w->setPath(v);
+                if (w->getQueueIndex() == 0)
+                    q.insert(w);
+                else
+                    q.decreaseKey(w);
+            }
+        }
     }
+
+    while (!q.empty()) {
+        q.extractMin();
+    }
+}
+
+
+void Graph::bellmanFordShortestPath(const int &orig) {
+    clearAuxiliary();
+
     Vertex *start = findVertex(orig);
-    start->dist = 0;
+    start->setFCost(0);
     for (int i = 1; i < vertexSet.size(); i++) {
         for (Vertex *v : vertexSet) {
-            for (Edge * edge : v->adj) {
-                Vertex *w = edge->destinationVertex;
-                if (w->dist > v->dist + edge->weightDistance) {
-                    w->dist = v->dist + edge->weightDistance;
-                    w->path = v;
+            for (Edge * edge : v->getAdj()) {
+                Vertex *w = edge->getDest();
+                double tempCost = v->getFCost() + edge->getWeightDistance();
+                if (w->getFCost() > tempCost) {
+                    w->setFCost(tempCost);
+                    w->setPath(v);
                 }
             }
         }
     }
     for (Vertex *v : vertexSet) {
         for (Edge * edge : v->adj) {
-            if (v->dist + edge->weightDistance < (edge->destinationVertex)->dist) {
+            if (v->getFCost() + edge->getWeightDistance() < (edge->getDest())->getFCost()) {
                 cerr << "there are cycles of negative weight\n";
                 return;
             }
@@ -316,7 +362,7 @@ void Graph::bellmanFordShortestPath(const int &orig) {
 vector<Vertex *> Graph::getPathVertexTo(int dest) const {
     vector<Vertex * > res;
     Vertex * v = findVertex(dest);
-    if (v == nullptr || v->dist == INF)
+    if (v == nullptr || v->getFCost() == INF)
         return res;
     for ( ; v != nullptr; v = v->path)
         res.push_back(v);
@@ -328,19 +374,14 @@ vector<Vertex *> Graph::getPathVertexTo(int dest) const {
                                     A*
 /-------------------------------------------------------------------------*/
 double Graph::heuristic(Vertex *v, Vertex *d) { // euclidean distance for now
-    return sqrt(pow(v->getX() - d->getX(), 2) + pow(v->getY() - d->getY(), 2));
+    return v->getPosition().distance(d->getPosition());
 }
 
 Vertex* Graph::initAstar(int origin) {
-    for (Vertex *v : vertexSet) {
-        v->setVisited(false);
-        v->setDist(INF); // dist is fCost of A*
-        v->setGCost(INF);
-        v->path = NULL;
-    }
+    clearAuxiliary();
 
     Vertex *start = findVertex(origin);
-    start->setDist(0);
+    start->setFCost(0);
     start->setGCost(0);
     return start;
 }
@@ -349,7 +390,7 @@ void Graph::AStar(int from, int to) {
     Vertex* start = initAstar(from);
     Vertex* dest = findVertex(to);
 
-    start->setDist(heuristic(start, dest));
+    start->setFCost(heuristic(start, dest));
 
     MutablePriorityQueue<Vertex> q;
     q.insert(start);
@@ -358,7 +399,7 @@ void Graph::AStar(int from, int to) {
         Vertex *v = q.extractMin();
         v->setVisited(true);
 
-        if (v->getId() == dest->getId()) {
+        if (v->getID() == dest->getID()) {
             break;
         }
 
@@ -373,7 +414,7 @@ void Graph::AStar(int from, int to) {
             if (neighbour->getGCost() > tempCost) {
                 neighbour->setPath(v);
                 neighbour->setGCost(tempCost);
-                neighbour->setDist(neighbour->getGCost() + heuristic(neighbour, dest));
+                neighbour->setFCost(neighbour->getGCost() + heuristic(neighbour, dest));
                 if (neighbour->getQueueIndex() == 0)
                     q.insert(neighbour);
                 else

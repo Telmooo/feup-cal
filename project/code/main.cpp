@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     string fileName = argv[1];
     string iteration = "one";
-    string algorithm = "a-star";
+    string algorithm = "dijkstra";
 
     // Init Screen
     GraphViewer * gView = new GraphViewer(1920,1080, false);
@@ -66,13 +66,13 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
             cout << "Map without Central Vertex" << endl;
             return;
         }
-        int centralVertexID = graph->getCentralVertex()->getId();
+        int centralVertexID = graph->getCentralVertex()->getID();
 
         if (graph->getDestinationVertex() == NULL) {
             cout << "Map without destination" << endl;
             return;
         }
-        int destinationID = graph->getDestinationVertex()->getId();
+        int destinationID = graph->getDestinationVertex()->getID();
 
         for(Vertex * pickUP : graph->getPickUpPoint()) {
             cout << "Press any key to next pick up one thief" << endl;
@@ -81,14 +81,14 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
 
             draw.cleanLastWaggonPath();
 
-            int pickUpID = pickUP->getId();
-            graph->dijkstraShortestPath(centralVertexID);
+            int pickUpID = pickUP->getID();
+            graph->dijkstraShortestPath(centralVertexID, pickUpID);
             draw.drawPath(graph->getPathVertexTo(pickUpID));
 
-            graph->dijkstraShortestPath(pickUpID);
+            graph->dijkstraShortestPath(pickUpID, destinationID);
             draw.drawPath(graph->getPathVertexTo(destinationID));
 
-            graph->dijkstraShortestPath(destinationID);
+            graph->dijkstraShortestPath(destinationID, centralVertexID);
             draw.drawPath(graph->getPathVertexTo(centralVertexID));
 
             gView->rearrange();
@@ -103,13 +103,13 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
             cout << "Map without Central Vertex" << endl;
             return;
         }
-        int centralVertexID = graph->getCentralVertex()->getId();
+        int centralVertexID = graph->getCentralVertex()->getID();
 
         if (graph->getDestinationVertex() == NULL) {
             cout << "Map without destination" << endl;
             return;
         }
-        int destinationID = graph->getDestinationVertex()->getId();
+        int destinationID = graph->getDestinationVertex()->getID();
 
         for(Vertex * pickUP : graph->getPickUpPoint()) {
             cout << "Press any key to next pick up one thief" << endl;
@@ -118,7 +118,7 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
 
             draw.cleanLastWaggonPath();
 
-            int pickUpID = pickUP->getId();
+            int pickUpID = pickUP->getID();
             graph->AStar(centralVertexID, pickUpID);
             draw.drawPath(graph->getPathVertexTo(pickUpID));
 

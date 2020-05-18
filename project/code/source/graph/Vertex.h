@@ -2,8 +2,9 @@
 #define MEATWAGONS_VERTEX_H
 
 #include <vector>
-#include <windef.h>
+
 #include "../utils/MutablePriorityQueue.h"
+#include "../utils/Position.h"
 
 #include "graph.h"
 
@@ -12,92 +13,98 @@ class Edge;
 class Vertex {
     int id;						// Vertex ID
 
-    vector<Edge *> adj;		    // Outgoing Edges
+    Position position;
 
-    double dist = 0;
-    double gCost = 0;
-    Vertex *path = NULL;
+    std::vector<Edge *> adj;    // Outgoing Edges
 
-    bool central = false;       // Central de Waggons
-    bool pickUpPoint = false;    // Local a recolher os prinsioneiros
-    bool destination = false;    // Local a entregar os prisioneiros
+    double fCost;               // F_COST for path-finding algorithms
+    double gCost;               // G_COST for A*
 
-    int density;                // Densidade populacional no vértice
-    int averageSpeed;           // Velocidade média no vértice
-    bool reachable;             // Se o  vértice é alcançavel
+    Vertex *path;               // Previous vertex on minimum path
 
-    int x;                      // x position
-    int y;                      // y position
+    bool central;               // Waggons' Central
+    bool pickUpPoint;           // Pickup location
+    bool destination;           // Deliver location
+    bool reachable;             // If vertex is reachable
 
-    bool open = false;
+    double popDensity;          // Population density
+    double avgSpeed;            // Average speed around the vertice
 
-    bool visited = false;		// auxiliary field
-    bool processing = false;	// auxiliary field
+    bool visited;		        // auxiliary field
+    bool processing;        	// auxiliary field
 
-    int queueIndex = 0; 		// required by MutablePriorityQueue
+    int queueIndex;      		// required by MutablePriorityQueue
 
 public:
     Vertex(int in, int x, int y);
 
     virtual ~Vertex();
 
-    int getId() const;
-
-    int getX() const;
-    int getY() const;
-
-    double getDist() const;
-
-    Vertex *getPath() const;
-
-    void addEdge(Edge * e);
-
     bool operator<(Vertex & vertex) const;
 
-    void setDist(double dist);
+    void addEdge(Edge * e);
+    /* -------------------------------------------------------------------------
+                                GETTERS
+    /-------------------------------------------------------------------------*/
+    int getID() const;
+
+    const Position& getPosition() const;
+
+    const std::vector<Edge*>& getAdj() const;
+
+    double getFCost() const;
 
     double getGCost() const;
 
-    void setGCost(double gCost);
+    const Vertex* getPath() const;
 
-    void setCentral(bool ctr);
+    bool isCentral() const;
 
-    void setInfo(int info);
+    bool isPickUp() const;
 
-    void setAdj(const vector<Edge *> &adj);
+    bool isDestination() const;
 
-    void setPath(Vertex *path);
+    bool isReachable() const;
 
-    void setQueueIndex(int queueIndex);
+    double getPopulationDensity() const;
 
-    bool isOpen() const;
-
-    void setOpen(bool open);
-
-    void setVisited(bool visited);
-
-    void setProcessing(bool processing);
-
-    const vector<Edge *> &getAdj() const;
-
-    int getQueueIndex() const;
+    double getAvgSpeed() const;
 
     bool isVisited() const;
 
     bool isProcessing() const;
 
-    bool getCentral();
+    int getQueueIndex() const;
+    /* -------------------------------------------------------------------------
+                                SETTERS
+    /-------------------------------------------------------------------------*/
+    void setPosition(Position position);
 
-    bool getDestination();
+    void setFCost(double fCost);
 
-    void setDestination(bool b);
+    void setGCost(double gCost);
 
-    void setCatchPoint(bool b);
+    void setPath(Vertex *path);
 
-    bool getCatchPoint();
+    void setCentral(bool central);
 
-    // // required by MutablePriorityQueue
+    void setPickUp(bool pickUp);
+
+    void setDestination(bool destination);
+
+    void setReachable(bool reachable);
+
+    void setPopulationDensity(double popDensity);
+
+    void setAvgSpeed(double avgSpeed);
+
+    void setVisited(bool visited);
+
+    void setProcessing(bool processing);
+
+    // required by MutablePriorityQueue
     friend class MutablePriorityQueue<Vertex>;
+
     friend class Graph;
 };
 
