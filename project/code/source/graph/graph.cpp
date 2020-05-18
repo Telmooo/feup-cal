@@ -49,24 +49,27 @@ vector<Vertex *> Graph::getVertexSet() const {
             Central, PickUp and Destination setters and getters
 /-------------------------------------------------------------------------*/
 
-void Graph::setCentralVertex(int position) {
-    if (position < vertexSet.size()) {
-        centralVertex = vertexSet.at(position);
-        vertexSet.at(position)->setCentral(true);
+void Graph::setCentralVertex(int id) {
+    Vertex *v = findVertex(id);
+    if (v != NULL) {
+        centralVertex = v;
+        v->setCentral(true);
     }
 }
 
-void Graph::addPickUpPoint(int position) {
-    if (position < vertexSet.size()) {
-        pickUpPoints.push_back(vertexSet.at(position));
-        vertexSet.at(position)->setPickUp(true);
+void Graph::addPickUpPoint(int id) {
+    Vertex *v = findVertex(id);
+    if (v != NULL) {
+        pickUpPoints.push_back(v);
+        v->setPickUp(true);
     }
 }
 
-void Graph::setDestinationVertex(int position) {
-    if (position < vertexSet.size()) {
-        destinationVertex = vertexSet.at(position);
-        vertexSet.at(position)->setDestination(true);
+void Graph::setDestinationVertex(int id) {
+    Vertex *v = findVertex(id);
+    if (v != NULL) {
+        destinationVertex = v;
+        v->setDestination(true);
     }
 }
 

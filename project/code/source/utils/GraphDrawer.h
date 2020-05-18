@@ -20,7 +20,7 @@ public:
 
     void drawGraph();
 
-    void drawPath(vector<Vertex *> path);
+    void drawPath(vector<Vertex *> path, string color);
 
     void cleanLastWaggonPath();
 };

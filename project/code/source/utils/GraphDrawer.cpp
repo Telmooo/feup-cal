@@ -31,7 +31,7 @@ void GraphDrawer::drawGraph() {
         } else {
             gv->setVertexColor(vert->getID(), "green");
         }
-
+        gv->setVertexLabel(vert->getID(), std::to_string(vert->getID()));
         gv->addNode(vert->getID(), (int) (xPercent * 1920), (int) (yPercent * 1080));
     }
 
@@ -53,12 +53,12 @@ void GraphDrawer::drawGraph() {
     }
 }
 
-void GraphDrawer::drawPath(vector<Vertex *> path) {
+void GraphDrawer::drawPath(vector<Vertex *> path, string color) {
     for(int i = 0; i < path.size() - 1; i++) {
         for(Edge * e : path.at(i)->getAdj()) {
             if(e->getDest()->getID() == path.at(i+1)->getID()) {
                 edgesLastWaggon.push_back(*e);
-                gv->setEdgeColor(e->getID(), "black");
+                gv->setEdgeColor(e->getID(), color);
             }
 
         }

@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     string fileName = argv[1];
     string iteration = "one";
-    string algorithm = "dijkstra";
+    string algorithm = "a-star";
 
     // Init Screen
     GraphViewer * gView = new GraphViewer(1920,1080, false);
@@ -83,13 +83,13 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
 
             int pickUpID = pickUP->getID();
             graph->dijkstraShortestPath(centralVertexID, pickUpID);
-            draw.drawPath(graph->getPathVertexTo(pickUpID));
+            draw.drawPath(graph->getPathVertexTo(pickUpID), "black");
 
             graph->dijkstraShortestPath(pickUpID, destinationID);
-            draw.drawPath(graph->getPathVertexTo(destinationID));
+            draw.drawPath(graph->getPathVertexTo(destinationID), "cyan");
 
             graph->dijkstraShortestPath(destinationID, centralVertexID);
-            draw.drawPath(graph->getPathVertexTo(centralVertexID));
+            draw.drawPath(graph->getPathVertexTo(centralVertexID), "magenta");
 
             gView->rearrange();
         }
@@ -120,13 +120,13 @@ void algorithmFirstIter(Graph * graph, GraphViewer * gView, GraphDrawer draw, st
 
             int pickUpID = pickUP->getID();
             graph->AStar(centralVertexID, pickUpID);
-            draw.drawPath(graph->getPathVertexTo(pickUpID));
+            draw.drawPath(graph->getPathVertexTo(pickUpID), "black");
 
             graph->AStar(pickUpID, destinationID);
-            draw.drawPath(graph->getPathVertexTo(destinationID));
+            draw.drawPath(graph->getPathVertexTo(destinationID), "cyan");
 
             graph->AStar(destinationID, centralVertexID);
-            draw.drawPath(graph->getPathVertexTo(centralVertexID));
+            draw.drawPath(graph->getPathVertexTo(centralVertexID), "magenta");
 
             gView->rearrange();
         }
