@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Department.h"
 #include "../utils/GraphReader.h"
 
@@ -36,6 +37,8 @@ void Department::initDepartment(string fileName) {
 
 void Department::addWaggon(int capacity) {
     waggons.push_back(new Waggon(capacity));
+
+    if (capacity > maxCapacity) maxCapacity = capacity;
 }
 
 void Department::firstIteration(string algorithm) {
@@ -103,4 +106,25 @@ void Department::addPickUp(int position) {
     graph->addPickUpPoint(position);
     gDrawer->drawGraph();
     gView->rearrange();
+}
+
+void Department::addRequest(Request request) {
+
+}
+
+void Department::addRequests(std::string location) {
+    std::ifstream in("../resources/reservations/" + location + "/reservations.txt");
+
+    if (!in.is_open()) return;
+
+    int N;
+    in >> N;
+    int numPris, type, pickup, dest;
+    double p_dist, p_time;
+
+    for (int i = 0; i < N; i++) {
+        in >> numPris >> type >> pickup >> dest >> p_dist >> p_time;
+
+        addRequest(Request(numPris, type, pickup, dest, p_dist, p_time));
+    }
 }
