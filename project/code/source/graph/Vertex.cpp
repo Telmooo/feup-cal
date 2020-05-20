@@ -2,10 +2,10 @@
 
 /*************************** Vertex Functions **************************/
 
-Vertex::Vertex(int in, int x, int y) :
+Vertex::Vertex(int in, int x, int y, double popDensity, double avgSpeed) :
     id(in), position(x, y), fCost(INF), gCost(INF),
     path(NULL), central(false), pickUpPoint(false), destination(false),
-    popDensity(0.0), avgSpeed(0.0), reachable(false), visited(false),
+    popDensity(popDensity), avgSpeed(avgSpeed), reachable(false), visited(false),
     processing(false), queueIndex(0) { }
 
 Vertex::~Vertex() {

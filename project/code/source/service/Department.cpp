@@ -1,8 +1,10 @@
 #include <fstream>
+#include <algorithm>
 #include "Department.h"
 #include "../utils/GraphReader.h"
 
-Department::Department() {
+Department::Department() : maxCapacity(5) {
+
     this->gView = new GraphViewer(1920,1080, false);
     this->graph = new Graph();
     this->gDrawer = new GraphDrawer(this->gView, this->graph);
@@ -109,11 +111,24 @@ void Department::addPickUp(int position) {
 }
 
 void Department::addRequest(Request request) {
+    if (maxCapacity == 0) {
+        cout << "Can't add request. No available Waggons" << endl;
+        return;
+    }
 
+    while (request.getNumPris() > maxCapacity) {
+        Request split = Request(maxCapacity, request.getType(), request.getPickup(),
+                                request.getDest(), request.getPDist(), request.getPTime());
+        requests.push_back(split);
+
+        request = Request(request.getNumPris() - maxCapacity, request.getType(), request.getPickup(),
+                            request.getDest(), request.getPDist(), request.getPTime());
+    }
+    requests.push_back(request);
 }
 
 void Department::addRequests(std::string location) {
-    std::ifstream in("../resources/reservations/" + location + "/reservations.txt");
+    std::ifstream in("../resources/requests/" + location + "/requests.txt");
 
     if (!in.is_open()) return;
 

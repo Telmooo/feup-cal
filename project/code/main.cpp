@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
     else if (iteration == "two") {}
 
 
+    police->addRequests("8x8");
+
     return 0;
 }
 

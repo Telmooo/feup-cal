@@ -43,7 +43,7 @@ public:
 
     Vertex *findVertex(const int &in) const;
 
-    bool addVertex(const int &in, int x, int y);
+    bool addVertex(const int &in, int x, int y, double popDensity, double avgSpeed);
     bool addEdge(int edgeId, const int &source, const int &dest);
 
     vector<Vertex *> getVertexSet() const;

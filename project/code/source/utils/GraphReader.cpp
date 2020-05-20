@@ -14,15 +14,15 @@ void GraphReader::readNodes() {
     int MAX = stoi(line);
 
     for(int i = 0; i < MAX; i++) {
-        double idn, x, y;
+        double idn, x, y, popDensity, avgSpeed;
         char garbage;
 
         getline(nodes, line);
         std::stringstream ss(line);
 
-        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage;
+        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage >> popDensity >> garbage >> avgSpeed;
 
-        g->addVertex(idn, x, y);
+        g->addVertex(idn, x, y, popDensity, avgSpeed);
     }
 
     nodes.close();
@@ -95,10 +95,6 @@ void GraphReader::readTags() {
 
 void GraphReader::loadElements() {
     for(Vertex * current : g->getVertexSet()) {
-        // Densidade populacional
-        // Average Speed
-        // Reachable
-        // Draw Edges
         for(Edge * adj : current->getAdj()) {
             // Weight
             double dist = current->getPosition().distance(adj->getDest()->getPosition());

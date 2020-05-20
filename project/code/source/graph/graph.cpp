@@ -89,7 +89,7 @@ Vertex *Graph::getDestinationVertex() {
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
  */
-bool Graph::addVertex(const int &in, int x, int y) {
+bool Graph::addVertex(const int &in, int x, int y, double popDensity, double avgSpeed) {
     if (findVertex(in) != NULL)
         return false;
 
@@ -105,7 +105,7 @@ bool Graph::addVertex(const int &in, int x, int y) {
         minX = (x < minX) ? x : minX;
         minY = (y < minY) ? y : minY;
     }
-    vertexSet.push_back(new Vertex(in, x, y));
+    vertexSet.push_back(new Vertex(in, x, y, popDensity, avgSpeed));
     return true;
 }
 
@@ -173,7 +173,7 @@ Graph Graph::transpose() {
     unordered_map<Vertex*, Vertex*> vertexMap;
 
     for (Vertex *v : vertexSet) {
-        if (transposed.addVertex(v->getID(), v->getPosition().getX(), v->getPosition().getY())) {
+        if (transposed.addVertex(v->getID(), v->getPosition().getX(), v->getPosition().getY(), v->getPopulationDensity(), v->getAvgSpeed())) {
             vertexMap.insert(pair<Vertex*, Vertex*> (v, transposed.vertexSet.back()));
         }
     }

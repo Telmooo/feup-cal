@@ -4,7 +4,8 @@
 
 #include "GraphDrawer.h"
 
-GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {}
+GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {
+}
 
 void GraphDrawer::drawGraph() {
     // Draw Vertex

@@ -24,6 +24,7 @@ public:
     ~Department();
 
     void initDepartment(string fileName);
+
     void addWaggon(int capacity);
 
     void firstIteration(string algorithm);

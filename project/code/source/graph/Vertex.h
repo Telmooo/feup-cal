@@ -36,7 +36,7 @@ class Vertex {
     int queueIndex;      		// required by MutablePriorityQueue
 
 public:
-    Vertex(int in, int x, int y);
+    Vertex(int in, int x, int y, double popDensity, double avgSpeed);
 
     virtual ~Vertex();
 
