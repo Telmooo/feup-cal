@@ -50,7 +50,7 @@ void GraphReader::readEdges() {
     edges.close();
 }
 
-void GraphReader::readTags() {
+void GraphReader::readTags(Department &department) {
     std::ifstream tags("../resources/graphs/" + folder + "/tag.txt");
 
     if (!tags.is_open()) {
@@ -69,23 +69,7 @@ void GraphReader::readTags() {
             int MAX_TAG = stoi(line);
             for(int j = 0; j < MAX_TAG; j++) {
                 getline(tags, line);
-                g->setCentralVertex(stoi(line));
-            }
-        }
-        else if(line == "PickUp") {
-            getline(tags, line);
-            int MAX_TAG = stoi(line);
-            for(int j = 0; j < MAX_TAG; j++) {
-                getline(tags, line);
-                g->addPickUpPoint(stoi(line));
-            }
-        }
-        else if(line == "Destination") {
-            getline(tags, line);
-            int MAX_TAG = stoi(line);
-            for(int j = 0; j < MAX_TAG; j++) {
-                getline(tags, line);
-                g->setDestinationVertex(stoi(line));
+                department.setCentralVertex(stoi(line));
             }
         }
     }

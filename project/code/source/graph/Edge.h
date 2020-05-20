@@ -17,7 +17,7 @@ class Edge {
 public:
     Edge(int id, Vertex *d);
 
-    int getID();
+    int getID() const;
     Vertex* getDest() const;
     double getWeightDistance() const;
     double getWeightTime() const;

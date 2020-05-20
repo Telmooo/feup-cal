@@ -3,6 +3,7 @@
 
 #include <graphviewer.h>
 #include "../graph/Graph.h"
+#include "../Service/Department.h"
 
 class GraphReader {
 private:
@@ -15,7 +16,7 @@ public:
 
     void readEdges();
 
-    void readTags();
+    void readTags(Department &department);
 
     void loadElements();
 };

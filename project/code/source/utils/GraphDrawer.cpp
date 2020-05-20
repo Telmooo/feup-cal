@@ -21,12 +21,6 @@ void GraphDrawer::drawGraph() {
         if (vert->isCentral()) {
             gv->setVertexColor(vert->getID(), "yellow");
         }
-        else if(vert->isPickUp()) {
-            gv->setVertexColor(vert->getID(), "pink");
-        }
-        else if(vert->isDestination()) {
-            gv->setVertexColor(vert->getID(), "blue");
-        }
         else if (!vert->isReachable()) {
             gv->setVertexColor(vert->getID(), "red");
         } else {
@@ -54,14 +48,24 @@ void GraphDrawer::drawGraph() {
     }
 }
 
-void GraphDrawer::drawPath(vector<Vertex *> path, string color) {
-    for(int i = 0; i < path.size() - 1; i++) {
-        for(Edge * e : path.at(i)->getAdj()) {
-            if(e->getDest()->getID() == path.at(i+1)->getID()) {
-                edgesLastWaggon.push_back(*e);
-                gv->setEdgeColor(e->getID(), color);
-            }
+void GraphDrawer::setInterestPoints(const std::vector<Vertex*> &points) {
+    for (Vertex *vert : points) {
+        if (vert->isCentral()) {
+            gv->setVertexColor(vert->getID(), "yellow");
+        } else if (vert->isPickUp()) {
+            gv->setVertexColor(vert->getID(), "pink");
+        } else if (vert->isDestination()) {
+            gv->setVertexColor(vert->getID(), "blue");
+        } else {
+            gv->setVertexColor(vert->getID(), "green");
         }
+    }
+}
+
+void GraphDrawer::drawPath(const std::vector<Edge> &edges, string color) {
+    for (const Edge &edge : edges) {
+        edgesLastWaggon.push_back(edge);
+        gv->setEdgeColor(edge.getID(), color);
     }
 }
 

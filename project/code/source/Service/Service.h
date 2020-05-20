@@ -9,12 +9,12 @@ class Service {
     int emptySeats;
     std::vector<Request> requests;
 
-    std::vector<const Edge*> path;
+    std::vector<Edge> path;
 
     double distance;
 
-    int startHour;
-    int endHour;
+    double startHour;
+    double endHour;
 
 public:
     Service();
@@ -25,23 +25,25 @@ public:
 
     void addRequest(Request &r);
 
-    const std::vector<Request>& getRequests() const;
+    std::vector<Request>& getRequests();
 
-    void addEdge(const Edge *edge);
+    void addEdge(const Edge &edge);
 
-    const std::vector<const Edge*>& getPath() const;
+    void loadEdges(const std::vector<Edge> &edges);
+
+    const std::vector<Edge>& getPath() const;
 
     double getDistance() const;
 
     void setDistance(double distance);
 
-    int getStartHour() const;
+    double getStartHour() const;
 
-    void setStartHour(int startHour);
+    void setStartHour(double startHour);
 
-    int getEndHour() const;
+    double getEndHour() const;
 
-    void setEndHour(int endHour);
+    void setEndHour(double endHour);
 };
 
 #endif //MEATWAGONS_SERVICE_H

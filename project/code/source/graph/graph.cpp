@@ -3,8 +3,7 @@
 #include <unordered_map>
 #include <algorithm>
 
-Graph::Graph() : centralVertex(NULL),
-                 maxX(0), minX(0), maxY(0), minY(0) { }
+Graph::Graph() : maxX(0), minX(0), maxY(0), minY(0) { }
 
 Graph::~Graph() {
     for (Vertex *v : vertexSet) {
@@ -43,46 +42,6 @@ int Graph::getNumVertex() const {
 
 vector<Vertex *> Graph::getVertexSet() const {
     return vertexSet;
-}
-
-/* -------------------------------------------------------------------------
-            Central, PickUp and Destination setters and getters
-/-------------------------------------------------------------------------*/
-
-void Graph::setCentralVertex(int id) {
-    Vertex *v = findVertex(id);
-    if (v != NULL) {
-        centralVertex = v;
-        v->setCentral(true);
-    }
-}
-
-void Graph::addPickUpPoint(int id) {
-    Vertex *v = findVertex(id);
-    if (v != NULL) {
-        pickUpPoints.push_back(v);
-        v->setPickUp(true);
-    }
-}
-
-void Graph::setDestinationVertex(int id) {
-    Vertex *v = findVertex(id);
-    if (v != NULL) {
-        destinationVertex = v;
-        v->setDestination(true);
-    }
-}
-
-Vertex * Graph::getCentralVertex() {
-    return centralVertex;
-}
-
-vector<Vertex *> Graph::getPickUpPoint() {
-    return pickUpPoints;
-}
-
-Vertex *Graph::getDestinationVertex() {
-    return destinationVertex;
 }
 
 /*
@@ -229,9 +188,9 @@ void Graph::kosarajuSCC(int origin) {
                                     Pre-process
 /-------------------------------------------------------------------------*/
 
-void Graph::preProcess() {
-    if (centralVertex == NULL) return;
-    kosarajuSCC(centralVertex->getID());
+void Graph::preProcess(int central) {
+    if (findVertex(central) == NULL) return;
+    kosarajuSCC(central);
 }
 
 /* -------------------------------------------------------------------------

@@ -53,18 +53,18 @@ void Request::setPTime(double pTime) {
     p_time = pTime;
 }
 
-int Request::getPickupHour() const {
+double Request::getPickupHour() const {
     return pickupHour;
 }
 
-void Request::setPickupHour(int pickupHour) {
+void Request::setPickupHour(double pickupHour) {
     Request::pickupHour = pickupHour;
 }
 
-int Request::getDestHour() const {
+double Request::getDestHour() const {
     return destHour;
 }
 
-void Request::setDestHour(int destHour) {
+void Request::setDestHour(double destHour) {
     Request::destHour = destHour;
 }

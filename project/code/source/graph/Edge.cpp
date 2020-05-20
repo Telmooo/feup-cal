@@ -10,7 +10,7 @@ Edge::Edge(int id, Vertex *d): id(id), destinationVertex(d) {
                                 GETTERS
 /-------------------------------------------------------------------------*/
 
-int Edge::getID() {
+int Edge::getID() const {
     return id;
 }
 

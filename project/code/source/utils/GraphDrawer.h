@@ -20,7 +20,9 @@ public:
 
     void drawGraph();
 
-    void drawPath(vector<Vertex *> path, string color);
+    void setInterestPoints(const std::vector<Vertex*> &points);
+
+    void drawPath(const std::vector<Edge> &edges, string color);
 
     void cleanLastWaggonPath();
 };

@@ -8,26 +8,21 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    string fileName = argv[1];
+    string location = argv[1];
     string iteration = "one";
     string algorithm = "a-star";
 
     Department * police = new Department();
 
-    police->initDepartment(fileName);
+    police->initDepartment(location);
 
     if(iteration == "one") {
-        police->firstIteration(algorithm);
-        cout << "Add pickup:" << endl;
-        int pos; cin >> pos;
-        police->addPickUp(pos);
+        police->addWaggon(5);
+        police->addRequests(location);
         police->firstIteration(algorithm);
         getchar();
     }
     else if (iteration == "two") {}
-
-
-    police->addRequests("8x8");
 
     return 0;
 }

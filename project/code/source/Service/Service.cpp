@@ -19,15 +19,21 @@ void Service::addRequest(Request &r) {
     requests.push_back(r);
 }
 
-const std::vector<Request>& Service::getRequests() const {
+std::vector<Request>& Service::getRequests() {
     return requests;
 }
 
-void Service::addEdge(const Edge *edge) {
+void Service::addEdge(const Edge &edge) {
     path.push_back(edge);
 }
 
-const std::vector<const Edge*>& Service::getPath() const {
+void Service::loadEdges(const std::vector<Edge> &edges) {
+    for (const Edge &edge : edges) {
+        addEdge(edge);
+    }
+}
+
+const std::vector<Edge>& Service::getPath() const {
     return path;
 }
 
@@ -39,18 +45,18 @@ void Service::setDistance(double distance) {
     Service::distance = distance;
 }
 
-int Service::getStartHour() const {
+double Service::getStartHour() const {
     return startHour;
 }
 
-void Service::setStartHour(int startHour) {
+void Service::setStartHour(double startHour) {
     Service::startHour = startHour;
 }
 
-int Service::getEndHour() const {
+double Service::getEndHour() const {
     return endHour;
 }
 
-void Service::setEndHour(int endHour) {
+void Service::setEndHour(double endHour) {
     Service::endHour = endHour;
 }

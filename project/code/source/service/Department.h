@@ -9,12 +9,18 @@
 #include "Request.h"
 
 class Department {
+public:
+    struct WaggonComparator {
+        bool operator() (const Waggon *w1, const Waggon *w2);
+    };
 private:
     GraphViewer * gView;
     Graph * graph;
     GraphDrawer * gDrawer;
-    std::vector<Waggon *> waggons;
+    std::vector<Waggon*> waggons;
     std::vector<Request> requests;
+
+    Vertex* centralVertex = NULL;
 
     int maxCapacity;
 
@@ -27,11 +33,27 @@ public:
 
     void addWaggon(int capacity);
 
+    void getEdges(const std::vector<Vertex*> &vertices, std::vector<Edge> &edges);
+
+    double getPathDistance(const std::vector<Edge> &edges);
+    double getPathTime(const std::vector<Edge> &edges);
+
     void firstIteration(string algorithm);
+
+    void secondIteration(string algorithm);
+
+    void thirdIteration(string algorithm, string sub_algorithm);
 
     void addPickUp(int basicString);
 
     void addRequests(std::string location);
+
+    void setCentralVertex(int position);
+
+    Vertex * getCentralVertex();
+
+    void preProcessRequests();
+    void distributeSingleRequestPerService();
 };
 
 

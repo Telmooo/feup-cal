@@ -9,18 +9,10 @@ class Request {
     double p_dist;
     double p_time;
 
-    int pickupHour;
-    int destHour;
+    double pickupHour;
+    double destHour;
 public:
-    int getPickupHour() const;
 
-    void setPickupHour(int pickupHour);
-
-    int getDestHour() const;
-
-    void setDestHour(int destHour);
-
-public:
     Request(int numPris, int type, int pickup, int dest, double pDist, double pTime);
 
     int getNumPris() const;
@@ -46,6 +38,14 @@ public:
     double getPTime() const;
 
     void setPTime(double pTime);
+
+    double getPickupHour() const;
+
+    void setPickupHour(double pickupHour);
+
+    double getDestHour() const;
+
+    void setDestHour(double destHour);
 };
 
 #endif //MEATWAGONS_REQUEST_H

@@ -27,10 +27,6 @@ private:
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;    // path matrix
 
-    Vertex* centralVertex = NULL;
-    vector<Vertex*> pickUpPoints;
-    Vertex* destinationVertex;
-
     double maxX;
     double minX;
     double maxY;
@@ -52,20 +48,12 @@ public:
     vector<Edge *> getEdgeSet() const;
     int getNumEdges() const;
 
-    void setCentralVertex(int position);
-    void addPickUpPoint(int position);
-    void setDestinationVertex(int position);
-
-    Vertex * getCentralVertex();
-    vector<Vertex *> getPickUpPoint();
-    Vertex * getDestinationVertex();
-
     // -- Depth First Search
     vector<int> dfsFromOrigin(int origin);
     void dfsVisit(Vertex *v, vector<int> & res);
 
     /* PreProcessGraph */
-    void preProcess();
+    void preProcess(int central);
     void resetConnections();
 
     // --- Transpose Graph
