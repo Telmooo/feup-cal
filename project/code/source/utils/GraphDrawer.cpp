@@ -60,7 +60,6 @@ void GraphDrawer::drawPath(vector<Vertex *> path, string color) {
                 edgesLastWaggon.push_back(*e);
                 gv->setEdgeColor(e->getID(), color);
             }
-
         }
     }
 }

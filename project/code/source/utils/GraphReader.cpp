@@ -99,11 +99,10 @@ void GraphReader::loadElements() {
         // Average Speed
         // Reachable
         // Draw Edges
-
         for(Edge * adj : current->getAdj()) {
-            // Weight Time
-            // Weight Distance
-            adj->setWeight(1, 1);
+            // Weight
+            double dist = current->getPosition().distance(adj->getDest()->getPosition());
+            adj->setWeight(dist, dist / current->getAvgSpeed());
         }
     }
 }
