@@ -22,12 +22,12 @@ def createDensPopVelocity(filepath):
         line = fp.readline()
         edges = []
         while line:
-            result = parse("({}, {})", line.strip())
-            edges += [[result[0], result[1], randrange(100), randrange(120)]]
+            result = parse("({}, {}, {})", line.strip())
+            edges += [[result[0], result[1], result[2], randrange(100), randrange(120)]]
             line = fp.readline()
     fpw = open(filepath, "w")
     fpw.write(str(len(edges)) + '\n')
     for i in edges:
-        fpw.write(("({}, {}, {}, {})\n").format(i[0], i[1], i[2], i[3]))
+        fpw.write(("({}, {}, {}, {}, {})\n").format(i[0], i[1], i[2], i[3], i[4]))
 
-createDensPopVelocity('resources/graphs/8x8/edges.txt')
+createDensPopVelocity('./resources/graphs/Porto/nodes.txt')
