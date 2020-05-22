@@ -389,6 +389,102 @@ void Graph::AStar(int from, int to) {
     }
 }
 
+/* -------------------------------------------------------------------------
+                                    TSP
+/-------------------------------------------------------------------------*/
+void Graph::clearTSP() {
+    for (Vertex *v : vertexSet) {
+        v->setTSPVisited(false);
+    }
+}
+
+void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path) {
+    clearAuxiliary();
+    clearTSP();
+
+    Vertex *start = findVertex(from);
+    start->setVisited(true);
+
+    std::set<Vertex*> toVisit;
+
+    for (auto pair : pickUpDestMap) {
+        int pickup = pair.first;
+
+        Vertex *current = findVertex(pickup);
+        toVisit.insert(current);
+    }
+
+    Vertex *current = start;
+    while (!toVisit.empty()) {
+        Vertex *closest = closestVertex(current, toVisit);
+
+        closest->setTSPVisited(true);
+
+        toVisit.erase(std::find(toVisit.begin(), toVisit.end(), closest));
+
+        if (closest->isPickUp()) {
+            std::pair<std::multimap<int, int>::iterator, std::multimap<int, int>::iterator> destinations;
+            destinations = pickUpDestMap.equal_range(closest->getID());
+
+            for (std::multimap<int, int>::iterator it = destinations.first; it != destinations.second; it++) {
+                int destID = it->second;
+
+                Vertex *dest = findVertex(destID);
+                toVisit.insert(dest);
+            }
+
+            pickUpDestMap.erase(closest->getID());
+        }
+
+        // get path
+        std::vector<Vertex*> current_path;
+
+        AStar(current->getID(), closest->getID());
+
+        current_path = getPathVertexTo(closest->getID());
+
+        for (Vertex *v : current_path) {
+            path.push_back(v);
+        }
+        //
+
+        current = closest;
+    }
+
+    // path back to start
+    std::vector<Vertex*> start_path;
+
+    AStar(current->getID(), start->getID());
+
+    start_path = getPathVertexTo(start->getID());
+
+    for (Vertex *v : start_path) {
+        path.push_back(v);
+    }
+}
+
+Vertex* Graph::closestVertex(Vertex *start, const std::set<Vertex*> &toVisit) {
+    if (start == NULL || toVisit.empty()) return NULL;
+
+    auto it = toVisit.begin();
+    Vertex *closest = *it;
+    double minWeight = heuristic(start, closest);
+
+    it++;
+
+    for (; it != toVisit.end(); it++) {
+        Vertex *current = *it;
+
+        double currentWeight = heuristic(start, closest);
+
+        if (currentWeight < minWeight) {
+            minWeight = currentWeight;
+            closest = current;
+        }
+    }
+    return closest;
+}
+
 
 /**************** All Pairs Shortest Path  ***************/
 /*

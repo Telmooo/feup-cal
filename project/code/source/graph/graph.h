@@ -6,6 +6,8 @@
 #include <list>
 #include <limits>
 #include <cmath>
+#include <map>
+#include <set>
 #include <iostream>
 #include "../utils/MutablePriorityQueue.h"
 
@@ -78,6 +80,11 @@ public:
     double heuristic(Vertex *v, Vertex *d);
     Vertex* initAstar(int origin);
     void AStar(int from, int to);
+
+    // --- TSP
+    void clearTSP();
+    void nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path);
+    Vertex* closestVertex(Vertex *start, const std::set<Vertex*> &toVisit);
 
     // -- All pairs
     void floydWarshallShortestPath();

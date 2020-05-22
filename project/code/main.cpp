@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
     string location = argv[1];
     string iteration = "three";
-    string algorithm = "a-star";
+    string algorithm = "nearest";
 
     Department * police = new Department();
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         police->addWaggon(10);
         police->addWaggon(8);
         police->addRequests(location);
-        police->thirdIteration(algorithm, "null");
+        police->thirdIteration(algorithm);
         getchar();
     }
 

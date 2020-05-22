@@ -95,6 +95,29 @@ double Department::getPathTime(const std::vector<Edge> &edges) {
     return time;
 }
 
+void Department::getRequestTime(const std::vector<Edge> &edges, Request &request) {
+    double time = 0;
+    bool pickUpDone = false;
+
+    int pickUp = request.getPickup();
+    int dest = request.getDest();
+
+    for (const Edge &edge : edges) {
+        time += edge.getWeightTime();
+        if (pickUpDone) {
+            if ((edge.getDest())->getID() == dest) {
+                request.setDestHour(time);
+                break;
+            }
+        } else {
+            if ((edge.getDest())->getID() == pickUp) {
+                request.setPickupHour(time);
+                break;
+            }
+        }
+    }
+}
+
 void Department::firstIteration(string algorithm) {
     if (getCentralVertex() == NULL) {
         cout << "Map without Central Vertex" << endl;
@@ -175,7 +198,7 @@ void Department::firstIteration(string algorithm) {
             gView->rearrange();
 
             service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
-            service->setDistance(getPathTime(service->getPath()));
+            service->setDistance(getPathDistance(service->getPath()));
 
             previousEndHour = service->getEndHour();
             pickup->setPickUp(false);
@@ -279,7 +302,7 @@ void Department::secondIteration(string algorithm) {
                 gView->rearrange();
 
                 service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
-                service->setDistance(getPathTime(service->getPath()));
+                service->setDistance(getPathDistance(service->getPath()));
 
                 previousEndHour.at(i) = service->getEndHour();
                 path.clear();
@@ -296,7 +319,7 @@ void Department::secondIteration(string algorithm) {
     } while (has_service);
 }
 
-void Department::thirdIteration(string algorithm, string sub_algorithm) {
+void Department::thirdIteration(string algorithm) {
     if (getCentralVertex() == NULL) {
         cout << "Map without Central Vertex" << endl;
         return;
@@ -306,8 +329,86 @@ void Department::thirdIteration(string algorithm, string sub_algorithm) {
         return;
     }
 
+    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
+
+    if (algorithm == "nearest") algFunction = &Graph::nearestNeighbour;
+    else {
+        cout << "Invalid algorithm" << endl;
+        return;
+    }
+
     distributeMultiRequestPerService();
 
+    int centralVertexID = getCentralVertex()->getID();
+
+    for (Waggon *waggon : waggons) {
+        double previousEndHour = 0;
+        std::vector<Edge> path;
+        std::vector<Vertex *> interestPoints;
+        for (Service *service : waggon->getServices()) {
+            cout << "Press any key to pre-process the next service" << endl;
+            getchar();
+            cin.ignore(1000, '\n');
+            gDrawer->setInterestPoints(interestPoints);
+            gDrawer->cleanLastWaggonPath();
+
+            service->setStartHour(previousEndHour + 1);
+
+            interestPoints.clear();
+
+            std::multimap<int, int> pickUpDestMap;
+            std::multimap<int, int>::iterator it = pickUpDestMap.begin();
+
+            for (Request &request : service->getRequests()) {
+                int pickUpID = request.getPickup();
+                int destinationID = request.getDest();
+
+                it = pickUpDestMap.insert(it, std::pair<int, int>(pickUpID, destinationID));
+
+                Vertex *pickup = graph->findVertex(pickUpID);
+                Vertex *destination = graph->findVertex(destinationID);
+
+                pickup->setPickUp(true);
+                destination->setDestination(true);
+
+                interestPoints.push_back(pickup);
+                interestPoints.push_back(destination);
+            }
+
+
+            gDrawer->setInterestPoints(interestPoints);
+            gView->rearrange();
+
+            cout << "Press any key to process the service" << endl;
+            getchar();
+            cin.ignore(1000, '\n');
+
+            std::vector<Vertex*> vertexPath;
+            (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
+            getEdges(graph->getPathVertexTo(centralVertexID), path);
+            service->loadEdges(path);
+
+            for (Request &request : service->getRequests()) {
+                getRequestTime(path, request);
+            }
+
+            gDrawer->drawPath(path, "black");
+
+            gView->rearrange();
+
+            service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
+            service->setDistance(getPathDistance(service->getPath()));
+
+            previousEndHour = service->getEndHour();
+
+            for (Vertex *v : interestPoints) {
+                v->setPickUp(false);
+                v->setDestination(false);
+            }
+
+            path.clear();
+        }
+    }
 }
 
 void Department::addRequest(Request request) {

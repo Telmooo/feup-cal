@@ -6,7 +6,7 @@ Vertex::Vertex(int in, int x, int y, double popDensity, double avgSpeed) :
     id(in), position(x, y), fCost(INF), gCost(INF),
     path(NULL), central(false), pickUpPoint(false), destination(false),
     popDensity(popDensity), avgSpeed(avgSpeed), reachable(false), visited(false),
-    processing(false), queueIndex(0) { }
+    TSPvisited(false), processing(false), queueIndex(0) { }
 
 Vertex::~Vertex() {
     for (Edge *e : adj) {
@@ -56,6 +56,8 @@ double Vertex::getAvgSpeed() const { return avgSpeed; }
 
 bool Vertex::isVisited() const { return visited; }
 
+bool Vertex::isTSPVisited() const { return TSPvisited; }
+
 bool Vertex::isProcessing() const { return processing; }
 
 int Vertex::getQueueIndex() const { return queueIndex; }
@@ -84,5 +86,7 @@ void Vertex::setPopulationDensity(double popDensity) { this->popDensity = popDen
 void Vertex::setAvgSpeed(double avgSpeed) { this->avgSpeed = avgSpeed; }
 
 void Vertex::setVisited(bool visited) { this->visited = visited; }
+
+void Vertex::setTSPVisited(bool visited) { this->TSPvisited = visited; }
 
 void Vertex::setProcessing(bool processing) { this->processing = processing; }

@@ -31,6 +31,7 @@ class Vertex {
     double avgSpeed;            // Average speed around the vertice
 
     bool visited;		        // auxiliary field
+    bool TSPvisited;            // auxiliary field
     bool processing;        	// auxiliary field
 
     int queueIndex;      		// required by MutablePriorityQueue
@@ -72,6 +73,8 @@ public:
 
     bool isVisited() const;
 
+    bool isTSPVisited() const;
+
     bool isProcessing() const;
 
     int getQueueIndex() const;
@@ -99,6 +102,8 @@ public:
     void setAvgSpeed(double avgSpeed);
 
     void setVisited(bool visited);
+
+    void setTSPVisited(bool visited);
 
     void setProcessing(bool processing);
 

@@ -33,12 +33,13 @@ public:
 
     double getPathDistance(const std::vector<Edge> &edges);
     double getPathTime(const std::vector<Edge> &edges);
+    void getRequestTime(const std::vector<Edge> &edges, Request &request);
 
     void firstIteration(string algorithm);
 
     void secondIteration(string algorithm);
 
-    void thirdIteration(string algorithm, string sub_algorithm);
+    void thirdIteration(string algorithm);
 
     void addPickUp(int basicString);
 
