@@ -43,14 +43,18 @@ void Department::initDepartment(string fileName) {
 
     // Init Graph
     GraphReader gReader(graph, fileName);
+    cout << "Reading...\n";
     gReader.readNodes();
     gReader.readEdges();
     gReader.readTags(*this);
     gReader.loadElements();
 
     // PreProcess and Draw
-    if (centralVertex != NULL)
+    if (centralVertex != NULL) {
+        cout << "Pre-processing...\n";
         graph->preProcess(centralVertex->getID());
+    }
+
     gDrawer->drawGraph();
     gView->rearrange();
 }
@@ -115,11 +119,11 @@ void Department::firstIteration(string algorithm) {
     int centralVertexID = getCentralVertex()->getID();
 
     for (Waggon *waggon : waggons) {
-        int previousEndHour = 0;
+        double previousEndHour = 0;
         std::vector<Edge> path;
         std::vector<Vertex*> interestPoints;
         for (Service *service : waggon->getServices()) {
-            cout << "Press any pre-process the next service" << endl;
+            cout << "Press any key to pre-process the next service" << endl;
             getchar();
             cin.ignore(1000, '\n');
             gDrawer->setInterestPoints(interestPoints);
@@ -182,7 +186,114 @@ void Department::firstIteration(string algorithm) {
 }
 
 void Department::secondIteration(string algorithm) {
-    firstIteration(algorithm);
+    if (getCentralVertex() == NULL) {
+        cout << "Map without Central Vertex" << endl;
+        return;
+    }
+    if (waggons.empty()) {
+        cout << "No waggons available" << endl;
+        return;
+    }
+
+    void (Graph::*algFunction)(int, int);
+
+    if (algorithm == "dijkstra") algFunction = &Graph::dijkstraShortestPath;
+    else if(algorithm == "a-star") algFunction = &Graph::AStar;
+    else {
+        cout << "Invalid algorithm" << endl;
+        return;
+    }
+
+    distributeSingleRequestPerService();
+
+    int centralVertexID = getCentralVertex()->getID();
+
+    size_t serviceIndex = 0;
+    bool has_service;
+
+    std::vector<double> previousEndHour(waggons.size());
+    std::vector<Vertex *> interestPoints;
+    do {
+        has_service = false;
+        cout << "Press any key to go next wave of services" << endl;
+        getchar();
+        cin.ignore(1000, '\n');
+
+        gDrawer->setInterestPoints(interestPoints);
+        gDrawer->cleanLastWaggonPath();
+        gView->rearrange();
+        for (int i = 0; i < waggons.size(); i++) {
+            Waggon *waggon = waggons.at(i);
+            cout << "Press any key to pre-process waggon" << endl;
+            getchar();
+            cin.ignore(1000, '\n');
+            if (serviceIndex < waggon->getServices().size()) {
+                std::vector<Edge> path;
+                has_service = true;
+                Service *service = waggon->getServices().at(serviceIndex);
+
+                service->setStartHour(previousEndHour.at(i) + 1);
+
+                int pickUpID = service->getRequests().at(0).getPickup();
+                int destinationID = service->getRequests().at(0).getDest();
+
+                Vertex *pickup = graph->findVertex(pickUpID);
+                Vertex *destination = graph->findVertex(destinationID);
+
+                pickup->setPickUp(true);
+                destination->setDestination(true);
+
+                interestPoints.push_back(pickup);
+                interestPoints.push_back(destination);
+
+                gDrawer->setInterestPoints(interestPoints);
+                gView->rearrange();
+
+                cout << "Press any key to process the service" << endl;
+                getchar();
+                cin.ignore(1000, '\n');
+
+                // ---- PICKUP
+                (graph->*algFunction)(centralVertexID, pickUpID);
+                getEdges(graph->getPathVertexTo(pickUpID), path);
+                service->loadEdges(path);
+                service->getRequests().at(0).setPickupHour(getPathTime(path));
+                gDrawer->drawPath(path, "black");
+
+                path.clear();
+                // ---- DESTINATION
+                (graph->*algFunction)(pickUpID, destinationID);
+                getEdges(graph->getPathVertexTo(destinationID), path);
+                service->loadEdges(path);
+                service->getRequests().at(0).setDestHour(
+                        service->getRequests().at(0).getPickupHour() + getPathTime(path));
+                gDrawer->drawPath(path, "cyan");
+
+                path.clear();
+                // ---- RETURN
+                (graph->*algFunction)(destinationID, centralVertexID);
+                getEdges(graph->getPathVertexTo(centralVertexID), path);
+                service->loadEdges(path);
+                gDrawer->drawPath(path, "magenta");
+
+                gView->rearrange();
+
+                service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
+                service->setDistance(getPathTime(service->getPath()));
+
+                previousEndHour.at(i) = service->getEndHour();
+                path.clear();
+            }
+        }
+
+        for (Vertex *v : interestPoints) {
+            v->setPickUp(false);
+            v->setDestination(false);
+        }
+        gDrawer->setInterestPoints(interestPoints);
+        interestPoints.clear();
+        serviceIndex++;
+    } while (has_service);
 }
 
 void Department::thirdIteration(string algorithm, string sub_algorithm) {
@@ -253,15 +364,32 @@ void Department::distributeSingleRequestPerService() {
         aux.push(w);
     }
 
-    for (Request request : requests) {
+    for (auto it = requests.begin(); it != requests.end(); ) {
 
         Waggon *waggon = aux.top();
         aux.pop();
 
         Service *service = new Service();
 
-        service->addRequest(request);
-        service->setEmptySeats(waggon->getCapacity() - request.getNumPris());
+        Request request = *it;
+
+        if (waggon->getCapacity() < request.getNumPris()) {
+            Request split = Request(waggon->getCapacity(), request.getType(), request.getPickup(),
+                                    request.getDest(), request.getPDist(), request.getPTime());
+
+            service->addRequest(split);
+            service->setEmptySeats(waggon->getCapacity() - split.getNumPris());
+
+            request = Request(request.getNumPris() - waggon->getCapacity(), request.getType(), request.getPickup(),
+                              request.getDest(), request.getPDist(), request.getPTime());
+
+            it = requests.erase(it);
+            it = requests.insert(it, request);
+        } else {
+            service->addRequest(request);
+            service->setEmptySeats(waggon->getCapacity() - request.getNumPris());
+            it++;
+        }
 
         waggon->addService(service);
 
@@ -277,14 +405,18 @@ void Department::distributeSingleRequestPerService() {
 }
 
 bool Department::WaggonComparator::operator() (const Waggon *w1, const Waggon *w2) {
+    return w1->getCapacity() < w2->getCapacity();
+}
+
+bool Department::WaggonComparatorMultiRequest::operator() (const Waggon *w1, const Waggon *w2) {
     int w1Left;
     int w2Left;
 
     if (w1->getServices().empty()) w1Left = w1->getCapacity();
     else w1Left = w1->getServices().back()->getEmptySeats();
 
-    if (w2->getServices().empty()) w2Left = w1->getCapacity();
+    if (w2->getServices().empty()) w2Left = w2->getCapacity();
     else w2Left = w2->getServices().back()->getEmptySeats();
 
-    return w1Left > w2Left;
+    return w1Left < w2Left;
 }

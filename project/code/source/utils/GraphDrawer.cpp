@@ -5,6 +5,7 @@
 #include "GraphDrawer.h"
 
 GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {
+    (this->gv)->defineVertexSize(15);
 }
 
 void GraphDrawer::drawGraph() {

@@ -30,4 +30,4 @@ def createDensPopVelocity(filepath):
     for i in edges:
         fpw.write(("({}, {}, {}, {}, {})\n").format(i[0], i[1], i[2], i[3], i[4]))
 
-createDensPopVelocity('./resources/graphs/Porto/nodes.txt')
+createDensPopVelocity('./resources/graphs/16x16/nodes.txt')

@@ -23,6 +23,8 @@ void GraphReader::readNodes() {
         ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage >> popDensity >> garbage >> avgSpeed;
 
         g->addVertex(idn, x, y, popDensity, avgSpeed);
+
+        std::cout << "Node " << i + 1 << "/" << MAX << "\n";
     }
 
     nodes.close();
@@ -46,6 +48,8 @@ void GraphReader::readEdges() {
         ss >> garbage >> idn1 >> garbage >> idn2 >> garbage;
 
         g->addEdge(i, idn1, idn2);
+
+        std::cout << "Edge " << i + 1 << "/" << MAX << "\n";
     }
     edges.close();
 }

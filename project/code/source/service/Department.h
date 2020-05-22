@@ -9,10 +9,6 @@
 #include "Request.h"
 
 class Department {
-public:
-    struct WaggonComparator {
-        bool operator() (const Waggon *w1, const Waggon *w2);
-    };
 private:
     GraphViewer * gView;
     Graph * graph;
@@ -54,6 +50,13 @@ public:
 
     void preProcessRequests();
     void distributeSingleRequestPerService();
+
+    struct WaggonComparator {
+        bool operator() (const Waggon *w1, const Waggon *w2);
+    };
+    struct WaggonComparatorMultiRequest {
+        bool operator() (const Waggon *w1, const Waggon *w2);
+    };
 };
 
 
