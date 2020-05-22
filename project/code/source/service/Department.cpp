@@ -297,6 +297,17 @@ void Department::secondIteration(string algorithm) {
 }
 
 void Department::thirdIteration(string algorithm, string sub_algorithm) {
+    if (getCentralVertex() == NULL) {
+        cout << "Map without Central Vertex" << endl;
+        return;
+    }
+    if (waggons.empty()) {
+        cout << "No waggons available" << endl;
+        return;
+    }
+
+    distributeMultiRequestPerService();
+
 }
 
 void Department::addRequest(Request request) {
@@ -404,6 +415,95 @@ void Department::distributeSingleRequestPerService() {
     }
 }
 
+void Department::distributeMultiRequestPerService() {
+    preProcessRequests();
+
+    size_t waggonCounter = 0;
+    size_t numWaggons = waggons.size();
+
+    std::priority_queue<Waggon*, std::vector<Waggon*>, WaggonComparator> aux;
+    std::priority_queue<Waggon*, std::vector<Waggon*>, WaggonComparatorMultiRequest> aux_mult;
+
+    bool has_requests;
+    do {
+        has_requests = false;
+
+        for (Waggon *w : waggons) {
+            aux.push(w);
+        }
+
+        for (auto it = requests.begin(); it != requests.end(); ) {
+            has_requests = true;
+
+            Waggon *waggon = aux.top();
+            aux.pop();
+
+            Service *service = new Service();
+
+            Request request = *it;
+            it = requests.erase(it);
+
+            if (waggon->getCapacity() < request.getNumPris()) {
+                Request split = Request(waggon->getCapacity(), request.getType(), request.getPickup(),
+                                        request.getDest(), request.getPDist(), request.getPTime());
+
+                service->addRequest(split);
+                service->setEmptySeats(waggon->getCapacity() - split.getNumPris());
+
+                request = Request(request.getNumPris() - waggon->getCapacity(), request.getType(), request.getPickup(),
+                                  request.getDest(), request.getPDist(), request.getPTime());
+
+                it = requests.insert(it, request);
+            } else {
+                service->addRequest(request);
+                service->setEmptySeats(waggon->getCapacity() - request.getNumPris());
+            }
+
+            waggon->addService(service);
+
+            waggonCounter++;
+
+            if (waggonCounter == numWaggons) {
+                waggonCounter = 0;
+                break;
+            }
+        }
+
+        while (!aux.empty()) {
+            aux.pop();
+        }
+
+        for (Waggon *waggon : waggons) {
+            if (waggon->getServices().back()->getEmptySeats() > 0) {
+                aux_mult.push(waggon);
+            }
+        }
+
+        while (!aux_mult.empty()) {
+            Waggon *waggon = aux_mult.top();
+            aux_mult.pop();
+            Service *service = waggon->getServices().back();
+            for (auto it = requests.begin(); it != requests.end();) {
+                has_requests = true;
+
+                Request request = *it;
+
+                if (service->getEmptySeats() >= request.getNumPris()) {
+                    service->addRequest(request);
+                    service->setEmptySeats(service->getEmptySeats() - request.getNumPris());
+                    it = requests.erase(it);
+                } else {
+                    it++;
+                }
+
+                if (service->getEmptySeats() == 0) break;
+            }
+        }
+    }
+
+    while (has_requests);
+}
+
 bool Department::WaggonComparator::operator() (const Waggon *w1, const Waggon *w2) {
     return w1->getCapacity() < w2->getCapacity();
 }
@@ -413,10 +513,20 @@ bool Department::WaggonComparatorMultiRequest::operator() (const Waggon *w1, con
     int w2Left;
 
     if (w1->getServices().empty()) w1Left = w1->getCapacity();
-    else w1Left = w1->getServices().back()->getEmptySeats();
+    else {
+        w1Left = w1->getServices().back()->getEmptySeats();
+        if (w1Left == 0) {
+            w1Left = w1->getCapacity();
+        }
+    }
 
     if (w2->getServices().empty()) w2Left = w2->getCapacity();
-    else w2Left = w2->getServices().back()->getEmptySeats();
+    else {
+        w2Left = w2->getServices().back()->getEmptySeats();
+        if (w2Left == 0) {
+            w2Left = w2->getCapacity();
+        }
+    }
 
     return w1Left < w2Left;
 }

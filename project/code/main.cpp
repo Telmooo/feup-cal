@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     }
 
     string location = argv[1];
-    string iteration = "two";
+    string iteration = "three";
     string algorithm = "a-star";
 
     Department * police = new Department();
@@ -27,6 +27,13 @@ int main(int argc, char *argv[]) {
         police->addWaggon(8);
         police->addRequests(location);
         police->secondIteration(algorithm);
+        getchar();
+    }
+    else if (iteration == "three") {
+        police->addWaggon(10);
+        police->addWaggon(8);
+        police->addRequests(location);
+        police->thirdIteration(algorithm, "null");
         getchar();
     }
 

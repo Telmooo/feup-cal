@@ -50,6 +50,7 @@ public:
 
     void preProcessRequests();
     void distributeSingleRequestPerService();
+    void distributeMultiRequestPerService();
 
     struct WaggonComparator {
         bool operator() (const Waggon *w1, const Waggon *w2);
