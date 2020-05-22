@@ -398,7 +398,7 @@ void Graph::clearTSP() {
     }
 }
 
-void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path) {
+vector<Vertex *> Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path) {
     clearAuxiliary();
     clearTSP();
 
@@ -415,6 +415,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     }
 
     Vertex *current = start;
+
     while (!toVisit.empty()) {
         Vertex *closest = closestVertex(current, toVisit);
 
@@ -436,22 +437,16 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
             pickUpDestMap.erase(closest->getID());
         }
 
-        // get path
-        std::vector<Vertex*> current_path;
-
         AStar(current->getID(), closest->getID());
-
+        std::vector<Vertex*> current_path;
         current_path = getPathVertexTo(closest->getID());
 
         for (Vertex *v : current_path) {
             path.push_back(v);
         }
-        //
-
         current = closest;
     }
 
-    // path back to start
     std::vector<Vertex*> start_path;
 
     AStar(current->getID(), start->getID());
@@ -461,6 +456,8 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     for (Vertex *v : start_path) {
         path.push_back(v);
     }
+
+    return path;
 }
 
 Vertex* Graph::closestVertex(Vertex *start, const std::set<Vertex*> &toVisit) {

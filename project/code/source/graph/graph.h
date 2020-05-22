@@ -83,7 +83,7 @@ public:
 
     // --- TSP
     void clearTSP();
-    void nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path);
+    vector<Vertex *> nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path);
     Vertex* closestVertex(Vertex *start, const std::set<Vertex*> &toVisit);
 
     // -- All pairs
