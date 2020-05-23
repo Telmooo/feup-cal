@@ -1,7 +1,3 @@
-//
-// Created by diogo on 15/05/2020.
-//
-
 #include "GraphDrawer.h"
 
 GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {
@@ -68,6 +64,8 @@ void GraphDrawer::drawPath(const std::vector<Edge> &edges, string color) {
     for (const Edge &edge : edges) {
         edgesLastWaggon.push_back(edge);
         gv->setEdgeColor(edge.getID(), color);
+        gv->rearrange();
+        // Sleep(250); -> Visualizar arestas a aparecer
     }
 }
 

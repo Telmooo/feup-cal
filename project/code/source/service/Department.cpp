@@ -1,5 +1,6 @@
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 #include "Department.h"
 #include "../utils/GraphReader.h"
 #include <functional>
@@ -409,6 +410,57 @@ void Department::thirdIteration(string algorithm) {
             path.clear();
         }
     }
+}
+
+void Department::fourthIteration(string algorithm) {
+    // To Do
+}
+
+void Department::dijkstraTime(int n) {
+    int nodes = graph->getNumVertex();
+    if(nodes < n) n = nodes;
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+                graph->dijkstraShortestPath(i, j);
+    auto finish = std::chrono::high_resolution_clock::now();
+    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+    cout << "Total time (micro-seconds)=" << elapsed << endl;
+    cout << "Dijkstra processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+}
+
+void Department::astarTime(int n) {
+    int nodes = graph->getNumVertex();
+    if(nodes < n) n = nodes;
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            graph->AStar(i, j);
+    auto finish = std::chrono::high_resolution_clock::now();
+    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+    cout << "Total time (micro-seconds)=" << elapsed << endl;
+    cout << "A-Star processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+}
+
+void Department::nearestNeighboorTime(int n) {
+    int nodes = graph->getNumVertex();
+    if(nodes < n) n = nodes;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            vector<Vertex *> garbagePath;
+            multimap<int, int> onePickUp;
+            onePickUp.insert(std::pair<char,int>(i, j));
+            graph->nearestNeighbour(0, onePickUp, garbagePath);
+
+        }
+    }
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+    cout << "Total time (micro-seconds)=" << elapsed << endl;
+    cout << "Nearest Neighbour processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
 }
 
 void Department::addRequest(Request request) {

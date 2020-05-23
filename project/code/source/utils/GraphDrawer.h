@@ -1,7 +1,3 @@
-//
-// Created by diogo on 15/05/2020.
-//
-
 #ifndef MEATWAGONS_GRAPHDRAWER_H
 #define MEATWAGONS_GRAPHDRAWER_H
 

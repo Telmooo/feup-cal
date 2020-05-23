@@ -35,11 +35,16 @@ public:
     double getPathTime(const std::vector<Edge> &edges);
     void getRequestTime(const std::vector<Edge> &edges, Request &request);
 
+    // -- Iterations -- //
     void firstIteration(string algorithm);
-
     void secondIteration(string algorithm);
-
     void thirdIteration(string algorithm);
+    void fourthIteration(string algorithm);
+
+    // -- Complexity -- //
+    void dijkstraTime(int n);
+    void astarTime(int n);
+    void nearestNeighboorTime(int n);
 
     void addPickUp(int basicString);
 
