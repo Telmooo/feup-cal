@@ -51,6 +51,7 @@ void GraphDrawer::drawGraph() {
 
 void GraphDrawer::setInterestPoints(const std::vector<Vertex*> &points) {
     for (Vertex *vert : points) {
+        vertexLastWaggon.push_back(*vert);
         if (vert->isCentral()) {
             gv->setVertexColor(vert->getID(), "yellow");
         } else if (vert->isPickUp()) {
@@ -72,8 +73,12 @@ void GraphDrawer::drawPath(const std::vector<Edge> &edges, string color) {
 
 void GraphDrawer::cleanLastWaggonPath() {
     for(Edge e : edgesLastWaggon) {
-        edgesLastWaggon.push_back(e);
         gv->setEdgeColor(e.getID(), "green");
     }
+    for(Vertex v : vertexLastWaggon) {
+        gv->setVertexColor(v.getID(), "green");
+    }
+    edgesLastWaggon.clear();
+    vertexLastWaggon.clear();
 }
 

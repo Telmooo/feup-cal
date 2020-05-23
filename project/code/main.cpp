@@ -2,9 +2,12 @@
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
-        cout << "usage: [grid map path] [algorithm]" << endl;
-        cout << "Algorithms available: " << endl;
+        cout << "usage: [grid map path] [iteration] algorithm]" << endl;
+        cout << "First and Second iteration algorithms:" << endl;
         cout << "dijkstra" << endl;
+        cout << "astar" << endl;
+        cout << "Third and Four iteration algorithms:" << endl;
+        cout << "nearest" << endl;
         return -1;
     }
 
@@ -30,6 +33,13 @@ int main(int argc, char *argv[]) {
         getchar();
     }
     else if (iteration == "three") {
+        police->addWaggon(10);
+        police->addWaggon(8);
+        police->addRequests(location);
+        police->thirdIteration(algorithm);
+        getchar();
+    }
+    else if (iteration == "four") {
         police->addWaggon(10);
         police->addWaggon(8);
         police->addRequests(location);

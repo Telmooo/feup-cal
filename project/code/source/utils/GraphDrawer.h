@@ -15,6 +15,7 @@ private:
     Graph * g;
     GraphViewer * gv;
     vector<Edge> edgesLastWaggon;
+    vector<Vertex> vertexLastWaggon;
 public:
     GraphDrawer(GraphViewer * gv, Graph * g);
 

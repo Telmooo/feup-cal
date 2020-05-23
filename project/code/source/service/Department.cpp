@@ -385,7 +385,7 @@ void Department::thirdIteration(string algorithm) {
 
             std::vector<Vertex*> vertexPath;
             (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
-            getEdges(graph->getPathVertexTo(centralVertexID), path);
+            getEdges(vertexPath, path);
             service->loadEdges(path);
 
             for (Request &request : service->getRequests()) {
