@@ -52,8 +52,12 @@ void Department::initDepartment(string fileName) {
 
     // PreProcess and Draw
     if (centralVertex != NULL) {
+        auto start = std::chrono::high_resolution_clock::now();
         cout << "Pre-processing...\n";
         graph->preProcess(centralVertex->getID());
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        cout << "Total time pre processing (micro-seconds)=" << elapsed << endl;
     }
 
     gDrawer->drawGraph();

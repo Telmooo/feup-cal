@@ -699,12 +699,23 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 \chapter[Estruturas de dados utilizadas][Estruturas de dados utilizadas]{Estruturas de dados utilizadas} \label{\thechapter}
 
 \section{Grafo}
-O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente adaptado ao nosso problema. Para guardar os vértices e as 
-arestas utilizamos $vectors$ que contém um pointer para o respetivo elemento.
+O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente nesta mesma unidade curriculas, porém adaptado ao nosso problema. Para guardar os vértices e as 
+arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento. Cada aresta e cada vértice possuem um ID que permitem a sua identificação.
+Relativamente aos vértices, estes ainda possuem uma posição, as arestas que partem desse mesmo vértice, entre outros campos que são utilizados
+na execução de diversos algoritmos.
+Relativamente às arestas, estas possuem o vértice de destino e os peso do tempo e da distância. 
+Estas classes referidas anteriormente encontram-se no diretório graph.
 
 \section{Departamento}
-A classe \textit{Departamento} é a principal classe do deste trabalho. Através desta classe conseguimos ter acesso a todas as carrinhas que vão atender os diversos pedidos de
-transporte de prisioneiros.
+O departamento possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os serviços a que este mesmo departamento tem de responder.
+\subsection{Pedidos}
+Cada pedido é caracterizado pelo número de prisioneiros e o tipo de transporte que vai ser necessário efetuar. Além disso, o pedido de transporte também possui o ponto 
+em que vai ser efetuado o ponto de recolha e o ponto de destino, assim como o peso da distância e peso do tempo.
+
+\subsection{Carrinhas}
+Cada carrinha possui uma capacidade máxima, que corresponde ao número de prisioneiros que a mesma consegue transportar.
+
+\subsection{Serviço}
 
 \section{Algoritmos}
 Ao longo das quatro iterações deste projeto utilizamos diversas estruturas de dados.
@@ -718,7 +729,8 @@ O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $Mutabl
 permite fazer uma estimativa do vértice que se poderá encontrar mais próximo do local de destino.
 
 \subsection{Nearest Neighbour}
-O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que
+O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que vários pedidos tenham o mesmo ponto de recolha, a utilização de multimaps permite a
+existência de Keys iguais, mas com pontos de destino diferentex.
 
 \newpage
 %----------------------------------------------------------------------------------------
@@ -728,30 +740,21 @@ O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é 
 
 Código para análise temporal empírica:
 
-auto start = std::chrono::high_resolution_clock::now();
-for (int i = 0; i < n; i++)
-	for (int j = 0; j < n; j++)
-		g.dijkstraShortestPath(make_pair(i,j));
+\section{Kosaraju}
 
-auto finish = std::chrono::high_resolution_clock::now();
-auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
-cout << "Dijkstra processing grid " << n << " x " << n << " average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+\section{Pré processamento}
 
 \section{Djisktra}
-
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
 \section{A-Star}
-
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
 \section{Nearest Neighbour}
-
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
-
 
 \newpage
 %----------------------------------------------------------------------------------------
