@@ -329,7 +329,7 @@ void Department::thirdIteration(string algorithm) {
         return;
     }
 
-    vector<Vertex *> (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
+    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
 
     if (algorithm == "nearest") algFunction = &Graph::nearestNeighbour;
     else {
@@ -384,9 +384,8 @@ void Department::thirdIteration(string algorithm) {
             cin.ignore(1000, '\n');
 
             std::vector<Vertex*> vertexPath;
-            vector<Vertex *> pathVertex = (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
-
-            getEdges(pathVertex, path);
+            (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
+            getEdges(graph->getPathVertexTo(centralVertexID), path);
             service->loadEdges(path);
 
             for (Request &request : service->getRequests()) {
