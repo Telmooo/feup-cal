@@ -694,7 +694,87 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 
 \newpage
 %----------------------------------------------------------------------------------------
-%	CHAPTER 5 - Conclusão
+%	CHAPTER 5 - Estruturas de dados utilizadas
+%----------------------------------------------------------------------------------------
+\chapter[Estruturas de dados utilizadas][Estruturas de dados utilizadas]{Estruturas de dados utilizadas} \label{\thechapter}
+
+\section{Grafo}
+O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente adaptado ao nosso problema. Para guardar os vértices e as 
+arestas utilizamos $vectors$ que contém um pointer para o respetivo elemento.
+
+\section{Departamento}
+A classe \textit{Departamento} é a principal classe do deste trabalho. Através desta classe conseguimos ter acesso a todas as carrinhas que vão atender os diversos pedidos de
+transporte de prisioneiros.
+
+\section{Algoritmos}
+Ao longo das quatro iterações deste projeto utilizamos diversas estruturas de dados.
+
+\subsection{Djisktra}
+Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ já fornecida previamente. Esta possui a vantagem de ser possível alterar a \textit{key} 
+de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
+
+\subsection{A-Star}
+O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$. No entanto, além desta estrutura de dados, o algoritmo possui uma heurística que 
+permite fazer uma estimativa do vértice que se poderá encontrar mais próximo do local de destino.
+
+\subsection{Nearest Neighbour}
+O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que
+
+\newpage
+%----------------------------------------------------------------------------------------
+%	CHAPTER 6 - Algoritmos efetivamente implementados e análise de complexidade 
+%----------------------------------------------------------------------------------------
+\chapter[Algoritmos efetivamente implementados][Algoritmos efetivamente implementados]{Algoritmos efetivamente implementados} \label{\thechapter}
+
+Código para análise temporal empírica:
+
+auto start = std::chrono::high_resolution_clock::now();
+for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+		g.dijkstraShortestPath(make_pair(i,j));
+
+auto finish = std::chrono::high_resolution_clock::now();
+auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+cout << "Dijkstra processing grid " << n << " x " << n << " average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+
+\section{Djisktra}
+
+\subsection{Análise teórica}
+\subsection{Análise temporal empírica}
+
+\section{A-Star}
+
+\subsection{Análise teórica}
+\subsection{Análise temporal empírica}
+
+\section{Nearest Neighbour}
+
+\subsection{Análise teórica}
+\subsection{Análise temporal empírica}
+
+
+\newpage
+%----------------------------------------------------------------------------------------
+%	CHAPTER 7 - Conectividade dos grafos utilizados
+%----------------------------------------------------------------------------------------
+\chapter[Conectividade dos grafos utilizados][Conectividade dos grafos utilizados]{Conectividade dos grafos utilizados} \label{\thechapter}
+
+Conforme foi referido anteriormente, antes de começar a procura do caminho mais curto é necessário verificar que todos os pontos de interesse a serem percorridos encontram-se na
+parte fortemente conexa do grafo. Para garantir isto foi utilizado o algoritmo de $Kosaraju$ que permite obter a parte fortemente conexa do grafo. Depois deste algoritmo ser aplicado
+é possível distinguir através do $GraphViewer$ as componentes do grafo que se encontram conexas dos componentes que não se encontram conexos atráves da sua cor. Os vértices e arestas
+que se encontram representados com a cor vermelha, correspondem àqueles que se encontram na parte não conexa do grafo. Respetivamente, aqueles elementos que se encontram com cor
+verde correspondem à parte conexa do grafo.
+
+\section{Grafos pouco conexos}
+Foi utilizado um grafo pouco conexo para verificar que o nosso algoritmo de $Kosaraju$ estava bem implementado. O mapa pouco conexo utilizado foi do $Porto$.
+
+\section{Grafos muito conexos}
+Os grafos conexos foram utilizados para testar as diversas iterações, uma vez que estes permitem visitar quase todos os vértices. Foram utilizados os $GridMaps$ $8x8$ e $16x16$,
+assim como o mapa de $Cabeceiras$.
+
+\newpage
+%----------------------------------------------------------------------------------------
+%	CHAPTER 8 - Conclusão
 %----------------------------------------------------------------------------------------
 \chapter[Conclusão][Conclusão]{Conclusão} \label{\thechapter}
 
