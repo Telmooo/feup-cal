@@ -73,22 +73,17 @@ public:
     // --- Single source
     void unweightedShortestPath(const int &s);
     void dijkstraShortestPath(const int &s);
-    void dijkstraShortestPath(int origin, int dest);
-    void bellmanFordShortestPath(const int &s);
+    void dijkstraShortestPath(int origin, int dest, double distP, double timeP);
 
     // --- A*
     double heuristic(Vertex *v, Vertex *d);
     Vertex* initAstar(int origin);
-    void AStar(int from, int to);
+    void AStar(int from, int to, double distP, double timeP);
 
     // --- TSP
     void clearTSP();
     void nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path);
     Vertex* closestVertex(Vertex *start, const std::set<Vertex*> &toVisit);
-
-    // -- All pairs
-    void floydWarshallShortestPath();
-    vector<int> getfloydWarshallPath(const int &origin, const int &dest) const;
 
     // -- Miscellaneous
     double getMaxX();

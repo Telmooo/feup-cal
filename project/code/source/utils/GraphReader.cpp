@@ -20,7 +20,8 @@ void GraphReader::readNodes() {
         getline(nodes, line);
         std::stringstream ss(line);
 
-        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage >> popDensity >> garbage >> avgSpeed;
+        // Funciona para numero < 10 popDensity avg Speed???
+        ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage >> popDensity >> garbage >> avgSpeed >> garbage;
 
         g->addVertex(idn, x, y, popDensity, avgSpeed);
 
@@ -84,7 +85,6 @@ void GraphReader::readTags(Department &department) {
 void GraphReader::loadElements() {
     for(Vertex * current : g->getVertexSet()) {
         for(Edge * adj : current->getAdj()) {
-            // Weight
             double dist = current->getPosition().distance(adj->getDest()->getPosition());
             adj->setWeight(dist, dist / current->getAvgSpeed());
         }

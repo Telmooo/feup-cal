@@ -22,8 +22,8 @@ def createDensPopVelocity(filepath):
         line = fp.readline()
         edges = []
         while line:
-            result = parse("({}, {}, {})", line.strip())
-            edges += [[result[0], result[1], result[2], randrange(100), randrange(120)]]
+            result = parse("({}, {}, {}, {}, {})", line.strip())
+            edges += [[result[0], result[1], result[2], 5, 5]]
             line = fp.readline()
     fpw = open(filepath, "w")
     fpw.write(str(len(edges)) + '\n')

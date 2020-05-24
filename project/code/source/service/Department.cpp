@@ -133,7 +133,7 @@ void Department::firstIteration(string algorithm) {
         return;
     }
 
-    void (Graph::*algFunction)(int, int);
+    void (Graph::*algFunction)(int, int, double, double);
 
     if (algorithm == "dijkstra") algFunction = &Graph::dijkstraShortestPath;
     else if(algorithm == "a-star") algFunction = &Graph::AStar;
@@ -174,12 +174,14 @@ void Department::firstIteration(string algorithm) {
             gDrawer->setInterestPoints(interestPoints);
             gView->rearrange();
 
+            cout << "Start Hour: "<< service->getStartHour() << endl;
+            cout << "Number of prisioners: "<< waggon->getCapacity() - service->getEmptySeats() << endl;
             cout << "Press any key to process the service" << endl;
             getchar();
             cin.ignore(1000, '\n');
 
             // ---- PICKUP
-            (graph->*algFunction)(centralVertexID, pickUpID);
+            (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
             getEdges(graph->getPathVertexTo(pickUpID), path);
             service->loadEdges(path);
             service->getRequests().at(0).setPickupHour(getPathTime(path));
@@ -187,7 +189,7 @@ void Department::firstIteration(string algorithm) {
 
             path.clear();
             // ---- DESTINATION
-            (graph->*algFunction)(pickUpID, destinationID);
+            (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
             getEdges(graph->getPathVertexTo(destinationID), path);
             service->loadEdges(path);
             service->getRequests().at(0).setDestHour(service->getRequests().at(0).getPickupHour() + getPathTime(path));
@@ -195,7 +197,7 @@ void Department::firstIteration(string algorithm) {
 
             path.clear();
             // ---- RETURN
-            (graph->*algFunction)(destinationID, centralVertexID);
+            (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
             getEdges(graph->getPathVertexTo(centralVertexID), path);
             service->loadEdges(path);
             gDrawer->drawPath(path, "magenta");
@@ -206,6 +208,7 @@ void Department::firstIteration(string algorithm) {
             service->setDistance(getPathDistance(service->getPath()));
 
             previousEndHour = service->getEndHour();
+            cout << "End Hour: "<< service->getEndHour() << endl;
             pickup->setPickUp(false);
             destination->setDestination(false);
             path.clear();
@@ -223,7 +226,7 @@ void Department::secondIteration(string algorithm) {
         return;
     }
 
-    void (Graph::*algFunction)(int, int);
+    void (Graph::*algFunction)(int, int, double, double);
 
     if (algorithm == "dijkstra") algFunction = &Graph::dijkstraShortestPath;
     else if(algorithm == "a-star") algFunction = &Graph::AStar;
@@ -277,12 +280,14 @@ void Department::secondIteration(string algorithm) {
                 gDrawer->setInterestPoints(interestPoints);
                 gView->rearrange();
 
+                cout << "Start Hour: "<< service->getStartHour() << endl;
+                cout << "Number of prisioners: "<< waggon->getCapacity() - service->getEmptySeats() << endl;
                 cout << "Press any key to process the service" << endl;
                 getchar();
                 cin.ignore(1000, '\n');
 
                 // ---- PICKUP
-                (graph->*algFunction)(centralVertexID, pickUpID);
+                (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
                 getEdges(graph->getPathVertexTo(pickUpID), path);
                 service->loadEdges(path);
                 service->getRequests().at(0).setPickupHour(getPathTime(path));
@@ -290,7 +295,7 @@ void Department::secondIteration(string algorithm) {
 
                 path.clear();
                 // ---- DESTINATION
-                (graph->*algFunction)(pickUpID, destinationID);
+                (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
                 getEdges(graph->getPathVertexTo(destinationID), path);
                 service->loadEdges(path);
                 service->getRequests().at(0).setDestHour(
@@ -299,7 +304,7 @@ void Department::secondIteration(string algorithm) {
 
                 path.clear();
                 // ---- RETURN
-                (graph->*algFunction)(destinationID, centralVertexID);
+                (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
                 getEdges(graph->getPathVertexTo(centralVertexID), path);
                 service->loadEdges(path);
                 gDrawer->drawPath(path, "magenta");
@@ -310,6 +315,7 @@ void Department::secondIteration(string algorithm) {
                 service->setDistance(getPathDistance(service->getPath()));
 
                 previousEndHour.at(i) = service->getEndHour();
+                cout << "End Hour: "<< service->getEndHour() << endl;
                 path.clear();
             }
         }
@@ -348,17 +354,17 @@ void Department::thirdIteration(string algorithm) {
 
     for (Waggon *waggon : waggons) {
         double previousEndHour = 0;
+        cout << "Hour: " << previousEndHour << endl;
         std::vector<Edge> path;
         std::vector<Vertex *> interestPoints;
         for (Service *service : waggon->getServices()) {
-            cout << "Press any key to pre-process the next service" << endl;
+            cout << "Press any key to pre-process the next service." << endl;
             getchar();
             cin.ignore(1000, '\n');
             gDrawer->setInterestPoints(interestPoints);
             gDrawer->cleanLastWaggonPath();
 
             service->setStartHour(previousEndHour + 1);
-
             interestPoints.clear();
 
             std::multimap<int, int> pickUpDestMap;
@@ -384,6 +390,8 @@ void Department::thirdIteration(string algorithm) {
             gDrawer->setInterestPoints(interestPoints);
             gView->rearrange();
 
+            cout << "Service Start Hour: " << service->getStartHour() << endl;
+            cout << "Number of prisioners: "<< waggon->getCapacity() - service->getEmptySeats() << endl;
             cout << "Press any key to process the service" << endl;
             getchar();
             cin.ignore(1000, '\n');
@@ -403,6 +411,9 @@ void Department::thirdIteration(string algorithm) {
 
             service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
             service->setDistance(getPathDistance(service->getPath()));
+
+            cout << "Service End Hour: " << service->getEndHour() << endl;
+            cout << "Service Distance: " << service->getDistance() << endl;
 
             previousEndHour = service->getEndHour();
 
@@ -426,7 +437,7 @@ void Department::dijkstraTime(int n) {
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-                graph->dijkstraShortestPath(i, j);
+                graph->dijkstraShortestPath(i, j, 1, 1);
     auto finish = std::chrono::high_resolution_clock::now();
     auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
     cout << "Total time (micro-seconds)=" << elapsed << endl;
@@ -439,7 +450,7 @@ void Department::astarTime(int n) {
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            graph->AStar(i, j);
+            graph->AStar(i, j, 1, 1);
     auto finish = std::chrono::high_resolution_clock::now();
     auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
     cout << "Total time (micro-seconds)=" << elapsed << endl;

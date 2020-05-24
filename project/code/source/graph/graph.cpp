@@ -259,7 +259,7 @@ void Graph::dijkstraShortestPath(const int &origin) {
 
 
 
-void Graph::dijkstraShortestPath(int origin, int dest) {
+void Graph::dijkstraShortestPath(int origin, int dest, double distP, double timeP) {
     clearAuxiliary();
 
     Vertex *start = findVertex(origin);
@@ -292,35 +292,6 @@ void Graph::dijkstraShortestPath(int origin, int dest) {
     }
 }
 
-
-void Graph::bellmanFordShortestPath(const int &orig) {
-    clearAuxiliary();
-
-    Vertex *start = findVertex(orig);
-    start->setFCost(0);
-    for (int i = 1; i < vertexSet.size(); i++) {
-        for (Vertex *v : vertexSet) {
-            for (Edge * edge : v->getAdj()) {
-                Vertex *w = edge->getDest();
-                double tempCost = v->getFCost() + edge->getWeightDistance();
-                if (w->getFCost() > tempCost) {
-                    w->setFCost(tempCost);
-                    w->setPath(v);
-                }
-            }
-        }
-    }
-    for (Vertex *v : vertexSet) {
-        for (Edge * edge : v->adj) {
-            if (v->getFCost() + edge->getWeightDistance() < (edge->getDest())->getFCost()) {
-                cerr << "there are cycles of negative weight\n";
-                return;
-            }
-        }
-    }
-}
-
-
 vector<Vertex *> Graph::getPathVertexTo(int dest) const {
     vector<Vertex * > res;
     Vertex * v = findVertex(dest);
@@ -335,8 +306,10 @@ vector<Vertex *> Graph::getPathVertexTo(int dest) const {
 /* -------------------------------------------------------------------------
                                     A*
 /-------------------------------------------------------------------------*/
-double Graph::heuristic(Vertex *v, Vertex *d) { // euclidean distance for now
-    return v->getPosition().distance(d->getPosition());
+double Graph::heuristic(Vertex *v, Vertex *d) {
+    double distC = v->getPosition().distance(d->getPosition());
+    double tempC = distC / v->getAvgSpeed();
+    return distC+ tempC; // timeC and distC?
 }
 
 Vertex* Graph::initAstar(int origin) {
@@ -348,7 +321,7 @@ Vertex* Graph::initAstar(int origin) {
     return start;
 }
 
-void Graph::AStar(int from, int to) {
+void Graph::AStar(int from, int to, double distP, double timeP) {
     Vertex* start = initAstar(from);
     Vertex* dest = findVertex(to);
 
@@ -439,7 +412,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
         // get path
         std::vector<Vertex*> current_path;
 
-        AStar(current->getID(), closest->getID());
+        AStar(current->getID(), closest->getID(), 0, 0); // Change this
 
         current_path = getPathVertexTo(closest->getID());
 
@@ -454,7 +427,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     // path back to start
     std::vector<Vertex*> start_path;
 
-    AStar(current->getID(), start->getID());
+    AStar(current->getID(), start->getID(), 0, 0);
 
     start_path = getPathVertexTo(start->getID());
 
@@ -484,83 +457,6 @@ Vertex* Graph::closestVertex(Vertex *start, const std::set<Vertex*> &toVisit) {
     }
     return closest;
 }
-
-
-/**************** All Pairs Shortest Path  ***************/
-/*
-template<class T>
-void Graph<T>::floydWarshallShortestPath() {
-
-    const int SIZE = vertexSet.size();
-
-    D.resize(SIZE); P.resize(SIZE);
-    for (int i = 0; i < SIZE; i++) {
-        D[i].resize(SIZE); P[i].resize(SIZE);
-        Vertex<T> *v = vertexSet[i];
-        for (int j = 0; j < SIZE; j++) {
-            if (i == j) { D[i][j] = 0; P[i][j] = v; continue; }
-            D[i][j] = INF; P[i][j] = NULL;
-            Vertex<T> *w = vertexSet[j];
-            for (Edge<T> edge : v->adj) {
-                if (edge.dest == w) {
-                    D[i][j] = edge.weight;
-                    P[i][j] = edge.dest;
-                    break;
-                }
-            }
-        }
-    }
-
-    for (int k = 0; k < SIZE; k++) {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (D[i][k] + D[k][j] < D[i][j]) {
-                    D[i][j] = D[i][k] + D[k][j];
-                    P[i][j] = P[i][k];
-                }
-            }
-        }
-    }
-}
-
-template<class T>
-vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const {
-    vector<T> res;
-
-    int pos_orig = -1, pos_dest = -1;
-    Vertex<T> *origV, *destV;
-    for (int i = 0; i < vertexSet.size(); i++) {
-        Vertex<T> *v = vertexSet[i];
-        if (pos_orig == -1 && v->info == orig) {
-            pos_orig = i;
-            origV = v;
-        }
-        if (pos_dest == -1 && v->info == dest) {
-            pos_dest = i;
-            destV = v;
-        }
-        if (pos_orig != -1 && pos_dest != -1) break;
-    }
-
-    if (pos_orig == -1 || pos_dest == -1) return res;
-
-    if (D[pos_orig][pos_dest] == INF) return res;
-
-    res.push_back(origV->info);
-    while (pos_orig != pos_dest) {
-        origV = P[pos_orig][pos_dest];
-        res.push_back(origV->info);
-        for (int i = 0; i < vertexSet.size(); i++) {
-            if (vertexSet[i] == origV) {
-                pos_orig = i;
-                break;
-            }
-        }
-    }
-
-    return res;
-}
- */
 
 double Graph::getMaxX() {
     return maxX;

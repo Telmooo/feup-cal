@@ -681,7 +681,7 @@ Devem ser, portanto, seguidos os seguintes passos quando é recebido um novo ped
 A aplicação a implementar irá incluir um menu de interação com o utilizador (GUI) capaz de navegar entre vários submenus, possibilitando o acesso às seguintes funcionalidades:
 
 \begin{itemize}
-	\item Visualização do grafo que contém o mapa disponibilizado (em GraphViewer)
+	\item Visualização do grafo que contém o mapa disponibilizado (utilizando GraphViewer)
 	\item Cálculo otimizado do percurso entre dois pontos
 	\item Adição e visualização do número de veículos
 	\item Adição de novos pedidos
@@ -700,14 +700,18 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 
 \section{Grafo}
 O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente nesta mesma unidade curriculas, porém adaptado ao nosso problema. Para guardar os vértices e as 
-arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento. Cada aresta e cada vértice possuem um ID que permitem a sua identificação.
-Relativamente aos vértices, estes ainda possuem uma posição, as arestas que partem desse mesmo vértice, entre outros campos que são utilizados
+arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento.
+
+\subsection{Vértice}
+Possuem um ID que permite a sua identificação, a posição em que o mesmo é desenhado, as arestas que partem dele e campos auxiliares que são utilizados
 na execução de diversos algoritmos.
-Relativamente às arestas, estas possuem o vértice de destino e os peso do tempo e da distância. 
-Estas classes referidas anteriormente encontram-se no diretório graph.
+
+\subsection{Aresta}
+Possuem um ID que permite a sua identificação, assim como um vértice de destino, o peso do tempo e o da distância. 
 
 \section{Departamento}
 O departamento possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os serviços a que este mesmo departamento tem de responder.
+
 \subsection{Pedidos}
 Cada pedido é caracterizado pelo número de prisioneiros e o tipo de transporte que vai ser necessário efetuar. Além disso, o pedido de transporte também possui o ponto 
 em que vai ser efetuado o ponto de recolha e o ponto de destino, assim como o peso da distância e peso do tempo.
@@ -717,9 +721,12 @@ Cada carrinha possui uma capacidade máxima, que corresponde ao número de prisi
 
 \subsection{Serviço}
 
-\section{Algoritmos}
-Ao longo das quatro iterações deste projeto utilizamos diversas estruturas de dados.
+\section{Leitura e desenho de mapas}
+Os mapas são lidos atrasvés de ficheiros de texto que possuem informação sobre os vértices e sobre as arestas.
+Também existem ficheiros que possuem informação sobre a localização da central e sobre os pedidos de transporte de prisioneiros. 
 
+
+\section{Algoritmos}
 \subsection{Djisktra}
 Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ já fornecida previamente. Esta possui a vantagem de ser possível alterar a \textit{key} 
 de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
@@ -734,11 +741,9 @@ existência de Keys iguais, mas com pontos de destino diferentex.
 
 \newpage
 %----------------------------------------------------------------------------------------
-%	CHAPTER 6 - Algoritmos efetivamente implementados e análise de complexidade 
+%	CHAPTER 6 - Algoritmos implementados e complexidade
 %----------------------------------------------------------------------------------------
-\chapter[Algoritmos efetivamente implementados][Algoritmos efetivamente implementados]{Algoritmos efetivamente implementados} \label{\thechapter}
-
-Código para análise temporal empírica:
+\chapter[Algoritmos implementados e complexidade][Algoritmos implementados e complexidade]{Algoritmos implementados e complexidade} \label{\thechapter}
 
 \section{Kosaraju}
 
