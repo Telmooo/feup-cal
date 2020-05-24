@@ -700,30 +700,33 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 
 \section{Grafo}
 O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente nesta mesma unidade curriculas, porém adaptado ao nosso problema. Para guardar os vértices e as 
-arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento.
+arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento. Encontra-se na classe $Graph$.
 
 \subsection{Vértice}
 Possuem um ID que permite a sua identificação, a posição em que o mesmo é desenhado, as arestas que partem dele e campos auxiliares que são utilizados
-na execução de diversos algoritmos.
+na execução de diversos algoritmos. Encontra-se na classe $Vertex$.
 
 \subsection{Aresta}
-Possuem um ID que permite a sua identificação, assim como um vértice de destino, o peso do tempo e o da distância. 
+Possuem um ID que permite a sua identificação, assim como um vértice de destino, o peso do tempo e o da distância. Encontra-se na classe $Edge$.
 
 \section{Departamento}
-O departamento possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os serviços a que este mesmo departamento tem de responder.
+A classe $Departament$ possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os serviços a que este mesmo departamento tem de responder.
 
 \subsection{Pedidos}
-Cada pedido é caracterizado pelo número de prisioneiros e o tipo de transporte que vai ser necessário efetuar. Além disso, o pedido de transporte também possui o ponto 
-em que vai ser efetuado o ponto de recolha e o ponto de destino, assim como o peso da distância e peso do tempo.
+Os pedidos encontram-se na classe $Request$ e são caracterizados pelo número de prisioneiros e o tipo de transporte que vai ser necessário efetuar. Além disso, o pedido de transporte também possui o 
+local de recolha e o ponto de destino, assim como o peso da distância e peso do tempo.
 
 \subsection{Carrinhas}
-Cada carrinha possui uma capacidade máxima, que corresponde ao número de prisioneiros que a mesma consegue transportar.
+As carrinhas encontram-se na classe $Waggon$ e possuem uma capacidade máxima, que corresponde ao número de prisioneiros que a mesma consegue transportar. Possuem também uma lista 
+com os serviços que a mesma irá efetuar.
 
 \subsection{Serviço}
+Os serviços possuem a distância percorrida e os pedidos que irão ser atendidos assim como uma hora de partida e de chegada, encontrando-se implementado na classe $Service$.
 
 \section{Leitura e desenho de mapas}
-Os mapas são lidos atrasvés de ficheiros de texto que possuem informação sobre os vértices e sobre as arestas.
-Também existem ficheiros que possuem informação sobre a localização da central e sobre os pedidos de transporte de prisioneiros. 
+Os mapas são lidos através de ficheiros de texto que possuem informação sobre os multiplos vértices e as arestas. 
+Existem também ficheiros que possuem informação sobre a localização da central e sobre os pedidos de transporte de prisioneiros. Esta informação é lida em métodos da classe $GraphReader$.
+Posteriormente, o grafo é desenhado na classe $GraphDrawer$, através do $GraphViewer$.
 
 
 \section{Algoritmos}
@@ -774,11 +777,15 @@ que se encontram representados com a cor vermelha, correspondem àqueles que se 
 verde correspondem à parte conexa do grafo.
 
 \section{Grafos pouco conexos}
-Foi utilizado um grafo pouco conexo para verificar que o nosso algoritmo de $Kosaraju$ estava bem implementado. O mapa pouco conexo utilizado foi do $Porto$.
+Os grafos pouco conexos foram utilizados para verificar que o algoritmo de $Kosaraju$ encontrava-se, de facto, bem implementado da nossa parte. Não 
+realizamos nenhuma iteração do nosso problema nestes grafos uma vez que a parte que se encontrava conexa era bastante reduzida e por esse mesmo motivo não era profícuo
+testar com estes mapas.
+O mapa pouco conexo que fora utilizado foi o do $Porto$.
 
 \section{Grafos muito conexos}
-Os grafos conexos foram utilizados para testar as diversas iterações, uma vez que estes permitem visitar quase todos os vértices. Foram utilizados os $GridMaps$ $8x8$ e $16x16$,
-assim como o mapa de $Cabeceiras$.
+Os grafos conexos foram utilizados para testar as diversas iterações. Uma vez que estes permitem visitar quase todos os vértices, constituem o melhor tipo
+de mapas para encontrar o caminho mais curto entre vários pontos. Foram utilizados os $GridMaps$ $8x8$ e $16x16$ com ligeiras alterações, assim como o mapa de $Cabeceiras$
+que foi criado com o âmbito de possuir outro mapa conexo sem ser $GridMaps$.
 
 \newpage
 %----------------------------------------------------------------------------------------
