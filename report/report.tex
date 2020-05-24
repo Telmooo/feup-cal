@@ -735,21 +735,30 @@ Posteriormente, o grafo é desenhado na classe $GraphDrawer$, através do $Graph
 %----------------------------------------------------------------------------------------
 \chapter[Algoritmos implementados e complexidade][Algoritmos implementados e complexidade]{Algoritmos implementados e complexidade} \label{\thechapter}
 
-\section{Kosaraju}
+\section{Pré-processamento}
+Antes de fazer pré-processamento no nosso grafo, verificamos que existe pelo menos um departamento no mapa a analisar.
+Caso exista, aplicamos o algoritmo de Kosaraju a partir do departamento. Logo após a aplicação do algoritmo, 
+obtemos a parte fortemente conexa a que o nosso departamento pertence, do qual irão sair todos os veículos de transporte de prisioneiros irão partir.
 
-\section{Pré processamento}
+O pseudo-código encontra-se já descrito no capitulo de funcionalidades a implementar.
+\subsection{Análise teórica}
+\subsection{Análise temporal empírica}
 
 \section{Djisktra}
-Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ já fornecida previamente. Esta possui a vantagem de ser possível alterar a \textit{key} 
-de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
+Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ que foi fornecida previamente para a resolução de exercícios nas aulas teórico-práticas.
+A utilização desta estrutura de dados demonstra ser vantajosa para a implementação do algoritmo uma vez que permite
+alterar a \textit{key} de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
 
+O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução, assim como foi efetuada a sua análise temporal.
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
 \section{A-Star}
-O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$. No entanto, além desta estrutura de dados, o algoritmo possui uma heurística que 
+O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$.
+No entanto, além desta estrutura de dados, o algoritmo possui uma heurística que 
 permite fazer uma estimativa do vértice que se poderá encontrar mais próximo do local de destino.
 
+O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução.
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
@@ -757,6 +766,16 @@ permite fazer uma estimativa do vértice que se poderá encontrar mais próximo 
 O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que vários pedidos tenham o mesmo ponto de recolha, a utilização de multimaps permite a
 existência de Keys iguais, mas com pontos de destino diferentex.
 
+O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução.
+
+\subsection{Análise teórica}
+\subsection{Análise temporal empírica}
+
+\section{Processamento de pedidos}
+Para distribuir os pedidos pelos diferentes veículos fizemos um algoritmo que distribui os pedidos pelas várias carrinhas,
+tentando fazer com que estas realizem o menor número de viagens possível.
+
+\subsection{Pseudo-código}
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
