@@ -729,19 +729,6 @@ Existem também ficheiros que possuem informação sobre a localização da cent
 Posteriormente, o grafo é desenhado na classe $GraphDrawer$, através do $GraphViewer$.
 
 
-\section{Algoritmos}
-\subsection{Djisktra}
-Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ já fornecida previamente. Esta possui a vantagem de ser possível alterar a \textit{key} 
-de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
-
-\subsection{A-Star}
-O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$. No entanto, além desta estrutura de dados, o algoritmo possui uma heurística que 
-permite fazer uma estimativa do vértice que se poderá encontrar mais próximo do local de destino.
-
-\subsection{Nearest Neighbour}
-O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que vários pedidos tenham o mesmo ponto de recolha, a utilização de multimaps permite a
-existência de Keys iguais, mas com pontos de destino diferentex.
-
 \newpage
 %----------------------------------------------------------------------------------------
 %	CHAPTER 6 - Algoritmos implementados e complexidade
@@ -753,14 +740,23 @@ existência de Keys iguais, mas com pontos de destino diferentex.
 \section{Pré processamento}
 
 \section{Djisktra}
+Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ já fornecida previamente. Esta possui a vantagem de ser possível alterar a \textit{key} 
+de um elemento sem precisar de o remover e voltar a inserir na $PriorityQueue$.
+
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
 \section{A-Star}
+O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$. No entanto, além desta estrutura de dados, o algoritmo possui uma heurística que 
+permite fazer uma estimativa do vértice que se poderá encontrar mais próximo do local de destino.
+
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
 \section{Nearest Neighbour}
+O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que vários pedidos tenham o mesmo ponto de recolha, a utilização de multimaps permite a
+existência de Keys iguais, mas com pontos de destino diferentex.
+
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 

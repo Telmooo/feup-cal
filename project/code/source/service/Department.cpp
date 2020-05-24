@@ -462,13 +462,12 @@ void Department::nearestNeighboorTime(int n) {
     if(nodes < n) n = nodes;
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < n; j++) {
             vector<Vertex *> garbagePath;
             multimap<int, int> onePickUp;
             onePickUp.insert(std::pair<char,int>(i, j));
             graph->nearestNeighbour(0, onePickUp, garbagePath);
-
         }
     }
 

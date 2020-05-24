@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
     }
 
     string location = "8x8";
-    string iteration = "three";
-    string algorithm = "nearest";
+    string iteration = "two";
+    string algorithm = "dijkstra";
 
     Department * police = new Department();
 
@@ -52,8 +52,10 @@ int main(int argc, char *argv[]) {
             police->dijkstraTime(32);
             police->dijkstraTime(64);
             police->dijkstraTime(128);
+            /*
             police->dijkstraTime(200);
             police->dijkstraTime(289);
+             */
         }
         else if (algorithm == "astar") {
             police->astarTime(4);
@@ -70,10 +72,8 @@ int main(int argc, char *argv[]) {
             police->nearestNeighboorTime(32);
             police->nearestNeighboorTime(64);
             police->nearestNeighboorTime(128);
-            /* Não está a dar para valores > 128? I dunno why
             police->nearestNeighboorTime(200);
             police->nearestNeighboorTime(289);
-             */
         }
     }
 
