@@ -1,23 +1,27 @@
 #include "source/service/Department.h"
 
 int main(int argc, char *argv[]) {
-    if(argc != 2) {
-        cout << "usage: [grid map path] [iteration] [algorithm]" << endl;
+    if(argc != 5) {
+        cout << "usage: [grid map path] [iteration] [algorithm] [delayed]" << endl;
         cout << "First and Second iteration algorithms:" << endl;
-        cout << "dijkstra" << endl;
-        cout << "a-star" << endl;
+        cout << "-   dijkstra" << endl;
+        cout << "-   a-star" << endl;
         cout << "Third and Four iteration algorithms:" << endl;
-        cout << "nearest" << endl;
+        cout << "-   nearest" << endl;
         return -1;
     }
 
-    string location = "8x8";
-    string iteration = "three";
+    string location = "16x16";
+    string iteration = "algorithmTime";
     string algorithm = "nearest";
 
     Department * police = new Department();
 
     police->initDepartment(location);
+
+    if (std::string(argv[4]) == "true") {
+        police->setDelayed(true);
+    }
 
     if (iteration == "one") {
         police->addWaggon(10);
@@ -32,18 +36,15 @@ int main(int argc, char *argv[]) {
         getchar();
     } else if (iteration == "three") {
         police->addWaggon(10);
-        police->addWaggon(8);
         police->addRequests(location);
         police->thirdIteration(algorithm);
         getchar();
     } else if (iteration == "four") {
-        /* To do
         police->addWaggon(10);
         police->addWaggon(8);
         police->addRequests(location);
         police->fourthIteration(algorithm);
         getchar();
-         */
     }
     else if (iteration == "algorithmTime") {
         if(algorithm == "dijkstra") {
@@ -67,13 +68,7 @@ int main(int argc, char *argv[]) {
             police->astarTime(289);
         }
         else if (algorithm == "nearest") {
-            police->nearestNeighboorTime(4);
-            police->nearestNeighboorTime(16);
-            police->nearestNeighboorTime(32);
-            police->nearestNeighboorTime(64);
-            police->nearestNeighboorTime(128);
-            police->nearestNeighboorTime(200);
-            police->nearestNeighboorTime(289);
+            police->nearestNeighbourTime();
         }
     }
 

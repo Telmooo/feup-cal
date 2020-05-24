@@ -27,6 +27,8 @@ public:
 
     void initDepartment(string fileName);
 
+    void setDelayed(bool delayed);
+
     void addWaggon(int capacity);
 
     void getEdges(const std::vector<Vertex*> &vertices, std::vector<Edge> &edges);
@@ -44,7 +46,7 @@ public:
     // -- Complexity -- //
     void dijkstraTime(int n);
     void astarTime(int n);
-    void nearestNeighboorTime(int n);
+    void nearestNeighbourTime();
 
     void addPickUp(int basicString);
 

@@ -22,6 +22,10 @@ Department::~Department() {
     }
 }
 
+void Department::setDelayed(bool delayed) {
+    gDrawer->setDelayed(delayed);
+}
+
 /* -------------------------------------------------------------------------
             Central, PickUp and Destination setters and getters
 /-------------------------------------------------------------------------*/
@@ -428,7 +432,121 @@ void Department::thirdIteration(string algorithm) {
 }
 
 void Department::fourthIteration(string algorithm) {
-    // To Do
+    if (getCentralVertex() == NULL) {
+        cout << "Map without Central Vertex" << endl;
+        return;
+    }
+    if (waggons.empty()) {
+        cout << "No waggons available" << endl;
+        return;
+    }
+
+    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
+
+    if (algorithm == "nearest") algFunction = &Graph::nearestNeighbour;
+    else {
+        cout << "Invalid algorithm" << endl;
+        return;
+    }
+
+    distributeMultiRequestPerService();
+
+    int centralVertexID = getCentralVertex()->getID();
+
+    size_t serviceIndex = 0;
+    bool has_service;
+
+    std::vector<double> previousEndHour(waggons.size());
+    std::vector<Vertex *> interestPoints;
+    do {
+        has_service = false;
+        cout << "Press any key to go next wave of services" << endl;
+        getchar();
+        cin.ignore(1000, '\n');
+
+        gDrawer->setInterestPoints(interestPoints);
+        gDrawer->cleanLastWaggonPath();
+        gView->rearrange();
+        for (int i = 0; i < waggons.size(); i++) {
+            Waggon *waggon = waggons.at(i);
+            cout << "Press any key to pre-process waggon" << endl;
+            getchar();
+            cin.ignore(1000, '\n');
+            if (serviceIndex < waggon->getServices().size()) {
+                std::vector<Edge> path;
+                has_service = true;
+                Service *service = waggon->getServices().at(serviceIndex);
+
+                service->setStartHour(previousEndHour.at(i) + 1);
+
+                int pickUpID = service->getRequests().at(0).getPickup();
+                int destinationID = service->getRequests().at(0).getDest();
+
+                std::multimap<int, int> pickUpDestMap;
+                std::multimap<int, int>::iterator it = pickUpDestMap.begin();
+
+                for (Request &request : service->getRequests()) {
+                    int pickUpID = request.getPickup();
+                    int destinationID = request.getDest();
+
+                    it = pickUpDestMap.insert(it, std::pair<int, int>(pickUpID, destinationID));
+
+                    Vertex *pickup = graph->findVertex(pickUpID);
+                    Vertex *destination = graph->findVertex(destinationID);
+
+                    pickup->setPickUp(true);
+                    destination->setDestination(true);
+
+                    interestPoints.push_back(pickup);
+                    interestPoints.push_back(destination);
+                }
+
+
+                gDrawer->setInterestPoints(interestPoints);
+                gView->rearrange();
+
+                gDrawer->setInterestPoints(interestPoints);
+                gView->rearrange();
+
+                cout << "Start Hour: "<< service->getStartHour() << endl;
+                cout << "Number of prisioners: "<< waggon->getCapacity() - service->getEmptySeats() << endl;
+                cout << "Press any key to process the service" << endl;
+                getchar();
+                cin.ignore(1000, '\n');
+
+                std::vector<Vertex*> vertexPath;
+                (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
+                getEdges(vertexPath, path);
+                service->loadEdges(path);
+
+                for (Request &request : service->getRequests()) {
+                    getRequestTime(path, request);
+                }
+
+                gDrawer->drawPath(path, "black");
+
+                gView->rearrange();
+
+                service->setEndHour(service->getStartHour() + getPathTime(service->getPath()));
+                service->setDistance(getPathDistance(service->getPath()));
+
+                cout << "Service End Hour: " << service->getEndHour() << endl;
+                cout << "Service Distance: " << service->getDistance() << endl;
+
+                service->getEndHour();
+                cout << "End Hour: "<< service->getEndHour() << endl;
+                path.clear();
+            }
+        }
+
+        for (Vertex *v : interestPoints) {
+            v->setPickUp(false);
+            v->setDestination(false);
+        }
+        gDrawer->setInterestPoints(interestPoints);
+        interestPoints.clear();
+        serviceIndex++;
+    } while (has_service);
 }
 
 void Department::dijkstraTime(int n) {
@@ -457,24 +575,37 @@ void Department::astarTime(int n) {
     cout << "A-Star processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
 }
 
-void Department::nearestNeighboorTime(int n) {
+void Department::nearestNeighbourTime() {
     int nodes = graph->getNumVertex();
-    if(nodes < n) n = nodes;
-    auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 1; i < n; i++) {
-        for (int j = 1; j < n; j++) {
-            vector<Vertex *> garbagePath;
-            multimap<int, int> onePickUp;
-            onePickUp.insert(std::pair<char,int>(i, j));
-            graph->nearestNeighbour(0, onePickUp, garbagePath);
+    int sizes[] = {4, 16, 32, 64, 500, 1000, 5000, 10000, 50000, 100000};
+
+    ofstream outFile("../data/nearestneighbour.csv");
+
+    for (int size : sizes) {
+        vector<Vertex *> garbagePath;
+        multimap<int, int> interestPoints;
+
+        for (int i = 1; i < size; i++) {
+            int pickup = rand() % nodes;
+            int dest = rand() % nodes;
+            while (dest == pickup) {
+                dest = rand() % nodes;
+            }
+
+            interestPoints.insert(std::pair<int, int>(pickup, dest));
         }
-    }
+        int startNode = rand() % nodes;
+        auto start = std::chrono::high_resolution_clock::now();
 
-    auto finish = std::chrono::high_resolution_clock::now();
-    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
-    cout << "Total time (micro-seconds)=" << elapsed << endl;
-    cout << "Nearest Neighbour processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+        graph->nearestNeighbour(startNode, interestPoints, garbagePath);
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile << size << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "Nearest Neighbour processing grid with " << size << "\n";
+    }
 }
 
 void Department::addRequest(Request request) {

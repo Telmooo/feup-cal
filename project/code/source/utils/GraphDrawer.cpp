@@ -2,6 +2,11 @@
 
 GraphDrawer::GraphDrawer(GraphViewer *gv, Graph *g) : gv(gv), g(g) {
     (this->gv)->defineVertexSize(15);
+    this->delayed = false;
+}
+
+void GraphDrawer::setDelayed(bool delayed) {
+    this->delayed = delayed;
 }
 
 void GraphDrawer::drawGraph() {
@@ -65,7 +70,7 @@ void GraphDrawer::drawPath(const std::vector<Edge> &edges, string color) {
         edgesLastWaggon.push_back(edge);
         gv->setEdgeColor(edge.getID(), color);
         gv->rearrange();
-        // Sleep(250); -> Visualizar arestas a aparecer
+        if (this->delayed) Sleep(250); // Slow visualization
     }
 }
 

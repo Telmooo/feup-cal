@@ -12,8 +12,11 @@ private:
     GraphViewer * gv;
     vector<Edge> edgesLastWaggon;
     vector<Vertex> vertexLastWaggon;
+    bool delayed;
 public:
     GraphDrawer(GraphViewer * gv, Graph * g);
+
+    void setDelayed(bool delayed);
 
     void drawGraph();
 
