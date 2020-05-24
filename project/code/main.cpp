@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
     }
 
     string location = "8x8";
-    string iteration = "two";
-    string algorithm = "dijkstra";
+    string iteration = "three";
+    string algorithm = "nearest";
 
     Department * police = new Department();
 

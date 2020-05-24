@@ -25,7 +25,6 @@ class Edge;
 class Graph {
 private:
     vector<Vertex*> vertexSet;    // vertex set
-    vector<Edge*> edgeSet;        // vertex set
     vector<vector<double>> D;      // minimum distance matrix
     vector<vector<Vertex *>> P;    // path matrix
 
@@ -46,9 +45,6 @@ public:
 
     vector<Vertex *> getVertexSet() const;
     int getNumVertex() const;
-
-    vector<Edge *> getEdgeSet() const;
-    int getNumEdges() const;
 
     // -- Depth First Search
     vector<int> dfsFromOrigin(int origin);

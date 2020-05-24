@@ -641,7 +641,7 @@ void Department::distributeMultiRequestPerService() {
         }
 
         for (Waggon *waggon : waggons) {
-            if (waggon->getServices().back()->getEmptySeats() > 0) {
+            if (!waggon->getServices().empty() && waggon->getServices().back()->getEmptySeats() > 0) {
                 aux_mult.push(waggon);
             }
         }

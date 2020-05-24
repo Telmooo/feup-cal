@@ -9,9 +9,6 @@ Graph::~Graph() {
     for (Vertex *v : vertexSet) {
         delete v;
     }
-    for (Edge *e : edgeSet) {
-        delete e;
-    }
 }
 
 /*
@@ -27,14 +24,6 @@ Vertex * Graph::findVertex(const int &in) const {
 /* -------------------------------------------------------------------------
             Edges and Vertex setters and getters
 /-------------------------------------------------------------------------*/
-
-int Graph::getNumEdges() const {
-    return edgeSet.size();
-}
-
-vector<Edge *> Graph::getEdgeSet() const {
-    return edgeSet;
-}
 
 int Graph::getNumVertex() const {
     return vertexSet.size();
@@ -79,7 +68,6 @@ bool Graph::addEdge(int edgeId, const int &source, const int &dest) {
     if (v1 == NULL || v2 == NULL)
         return false;
     Edge * e = new Edge(edgeId, v2);
-    edgeSet.push_back(e);
     v1->addEdge(e);
     return true;
 }
