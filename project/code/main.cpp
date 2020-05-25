@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    string location = "16x16";
-    string iteration = "algorithmTime";
+    string location = "8x8";
+    string iteration = "fourth";
     string algorithm = "nearest";
 
     Department * police = new Department();
@@ -23,23 +23,23 @@ int main(int argc, char *argv[]) {
         police->setDelayed(true);
     }
 
-    if (iteration == "one") {
+    if (iteration == "first") {
         police->addWaggon(10);
         police->addRequests(location);
         police->firstIteration(algorithm);
         getchar();
-    } else if (iteration == "two") {
+    } else if (iteration == "second") {
         police->addWaggon(5);
         police->addWaggon(8);
         police->addRequests(location);
         police->secondIteration(algorithm);
         getchar();
-    } else if (iteration == "three") {
+    } else if (iteration == "third") {
         police->addWaggon(10);
         police->addRequests(location);
         police->thirdIteration(algorithm);
         getchar();
-    } else if (iteration == "four") {
+    } else if (iteration == "fourth") {
         police->addWaggon(10);
         police->addWaggon(8);
         police->addRequests(location);
@@ -47,29 +47,9 @@ int main(int argc, char *argv[]) {
         getchar();
     }
     else if (iteration == "algorithmTime") {
-        if(algorithm == "dijkstra") {
-            police->dijkstraTime(4);
-            police->dijkstraTime(16);
-            police->dijkstraTime(32);
-            police->dijkstraTime(64);
-            police->dijkstraTime(128);
-            /*
-            police->dijkstraTime(200);
-            police->dijkstraTime(289);
-             */
-        }
-        else if (algorithm == "astar") {
-            police->astarTime(4);
-            police->astarTime(16);
-            police->astarTime(32);
-            police->astarTime(64);
-            police->astarTime(128);
-            police->astarTime(200);
-            police->astarTime(289);
-        }
-        else if (algorithm == "nearest") {
-            police->nearestNeighbourTime();
-        }
+        police->dijkstraTime();
+        police->astarTime();
+        police->nearestNeighbourTime();
     }
 
     return 0;

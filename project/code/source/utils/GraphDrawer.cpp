@@ -39,7 +39,7 @@ void GraphDrawer::drawGraph() {
 
         for(int j = 0; j < adj.size(); j++) {
             Edge * currentEdge = adj.at(j);
-            if (currentEdge->getOpen()) {
+            if (currentEdge->isOpen()) {
                 gv->setEdgeColor(currentEdge->getID(), "green");
             } else {
                 gv->setEdgeColor(currentEdge->getID(), "red");

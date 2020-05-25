@@ -185,7 +185,7 @@ void Department::firstIteration(string algorithm) {
             cin.ignore(1000, '\n');
 
             // ---- PICKUP
-            (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+            (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
             getEdges(graph->getPathVertexTo(pickUpID), path);
             service->loadEdges(path);
             service->getRequests().at(0).setPickupHour(getPathTime(path));
@@ -193,15 +193,15 @@ void Department::firstIteration(string algorithm) {
 
             path.clear();
             // ---- DESTINATION
-            (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+            (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
             getEdges(graph->getPathVertexTo(destinationID), path);
             service->loadEdges(path);
             service->getRequests().at(0).setDestHour(service->getRequests().at(0).getPickupHour() + getPathTime(path));
-            gDrawer->drawPath(path, "cyan");
+            gDrawer->drawPath(path, "orange");
 
             path.clear();
             // ---- RETURN
-            (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+            (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
             getEdges(graph->getPathVertexTo(centralVertexID), path);
             service->loadEdges(path);
             gDrawer->drawPath(path, "magenta");
@@ -255,6 +255,7 @@ void Department::secondIteration(string algorithm) {
         cin.ignore(1000, '\n');
 
         gDrawer->setInterestPoints(interestPoints);
+        interestPoints.clear();
         gDrawer->cleanLastWaggonPath();
         gView->rearrange();
         for (int i = 0; i < waggons.size(); i++) {
@@ -291,7 +292,7 @@ void Department::secondIteration(string algorithm) {
                 cin.ignore(1000, '\n');
 
                 // ---- PICKUP
-                (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+                (graph->*algFunction)(centralVertexID, pickUpID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
                 getEdges(graph->getPathVertexTo(pickUpID), path);
                 service->loadEdges(path);
                 service->getRequests().at(0).setPickupHour(getPathTime(path));
@@ -299,16 +300,16 @@ void Department::secondIteration(string algorithm) {
 
                 path.clear();
                 // ---- DESTINATION
-                (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+                (graph->*algFunction)(pickUpID, destinationID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
                 getEdges(graph->getPathVertexTo(destinationID), path);
                 service->loadEdges(path);
                 service->getRequests().at(0).setDestHour(
                         service->getRequests().at(0).getPickupHour() + getPathTime(path));
-                gDrawer->drawPath(path, "cyan");
+                gDrawer->drawPath(path, "orange");
 
                 path.clear();
                 // ---- RETURN
-                (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPTime(), service->getRequests().at(0).getPDist());
+                (graph->*algFunction)(destinationID, centralVertexID, service->getRequests().at(0).getPDist(), service->getRequests().at(0).getPTime());
                 getEdges(graph->getPathVertexTo(centralVertexID), path);
                 service->loadEdges(path);
                 gDrawer->drawPath(path, "magenta");
@@ -328,8 +329,6 @@ void Department::secondIteration(string algorithm) {
             v->setPickUp(false);
             v->setDestination(false);
         }
-        gDrawer->setInterestPoints(interestPoints);
-        interestPoints.clear();
         serviceIndex++;
     } while (has_service);
 }
@@ -344,7 +343,7 @@ void Department::thirdIteration(string algorithm) {
         return;
     }
 
-    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
+    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&, double, double);
 
     if (algorithm == "nearest") algFunction = &Graph::nearestNeighbour;
     else {
@@ -373,10 +372,18 @@ void Department::thirdIteration(string algorithm) {
 
             std::multimap<int, int> pickUpDestMap;
             std::multimap<int, int>::iterator it = pickUpDestMap.begin();
+            double maxDistP = std::numeric_limits<double>::lowest();
+            double maxTimeP = std::numeric_limits<double>::lowest();
 
             for (Request &request : service->getRequests()) {
                 int pickUpID = request.getPickup();
                 int destinationID = request.getDest();
+
+                double distP = request.getPDist();
+                double timeP = request.getPTime();
+
+                maxDistP = (distP > maxDistP) ? distP : maxDistP;
+                maxTimeP = (timeP > maxTimeP) ? timeP : maxTimeP;
 
                 it = pickUpDestMap.insert(it, std::pair<int, int>(pickUpID, destinationID));
 
@@ -401,7 +408,7 @@ void Department::thirdIteration(string algorithm) {
             cin.ignore(1000, '\n');
 
             std::vector<Vertex*> vertexPath;
-            (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
+            (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath, maxDistP, maxTimeP);
             getEdges(vertexPath, path);
             service->loadEdges(path);
 
@@ -441,7 +448,7 @@ void Department::fourthIteration(string algorithm) {
         return;
     }
 
-    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&);
+    void (Graph::*algFunction)(int, std::multimap<int, int>&, std::vector<Vertex*>&, double, double);
 
     if (algorithm == "nearest") algFunction = &Graph::nearestNeighbour;
     else {
@@ -465,6 +472,7 @@ void Department::fourthIteration(string algorithm) {
         cin.ignore(1000, '\n');
 
         gDrawer->setInterestPoints(interestPoints);
+        interestPoints.clear();
         gDrawer->cleanLastWaggonPath();
         gView->rearrange();
         for (int i = 0; i < waggons.size(); i++) {
@@ -484,10 +492,18 @@ void Department::fourthIteration(string algorithm) {
 
                 std::multimap<int, int> pickUpDestMap;
                 std::multimap<int, int>::iterator it = pickUpDestMap.begin();
+                double maxDistP = std::numeric_limits<double>::lowest();
+                double maxTimeP = std::numeric_limits<double>::lowest();
 
                 for (Request &request : service->getRequests()) {
                     int pickUpID = request.getPickup();
                     int destinationID = request.getDest();
+
+                    double distP = request.getPDist();
+                    double timeP = request.getPTime();
+
+                    maxDistP = (distP > maxDistP) ? distP : maxDistP;
+                    maxTimeP = (timeP > maxTimeP) ? timeP : maxTimeP;
 
                     it = pickUpDestMap.insert(it, std::pair<int, int>(pickUpID, destinationID));
 
@@ -515,7 +531,7 @@ void Department::fourthIteration(string algorithm) {
                 cin.ignore(1000, '\n');
 
                 std::vector<Vertex*> vertexPath;
-                (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath);
+                (graph->*algFunction)(centralVertexID, pickUpDestMap, vertexPath, maxDistP, maxTimeP);
                 getEdges(vertexPath, path);
                 service->loadEdges(path);
 
@@ -543,42 +559,62 @@ void Department::fourthIteration(string algorithm) {
             v->setPickUp(false);
             v->setDestination(false);
         }
-        gDrawer->setInterestPoints(interestPoints);
-        interestPoints.clear();
         serviceIndex++;
     } while (has_service);
 }
 
-void Department::dijkstraTime(int n) {
+void Department::dijkstraTime() {
     int nodes = graph->getNumVertex();
-    if(nodes < n) n = nodes;
-    auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-                graph->dijkstraShortestPath(i, j, 1, 1);
-    auto finish = std::chrono::high_resolution_clock::now();
-    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
-    cout << "Total time (micro-seconds)=" << elapsed << endl;
-    cout << "Dijkstra processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+
+    int dists[] = {10, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000};
+
+    ofstream outFile("../data/dijkstra.csv");
+
+    for (int dist : dists) {
+        int origin = rand() % nodes;
+
+        int dest = (origin + dist) % nodes;
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        graph->dijkstraShortestPath(origin, dest, 1, 1);
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile << dist << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "Dijkstra processing grid with " << dist << "\n";
+    }
 }
 
-void Department::astarTime(int n) {
+void Department::astarTime() {
     int nodes = graph->getNumVertex();
-    if(nodes < n) n = nodes;
-    auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            graph->AStar(i, j, 1, 1);
-    auto finish = std::chrono::high_resolution_clock::now();
-    auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
-    cout << "Total time (micro-seconds)=" << elapsed << endl;
-    cout << "A-Star processing grid with " << n << " nodes average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
+
+    int dists[] = {10, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000};
+
+    ofstream outFile("../data/astar.csv");
+
+    for (int dist : dists) {
+        int origin = rand() % nodes;
+
+        int dest = (origin + dist) % nodes;
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        graph->AStar(origin, dest, 1, 1);
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile << dist << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "A-Star processing grid with " << dist << "\n";
+    }
 }
 
 void Department::nearestNeighbourTime() {
     int nodes = graph->getNumVertex();
 
-    int sizes[] = {4, 16, 32, 64, 500, 1000, 5000, 10000, 50000, 100000};
+    int sizes[] = {4, 16, 32, 64, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 1500000};
 
     ofstream outFile("../data/nearestneighbour.csv");
 
@@ -598,7 +634,7 @@ void Department::nearestNeighbourTime() {
         int startNode = rand() % nodes;
         auto start = std::chrono::high_resolution_clock::now();
 
-        graph->nearestNeighbour(startNode, interestPoints, garbagePath);
+        graph->nearestNeighbour(startNode, interestPoints, garbagePath, 1, 1);
 
         auto finish = std::chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();

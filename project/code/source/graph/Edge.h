@@ -21,7 +21,7 @@ public:
     Vertex* getDest() const;
     double getWeightDistance() const;
     double getWeightTime() const;
-    bool getOpen();
+    bool isOpen();
 
     void setDest(Vertex *dest);
     void setWeight(double distance, double time);

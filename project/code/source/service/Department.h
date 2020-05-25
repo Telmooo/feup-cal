@@ -44,8 +44,8 @@ public:
     void fourthIteration(string algorithm);
 
     // -- Complexity -- //
-    void dijkstraTime(int n);
-    void astarTime(int n);
+    void dijkstraTime();
+    void astarTime();
     void nearestNeighbourTime();
 
     void addPickUp(int basicString);

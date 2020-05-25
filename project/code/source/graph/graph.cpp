@@ -193,59 +193,9 @@ void Graph::clearAuxiliary() {
     }
 }
 
-
-void Graph::unweightedShortestPath(const int &orig) {
-    clearAuxiliary();
-
-    Vertex *start = findVertex(orig);
-    if (start == NULL) return;
-
-    start->setFCost(0);
-    queue<Vertex*> q;
-    q.push(start);
-
-    while (!q.empty()) {
-        Vertex *v = q.front();
-        q.pop();
-        for (Edge * edge : v->getAdj()) {
-            Vertex *w = edge->getDest();
-            if (w->getFCost() == INF) {
-                q.push(w);
-                w->setFCost(v->getFCost() + 1);
-                w->setPath(v);
-            }
-        }
-    }
+double Graph::getWeightedWeight(double dist, double time, double distP, double timeP) {
+    return dist * distP + time * timeP;
 }
-
-void Graph::dijkstraShortestPath(const int &origin) {
-    clearAuxiliary();
-
-    Vertex *start = findVertex(origin);
-    start->setFCost(0);
-    MutablePriorityQueue<Vertex> q;
-    q.insert(start);
-
-    while (!q.empty()) {
-        Vertex *v = q.extractMin();
-        v->setVisited(true);
-
-        for (Edge *edge : v->getAdj()) {
-            Vertex *w = edge->getDest();
-            double tempCost = v->getFCost() + edge->getWeightDistance();
-            if (w->getFCost() > tempCost) {
-                w->setFCost(tempCost);
-                w->setPath(v);
-                if (w->getQueueIndex() == 0)
-                    q.insert(w);
-                else
-                    q.decreaseKey(w);
-            }
-        }
-    }
-}
-
-
 
 void Graph::dijkstraShortestPath(int origin, int dest, double distP, double timeP) {
     clearAuxiliary();
@@ -262,8 +212,10 @@ void Graph::dijkstraShortestPath(int origin, int dest, double distP, double time
         if (v->getID() == dest) break;
 
         for (Edge *edge : v->getAdj()) {
+            if (!edge->isOpen()) continue;
+
             Vertex *w = edge->getDest();
-            double tempCost = v->getFCost() + edge->getWeightDistance();
+            double tempCost = v->getFCost() + getWeightedWeight(edge->getWeightDistance(), edge->getWeightTime(), distP, timeP);
             if (w->getFCost() > tempCost) {
                 w->setFCost(tempCost);
                 w->setPath(v);
@@ -294,10 +246,10 @@ vector<Vertex *> Graph::getPathVertexTo(int dest) const {
 /* -------------------------------------------------------------------------
                                     A*
 /-------------------------------------------------------------------------*/
-double Graph::heuristic(Vertex *v, Vertex *d) {
+double Graph::heuristic(Vertex *v, Vertex *d, double distP, double timeP) {
     double distC = v->getPosition().distance(d->getPosition());
     double tempC = distC / v->getAvgSpeed();
-    return distC+ tempC; // timeC and distC?
+    return getWeightedWeight(distC, tempC, distP, timeP);
 }
 
 Vertex* Graph::initAstar(int origin) {
@@ -313,7 +265,7 @@ void Graph::AStar(int from, int to, double distP, double timeP) {
     Vertex* start = initAstar(from);
     Vertex* dest = findVertex(to);
 
-    start->setFCost(heuristic(start, dest));
+    start->setFCost(heuristic(start, dest, distP, timeP));
 
     MutablePriorityQueue<Vertex> q;
     q.insert(start);
@@ -328,16 +280,18 @@ void Graph::AStar(int from, int to, double distP, double timeP) {
 
 
         for (Edge *e : v->getAdj()) {
+            if (!e->isOpen()) continue;
+
             Vertex *neighbour = e->getDest();
 
             if (neighbour->isVisited()) continue;
 
-            double tempCost = v->getGCost() + e->getWeightDistance();
+            double tempCost = v->getGCost() + getWeightedWeight(e->getWeightDistance(), e->getWeightTime(), distP, timeP);
 
             if (neighbour->getGCost() > tempCost) {
                 neighbour->setPath(v);
                 neighbour->setGCost(tempCost);
-                neighbour->setFCost(neighbour->getGCost() + heuristic(neighbour, dest));
+                neighbour->setFCost(neighbour->getGCost() + heuristic(neighbour, dest, distP, timeP));
                 if (neighbour->getQueueIndex() == 0)
                     q.insert(neighbour);
                 else
@@ -359,7 +313,7 @@ void Graph::clearTSP() {
     }
 }
 
-void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path) {
+void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path, double distP, double timeP) {
     clearAuxiliary();
     clearTSP();
 
@@ -377,7 +331,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
 
     Vertex *current = start;
     while (!toVisit.empty()) {
-        Vertex *closest = closestVertex(current, toVisit);
+        Vertex *closest = closestVertex(current, toVisit, distP, timeP);
 
         closest->setTSPVisited(true);
 
@@ -400,7 +354,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
         // get path
         std::vector<Vertex*> current_path;
 
-        AStar(current->getID(), closest->getID(), 0, 0); // Change this
+        AStar(current->getID(), closest->getID(), distP, timeP); // Change this
 
         current_path = getPathVertexTo(closest->getID());
 
@@ -415,7 +369,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     // path back to start
     std::vector<Vertex*> start_path;
 
-    AStar(current->getID(), start->getID(), 0, 0);
+    AStar(current->getID(), start->getID(), distP, timeP);
 
     start_path = getPathVertexTo(start->getID());
 
@@ -424,19 +378,19 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     }
 }
 
-Vertex* Graph::closestVertex(Vertex *start, const std::set<Vertex*> &toVisit) {
+Vertex* Graph::closestVertex(Vertex *start, const std::set<Vertex*> &toVisit, double distP, double timeP) {
     if (start == NULL || toVisit.empty()) return NULL;
 
     auto it = toVisit.begin();
     Vertex *closest = *it;
-    double minWeight = heuristic(start, closest);
+    double minWeight = heuristic(start, closest, distP, timeP);
 
     it++;
 
     for (; it != toVisit.end(); it++) {
         Vertex *current = *it;
 
-        double currentWeight = heuristic(start, closest);
+        double currentWeight = heuristic(start, closest, distP, timeP);
 
         if (currentWeight < minWeight) {
             minWeight = currentWeight;

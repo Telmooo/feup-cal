@@ -26,7 +26,7 @@ double Edge::getWeightTime() const {
     return weightTime;
 }
 
-bool Edge::getOpen() {
+bool Edge::isOpen() {
     return open;
 }
 

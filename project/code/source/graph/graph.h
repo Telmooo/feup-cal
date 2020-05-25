@@ -66,20 +66,19 @@ public:
     // --- Get Path From Dest
     vector<Vertex *> getPathVertexTo(int dest) const;
 
+    double getWeightedWeight(double dist, double time, double distP, double timeP);
     // --- Single source
-    void unweightedShortestPath(const int &s);
-    void dijkstraShortestPath(const int &s);
     void dijkstraShortestPath(int origin, int dest, double distP, double timeP);
 
     // --- A*
-    double heuristic(Vertex *v, Vertex *d);
+    double heuristic(Vertex *v, Vertex *d, double distP, double timeP);
     Vertex* initAstar(int origin);
     void AStar(int from, int to, double distP, double timeP);
 
     // --- TSP
     void clearTSP();
-    void nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path);
-    Vertex* closestVertex(Vertex *start, const std::set<Vertex*> &toVisit);
+    void nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, std::vector<Vertex*> &path, double distP, double timeP);
+    Vertex* closestVertex(Vertex *start, const std::set<Vertex*> &toVisit, double distP, double timeP);
 
     // -- Miscellaneous
     double getMaxX();
