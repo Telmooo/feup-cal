@@ -30,4 +30,4 @@ def createDensPopVelocity(filepath):
     for i in edges:
         fpw.write(("({}, {}, {}, {}, {})\n").format(i[0], i[1], i[2], i[3], i[4]))
 
-createDensPopVelocity('./resources/graphs/16x16/nodes.txt')
+makeGridConnex('./resources/graphs/16x16/edges.txt')

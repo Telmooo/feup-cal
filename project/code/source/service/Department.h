@@ -47,6 +47,8 @@ public:
     void dijkstraTime();
     void astarTime();
     void nearestNeighbourTime();
+    void kosarajuTime();
+    void distributeRequestTime();
 
     void addPickUp(int basicString);
 

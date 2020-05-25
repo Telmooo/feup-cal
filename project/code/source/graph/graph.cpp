@@ -145,6 +145,7 @@ Graph Graph::transpose() {
 /-------------------------------------------------------------------------*/
 
 void Graph::kosarajuSCC(int origin) {
+    resetConnections();
     Graph transposed = transpose();
 
     vector<int> fromOrigin = dfsFromOrigin(origin);

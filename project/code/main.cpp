@@ -50,9 +50,11 @@ int main(int argc, char *argv[]) {
         getchar();
     }
     else if (iteration == "algorithmTime") {
-        //police->dijkstraTime();
-        //police->astarTime();
+        police->dijkstraTime();
+        police->astarTime();
         police->nearestNeighbourTime();
+        police->kosarajuTime();
+        police->distributeRequestTime();
     }
 
     return 0;

@@ -644,6 +644,94 @@ void Department::nearestNeighbourTime() {
     }
 }
 
+void Department::kosarajuTime() {
+    Graph graph_8x8 = Graph();
+    Graph graph_16x16 = Graph();
+
+    GraphReader gReader8x8(&graph_8x8, "8x8");
+    gReader8x8.readNodes();
+    gReader8x8.readEdges();
+
+    GraphReader gReader16x16(&graph_16x16, "16x16");
+    gReader16x16.readNodes();
+    gReader16x16.readEdges();
+
+    ofstream outFile("../data/kosaraju.csv");
+    Graph* graphs[] = { &graph_8x8, &graph_16x16, this->graph };
+    int sizes[] = {8, 16, 100};
+    int i = 0;
+    for (Graph* graph : graphs) {
+        auto start = std::chrono::high_resolution_clock::now();
+        graphs[i]->kosarajuSCC(0);
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile << sizes[i] << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "Kosaraju processing grid " << sizes[i] << "x" << sizes[i] << "\n";
+        i++;
+    }
+}
+
+void Department::distributeRequestTime() {
+    int nodes = graph->getNumVertex();
+    ofstream outFile("../data/singledistribute.csv");
+    ofstream outFile2("../data/multidistribute.csv");
+
+    int sizes[] = {10, 50, 100, 500, 1000, 5000};
+
+    for (int size : sizes) {
+        requests.clear();
+        for (Waggon *waggon : waggons) {
+            delete waggon;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            this->addWaggon(20);
+        }
+
+        for (int i = 0; i < size; i++) {
+            Request request = Request(rand() % 20, 1, rand() % nodes, rand() % nodes, 1, 1);
+            requests.push_back(request);
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        this->distributeSingleRequestPerService();
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile << size << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "Single Request Per Service processing requests " << size << "\n";
+    }
+
+    for (int size : sizes) {
+        requests.clear();
+        for (Waggon *waggon : waggons) {
+            delete waggon;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            this->addWaggon(20);
+        }
+
+        for (int i = 0; i < size; i++) {
+            Request request = Request(rand() % 20, 1, rand() % nodes, rand() % nodes, 1, 1);
+            requests.push_back(request);
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        this->distributeSingleRequestPerService();
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        outFile2 << size << "," << elapsed << "\n";
+        cout << "Total time (micro-seconds)=" << elapsed << endl;
+        cout << "Multi Request Per Service processing requests " << size << "\n";
+    }
+}
+
 void Department::addRequest(Request request) {
     if (maxCapacity == 0 || waggons.empty()) {
         cout << "Can't add request. No available Waggons" << endl;

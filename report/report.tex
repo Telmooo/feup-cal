@@ -745,11 +745,36 @@ obtemos a parte fortemente conexa a que o nosso departamento pertence, do qual i
 
 O pseudo-código encontra-se já descrito no capitulo de funcionalidades a implementar.
 \subsection{Análise teórica}
+No pré-processamento ocorre uma transposição do grafo, que envolve em inverter o sentido de todas as arestas. Esta transposição é feita em tempo linear no tamanho do grafo $O(|V|+|E|)$, sendo $V$ os vértices do grafo e $E$ as arestas do grafo, se for garantido que apenas é realizada as pesquisas do vértice uma vez. De modo a garantir a complexidade utilizou-se um $unordered_map$ para mapear o ID do vértice para o vértice em si.
 
+A complexidade em geral das operações no $unordered_map$ utilizadas (inserção e acesso) tem complexidade constantes e foram desprezadas na complexidade da transposição do grafo.
+
+É também realizada um \textit{reset} a todas as variáveis auxiliares dos vértices e arestas do grafo, esta operação possui complexidade linear no tamanho do grafo.
+
+De seguida são efetuadas duas pesquisas em profundidade a partir do vértice do departamento (uma no grafo original e outra no grafo transposto). A complexidade de uma pesquisa em profundidade também é linear no tamanho do grafo, assim como já foi apresentado nas aulas teóricas da unidade curricular.
+
+De modo a construir o componente fortemente conexo é necessário realizar uma interseção entre os resultados das pesquisas, tal interseção é realizada em tempo quadrático, no tamanho do componente fortemente conexo, que no pior caso é $|V|$, dando assim complexidade de $O(|V|^2)$.
+
+Após isso é necessário marcar os vértices e arestas como acessíveis ou não, esse processo também é realizado no total em tempo quadrático $O(|V|^2 + |V|+|E|)$.
+
+Sendo assim, o pré-processamento possui uma complexidade temporal total de:
+\begin{equation}
+O(|V|+|E|+|V^2|)
+\end{equation}
+
+Quanto à complexidade espacial do mesmo é necessário além do grafo a processar, um grafo adicional para guardar o transposto, uma mapa de vértices e dois vetores auxiliares para guardar o resultado das pesquisas em profundidade, isto resulta numa complexidade de:
+\begin{equation}
+O(|V|+|E|+|V|+|E|+|V|+|V|+|V|) \sim O(|V|+|E|)
+\end{equation}
 
 \subsection{Análise temporal empírica}
+De modo a analisar empiricamente, foi feito o pré-processamento em $grid$ $graphs$ de diferentes tamanhos, um de $8$x$8$, um de $16$x$16$ e outro de $100$x$100$.
 
+\begin{center}
+\includegraphics[scale=0.5]{kosaraju_empiric.png}
+\end{center}
 
+Dado à escassez de grafos diferentes, não obteve-se uma análise muito informativa, no entanto é possível observar-se ligeiramente que o tempo aumenta mais rapidamente que um aumento linear, suportando a nossa expectativa de tempo quadrático, no entanto, não é possível observar-se por concreto através destes dados.
 
 \section{Djisktra}
 Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ que foi fornecida previamente para a resolução de exercícios nas aulas teórico-práticas.
@@ -864,10 +889,13 @@ O(|V|+|E|+|PD|+|V|+|V|) \sim O(|V|+|E|+|PD|)
 \end{equation}
 
 \subsection{Análise temporal empírica}
+Ao analisar os resultados obtidos para o $NearestNeighbour$ observou-se que o gráfico comportou-se de forma bastante diferente ao expectável, isto pode dever-se a vários motivos, um deles seria a otimização que o $set$ proporciona ao eliminar vértices duplicados a visitar, e dado um número elevado de vértices a visitar é possível eliminar vários de uma única vez, podendo levar ao resultado obtido.
 
 \begin{center}
 \includegraphics[scale=0.5]{nearest_empiric.png}
 \end{center}
+
+
 
 \section{Processamento de pedidos}
 Para distribuir os pedidos pelos diferentes veículos fizemos um algoritmo que distribui os pedidos pelas várias carrinhas,
