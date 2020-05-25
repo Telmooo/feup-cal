@@ -11,9 +11,12 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    string location = "Cabeceiras";
-    string iteration = "fourth";
-    string algorithm = "nearest";
+    string location = argv[1];
+    string iteration = argv[2];
+    string algorithm = argv[3];
+
+    if (iteration == "algorithmTime")
+        location = "100x100";
 
     Department * police = new Department();
 

@@ -566,12 +566,12 @@ void Department::fourthIteration(string algorithm) {
 void Department::dijkstraTime() {
     int nodes = graph->getNumVertex();
 
-    int dists[] = {10, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000};
+    int dists[] = {10, 307, 818, 1227, 2040, 4080, 6017, 8463, 10198};
 
     ofstream outFile("../data/dijkstra.csv");
 
+    int origin = 0;
     for (int dist : dists) {
-        int origin = rand() % nodes;
 
         int dest = (origin + dist) % nodes;
 
@@ -590,12 +590,12 @@ void Department::dijkstraTime() {
 void Department::astarTime() {
     int nodes = graph->getNumVertex();
 
-    int dists[] = {10, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000};
+    int dists[] = {10, 307, 818, 1227, 2040, 4080, 6017, 8463, 10198};
 
     ofstream outFile("../data/astar.csv");
+    int origin = 0;
 
     for (int dist : dists) {
-        int origin = rand() % nodes;
 
         int dest = (origin + dist) % nodes;
 

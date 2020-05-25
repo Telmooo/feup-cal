@@ -14,7 +14,7 @@
 
 % Graphics and images
 \usepackage{graphicx}
-	\graphicspath{{../images/}}
+	\graphicspath{{./images/}}
 
 % Listings
 \usepackage{listings}
@@ -699,25 +699,25 @@ Deste modo, a aplicação terá capacidade de gerir de uma forma otimizada e seg
 \chapter[Estruturas de dados utilizadas][Estruturas de dados utilizadas]{Estruturas de dados utilizadas} \label{\thechapter}
 
 \section{Grafo}
-O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente nesta mesma unidade curriculas, porém adaptado ao nosso problema. Para guardar os vértices e as 
-arestas utilizamos um $vectors$ que contém um pointer para o respetivo elemento. Encontra-se na classe $Graph$.
+O grafo que fora utilizado no desenvolvimento deste projeto é uma adaptação de um grafo fornecido previamente nesta mesma unidade curricular, porém adaptado ao nosso problema. Para guardar os vértices e as 
+arestas foi utilizado a estrutura de dados $vector$ que contém um pointers para cada elemento. Encontra-se na classe $Graph$.
 
 \subsection{Vértice}
 Possuem um ID que permite a sua identificação, a posição em que o mesmo é desenhado, as arestas que partem dele e campos auxiliares que são utilizados
 na execução de diversos algoritmos. Encontra-se na classe $Vertex$.
 
 \subsection{Aresta}
-Possuem um ID que permite a sua identificação, assim como um vértice de destino, o peso do tempo e o da distância. Encontra-se na classe $Edge$.
+Possuem um ID que permite a sua identificação, assim como um vértice de destino, o peso do tempo e o da distância, além de campos auxiliares para diversos algoritmos. Encontra-se na classe $Edge$.
 
 \section{Departamento}
-A classe $Departament$ possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os serviços a que este mesmo departamento tem de responder.
+A classe $Departament$ possui o grafo, assim como um vetor que permite acessar todos os veículos disponíveis e todos os pedidos a que este mesmo departamento tem de responder.
 
 \subsection{Pedidos}
 Os pedidos encontram-se na classe $Request$ e são caracterizados pelo número de prisioneiros e o tipo de transporte que vai ser necessário efetuar. Além disso, o pedido de transporte também possui o 
-local de recolha e o ponto de destino, assim como o peso da distância e peso do tempo.
+local de recolha e o ponto de destino, assim como a importância (peso) da distância e peso do tempo no pedido.
 
-\subsection{Carrinhas}
-As carrinhas encontram-se na classe $Waggon$ e possuem uma capacidade máxima, que corresponde ao número de prisioneiros que a mesma consegue transportar. Possuem também uma lista 
+\subsection{Veículos}
+Os veículos encontram-se na classe $Waggon$ e possuem uma capacidade máxima, que corresponde ao número de prisioneiros que a mesma consegue transportar. Possuem também uma lista 
 com os serviços que a mesma irá efetuar.
 
 \subsection{Serviço}
@@ -727,6 +727,8 @@ Os serviços possuem a distância percorrida e os pedidos que irão ser atendido
 Os mapas são lidos através de ficheiros de texto que possuem informação sobre os multiplos vértices e as arestas. 
 Existem também ficheiros que possuem informação sobre a localização da central e sobre os pedidos de transporte de prisioneiros. Esta informação é lida em métodos da classe $GraphReader$.
 Posteriormente, o grafo é desenhado na classe $GraphDrawer$, através do $GraphViewer$.
+
+É também fornecida uma funcionalidade para introduzir atrasos no desenho do caminho durante os serviços, de modo a facilitar a visualização do percurso efetuado pelo veículo, para tal deve colocar o último argumento da linha de comandos ($delayed$) com o valor $true$.
 
 
 \newpage
@@ -742,6 +744,8 @@ obtemos a parte fortemente conexa a que o nosso departamento pertence, do qual i
 
 O pseudo-código encontra-se já descrito no capitulo de funcionalidades a implementar.
 \subsection{Análise teórica}
+
+
 \subsection{Análise temporal empírica}
 
 \section{Djisktra}
@@ -751,7 +755,38 @@ alterar a \textit{key} de um elemento sem precisar de o remover e voltar a inser
 
 O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução, assim como foi efetuada a sua análise temporal.
 \subsection{Análise teórica}
+Segundo a nossa implementação de Dijkstra, o algoritmo começa por pré-processar todos os vértices do grafo, tendo então uma complexidade linear ($O(|V|)$), sendo $V$ os vértices do grafo.
+
+De seguida é efetuada uma pesquisa do vértice inicial, que no pior caso, também é linear, tendo de percorrer todos os vértices para encontrar, não aumentando assim a complexidade total do algoritmo (mantém-se linear).
+
+Após a pesquisa é criado a $MutablePriorityQueue$ e é inserido o vértice inicial, tratando-se de uma inserção numa \emph{priority queue} a complexidade temporal desta operação é logarítmica, porém como a \emph{queue} está inicialmente vazia, a operação é constante $O(1)$.
+
+Por fim é feita um varrimento pela \emph{queue} de vértices a visitar, sendo o pior caso possível a visita de todos os vértices do grafo.
+
+Dentro do varrimento são executadas várias operações de complexidade constante, não sendo assim relevantes para a análise, porém ocorre um varrimento das arestas do vértice, mas vale notar que uma aresta não pode pertencer a mais de um vértice, tornando-se assim em conjuntos únicos. Isto implica que no final dos varrimentos cada vértice e cada aresta são apenas percorridos uma única vez, resultando assim num complexidade temporal de $O(|V|+|E|)$, sendo $E$ as arestas do grafo.
+
+Ainda dentro do varrimento são executadas as operações de $INSERT$ e $DECREASE_KEY$ na $MutablePriorityQueue$, em que ambas as operações possuem complexidade logarítmica, e são executadas para inserir ou alterar os vértices guardados na queue, sendo assim possuem complexidade de $O(log(|V|))$
+
+Concluindo então, obtemos uma complexidade total de:
+\begin{equation}
+O(|V| + |V| + |E| + |V|*log(|V|)) \sim O(|E|+|V|log(|V|))
+\end{equation}
+
+Quanto à complexidade espacial, o algoritmo utiliza o grafo em si, tendo então uma complexidade de $O(|V|+|E|)$ e a $MutablePriorityQueue$ para guardar os vértices a visitar, dado que todas as outras variáveis possuem todas complexidade constante (inteiros, pointers, entre outros).
+
+Assim a complexidade espacial total do algoritmo é:
+\begin{equation}
+O(|V| + |E| + |V|) \sim O(|V|+|E|)
+\end{equation}
+
 \subsection{Análise temporal empírica}
+Uma vez que não é possível aumentar o tamanho do input do algoritmo de Dijkstra, já que apenas recebe dois pontos, a origem e o destino, foi feita uma análise variando a distância entre os dois pontos, obtendo-se assim os seguintes resultados num $grid$ $graph$ $100$x$100$:
+
+\begin{center}
+\includegraphics[scale=0.5]{dijkstra_empiric.png}
+\end{center}
+
+O gráfico resultante assemelha-se ao esperado de uma função complexidade semelhante a $n*log(n)$.
 
 \section{A-Star}
 O algoritmo $A-Star$ é semelhante ao de Djisktra utilizando também uma $MutablePriorityQueue$.
@@ -760,16 +795,74 @@ permite fazer uma estimativa do vértice que se poderá encontrar mais próximo 
 
 O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução.
 \subsection{Análise teórica}
+Assim como mencionado na perspetiva de solução, a complexidade temporal do algoritmo $A*$ é no geral similar à do algoritmo de $Dijkstra$, possuindo no pior caso uma complexidade de $O(|E|+|V|log(|V|))$, sendo $V$ os vértices do grafo e $|E|$ as arestas do grafo.
+
+Na nossa implementação do $A*$ este principio mantém-se, podendo notar-se até que o código usado é basicamente igual. A única diferença do $A*$ é usar uma heuristíca de modo a tentar aproximar-se mais rapidamente do destino, convergindo mais rápido do que $Dijkstra$ na maioria dos casos, mas no pior caso terá a mesma complexidade que o de $Dijkstra$ como já mencionado.
+
+Assim como no algoritmo anterior, o $A*$ utiliza o próprio grafo e uma $MutablePriorityQueue$ auxiliar, sendo assim possui uma complexidade espacial também de
+\begin{equation}
+O(|V|+|E|)
+\end{equation}
+
 \subsection{Análise temporal empírica}
+Assim como no algoritmo anterior, não tem como aumentar o número de inputs, portanto, aumentou-se a distância entre os dois pontos de input de modo a verificar o aumento do tempo conforme a distância entre estes, os resultados obtidos num $grid$ $graph$ $100$x$100$ foram os seguintes:
+\begin{center}
+\includegraphics[scale=0.5]{astar_empiric.png}
+\end{center}
+
+Como era expectável, o gráfico assemelha-se ao do algoritmo de $Dijkstra$ apenas observando-se desvios em comparação com o gráfico de $Dijkstra$, que realçam o funcionamento da heurística do $A*$, levando a convergências mais rápidas em alguns casos, ou mais lentas noutros.
 
 \section{Nearest Neighbour}
 O algoritmo $Nearest Neighbour$ faz uso de $MultiMaps$ e $Sets$. Uma vez que é possível que vários pedidos tenham o mesmo ponto de recolha, a utilização de multimaps permite a
-existência de Keys iguais, mas com pontos de destino diferentex.
-
-O pseudo-código encontra-se já descrito no capitulo que aborda a perspectiva de solução.
+existência de $Keys$ iguais, mas com pontos de destino diferentes.
 
 \subsection{Análise teórica}
+Segundo a nossa implementação do algoritmo $NearestNeighbour$, o algoritmo começa por pré-processar todos os vértices do grafo, tendo então uma complexidade linear ($O(|V|)$), sendo $V$ os vértices do grafo.
+
+De seguida é efetuada uma pesquisa do vértice inicial, que no pior caso, também é linear, tendo de percorrer todos os vértices para encontrar, não aumentando assim a complexidade total do algoritmo (mantém-se linear).
+
+Após a pesquisa, o algoritmo necessita inicializar o $set$ de vértices a visitar com todos os pontos de recolha, iterando assim pelo $multimap$ recebido no input. Para cada ponto de recolha no $multimap$, ocorre uma pesquisa desse vértice e uma inserção no $set$. A primeira operação é linear como já vista anteriormente, a segunda é logarítmica no geral, mas dado uma dica da posição a inserir, este inserção pode ser otimizada para complexidade constante amortizada. Assim, esta fase de inicialização reduz-se a:
+\begin{equation}
+O(|PD| * |V|)~~~~ amortizado
+\end{equation}
+sendo $|PD|$ o número de pares de pontos a visitar.
+
+Após a inicialização, é necessário varrer os pontos a visitar, que são no pior caso todos listado no mapa (pode não percorrer todos devido ao uso do $set$, podendo assim acumular o mesmo lugar a visitar não tendo que o repetir múltiplas vezes).
+
+Em cada varrimento deve ser escolhido o ponto mais próximo do atual, operação feita linearmente no tamanho dos vértices a visitar, $O(|PD|)$, uma vez que se usa heurística para esta seleção.
+Deve-se também remover o elemento escolhido dos pontos a visitar, sendo assim, uma operação de remoção num $set$ tem complexidade logarítmica no tamanho do set, isto é, $O(log(|PD|))$.
+
+Para cada ponto escolhido, em caso de ser um ponto de recolha deve-se então fazer uma pesquisa no $multimap$ para obter todos os pontos de destino a adicionar no $set$ de pontos a visitar, removendo posteriormente todos esses pares de valores do $multimap$. Esta operação vai ser realizada o mesmo número de vezes de pontos de recolha dados, uma vez que esta operação é realizada para cada ponto de recolha. Dado que a pesquisa no $multimap$ usando $equal\_range$ e a remoção são de complexidade logarítmica, a pesquisa do ponto a adicionar ao $set$ é linear no número de vértices do grafo, e a inserção no $set$, desta vez não otimizada, é de complexidade também logarítmica. Assim, esta operação tem uma complexidade de $O(log(|PD|) + log(|PD|)+|V|+log(|PD|) \sim O(log(|PD|)+|V|)$.
+
+Após esta operação, tendo já o próximo ponto escolhido, é necessário obter o caminho mais curto entre esses pontos (dado que não são adjacentes, no caso geral), para tal foi utilizado o algoritmo $A*$, que já analisado anteriormente possui uma complexidade de $O(|E|+|V|log(|V|)$.
+
+Após a obtenção do caminho, é necessário apenas transferir os vértices da estrutura auxiliar para o output, e uma vez que o algoritmo $A*$ apenas visita um vértice no máximo uma vez, o pior caso possível trata-se de visitar todos os vértices, sendo assim, esta transferência adiciona uma complexidade linear ao algoritmo no número de vértices do grafo.
+
+Concluindo assim, a versão do algoritmo $NearestNeighbour$ implementada tem uma complexidade total de:
+\begin{equation}
+O(|V|+|V|+|V|+ |PD|*|V| + |PD| * (|PD|)
+\end{equation}
+
+Semelhante aos algortimos já analisados, o $NearestNeighbour$ também utiliza o próprio grafo, adicionando assim uma complexidade espacial de $O(|V|+|E|)$.
+
+Além dessa estrutura, o algoritmo também recebe pelo seu input um $multimap$ em que o seu tamanho depende do número de pares de pontos a visitar, adicionando assim uma complexidade espacial de $O(|PD|)$ sendo $PD$ o número de pares de pontos a visitar.
+
+O algoritmo também recebe um $vector$ onde irá guardar o seu resultado final, porém este não será contabilizado para a complexidade uma vez que isso dificultaria a distinção entre problemas complexos dado que produzem um output grande de problemas complexos onde calcular um único output já é bastante complicado.
+
+Como estrutura auxiliar, o algoritmo utiliza um $set$ para guardar os vértices a visitar, esta estrutura otimiza o espaço e o tempo requirido pelo algoritmo dado que é possível visitar o mesmo ponto várias vezes durante o percurso todo. Sendo um $set$, a complexidade espacial introduzida é de $O(|V|)$.
+
+É também utilizada outra estrutura auxiliar com função de ser a intermediária entre o algoritmo $A*$ e o path final. Uma vez que numa iteração do $A*$ o máximo de vértices visitados é o número de vértices do grafo, e esta estrutura é destruida após o seu uso, temos uma complexidade espacial adicional de $O(|V|)$.
+
+Concluindo, o algoritmo $NearestNeighbour$ tem então uma complexidade espacial total de:
+\begin{equation}
+O(|V|+|E|+|PD|+|V|+|V|) \sim O(|V|+|E|+|PD|)
+\end{equation}
+
 \subsection{Análise temporal empírica}
+
+\begin{center}
+\includegraphics[scale=0.5]{nearest_empiric.png}
+\end{center}
 
 \section{Processamento de pedidos}
 Para distribuir os pedidos pelos diferentes veículos fizemos um algoritmo que distribui os pedidos pelas várias carrinhas,
@@ -816,11 +909,13 @@ Foram utilizados múltiplos algoritmos no sentido de resolver estes problemas, n
 
 Estes algoritmos envolvem conhecimentos em várias áreas da programação, transpondo os conceitos abordados na cadeira, tais como: \textbf{bruteforce}, \textbf{recursão}, \textbf{programação dinâmica}, \textbf{algoritmos gananciosos} (\textbf{Dijkstra}, \textbf{A*}, \textbf{Nearest Neighbour}), \textbf{heurísticas}, vários conceitos associados a algoritmos genéticos, tais como, \textbf{mutação}, \textbf{crossover}, \textbf{seleção} e outros tópicos associados a grafos, nomeadamente, \textbf{conetividade} e  \textbf{ordem topológica}.
 
+Com a realização deste trabalho, descobrimos novas maneiras de implementar algoritmos já conhecidos de maneira eficiente e eficaz. A realização da análise empírica também permitiu comparar a eficácia dos vários algoritmos aplicados ao longo deste projeto.
+
 Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cada um responsável pelas seguintes partes do projeto:
 \begin{itemize}
-	\item\emph{ Diogo Samuel Fernandes} - Descrição do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a implementar),  Conclusão
-	\item\emph{ Hugo Guimarães} -  Perspetiva de solução, Funcionalidades a implementar, Conclusão
-	\item\emph{ Telmo Baptista} - Formalização do Problema, Perspetiva de solução, Pré-processamento dos dados de entrada (Funcionalidades a implementar),  Conclusão
+	\item\emph{ Diogo Samuel Fernandes} - Descrição do Problema, Formalização do Problema, Perspetiva de solução, Funcionalidades a implementar, Estruturas de dados utilizadas, Algoritmos implementados e complexidade, Conectividade dos grafos utilizados, Conclusão
+	\item\emph{ Hugo Guimarães} - Descrição do Problema, Formalização do Problema, Perspetiva de solução, Funcionalidades a implementar, Estruturas de dados utilizadas, Algoritmos implementados e complexidade, Conectividade dos grafos utilizados, Conclusão
+	\item\emph{ Telmo Baptista} - Descrição do Problema, Formalização do Problema, Perspetiva de solução, Funcionalidades a implementar, Estruturas de dados utilizadas, Algoritmos implementados e complexidade, Conectividade dos grafos utilizados, Conclusão
 \end{itemize}
 
 \newpage
@@ -869,8 +964,8 @@ Cada membro do grupo foi responsável por uma igual parte do trabalho, sendo cad
 	\color{blue} \underline{\href{https://github.com/kevinwang1975/PathFinder}{https://github.com/kevinwang1975/PathFinder}} \color{black}
 	\item Branch and Bound,\\
 	\color{blue} \underline{\href{https://en.wikipedia.org/wiki/Branch_and_bound}{https://en.wikipedia.org/wiki/Branch\_and\_bound}} \color{black}
+	\item Spacial Complexity Analysis,\\
+	\color{blue} \underline{\href{https://cs.stackexchange.com/questions/83574/does-space-complexity-analysis-usually-include-output-space}{https://redirect.is/space\_complexity}} \color{black}
 \end{itemize}
-
-\end{document}
 
 \end{document}

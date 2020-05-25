@@ -324,12 +324,13 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
     start->setVisited(true);
 
     std::set<Vertex*> toVisit;
+    std::set<Vertex*>::iterator it = toVisit.begin();
 
     for (auto pair : pickUpDestMap) {
         int pickup = pair.first;
 
         Vertex *current = findVertex(pickup);
-        toVisit.insert(current);
+        it = toVisit.insert(it, current);
     }
 
     Vertex *current = start;
@@ -338,7 +339,7 @@ void Graph::nearestNeighbour(int from, std::multimap<int, int> &pickUpDestMap, s
 
         closest->setTSPVisited(true);
 
-        toVisit.erase(std::find(toVisit.begin(), toVisit.end(), closest));
+        toVisit.erase(closest);
 
         if (closest->isPickUp()) {
             std::pair<std::multimap<int, int>::iterator, std::multimap<int, int>::iterator> destinations;
