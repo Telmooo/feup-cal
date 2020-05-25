@@ -7,6 +7,9 @@ Graph::Graph() : maxX(0), minX(0), maxY(0), minY(0) { }
 
 Graph::~Graph() {
     for (Vertex *v : vertexSet) {
+        for (Edge *e : v->getAdj())
+            delete e;
+
         delete v;
     }
 }

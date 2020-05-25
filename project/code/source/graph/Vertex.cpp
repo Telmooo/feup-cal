@@ -8,12 +8,6 @@ Vertex::Vertex(int in, int x, int y, double popDensity, double avgSpeed) :
     popDensity(popDensity), avgSpeed(avgSpeed), reachable(false), visited(false),
     TSPvisited(false), processing(false), queueIndex(0) { }
 
-Vertex::~Vertex() {
-    for (Edge *e : adj) {
-        delete e;
-    }
-}
-
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).

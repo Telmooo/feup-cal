@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    string location = "8x8";
+    string location = "Cabeceiras";
     string iteration = "fourth";
     string algorithm = "nearest";
 

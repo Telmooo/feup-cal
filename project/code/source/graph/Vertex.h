@@ -39,8 +39,6 @@ class Vertex {
 public:
     Vertex(int in, int x, int y, double popDensity, double avgSpeed);
 
-    virtual ~Vertex();
-
     bool operator<(Vertex & vertex) const;
 
     void addEdge(Edge * e);
