@@ -895,8 +895,6 @@ Ao analisar os resultados obtidos para o $NearestNeighbour$ observou-se que o gr
 \includegraphics[scale=0.5]{nearest_empiric.png}
 \end{center}
 
-
-
 \section{Processamento de pedidos}
 Para distribuir os pedidos pelos diferentes veículos fizemos um algoritmo que distribui os pedidos pelas várias carrinhas,
 tentando fazer com que estas realizem o menor número de viagens possível.
@@ -1031,6 +1029,18 @@ O $distributeMultiRequestPerService$ tem complexidades semelhantes ao anterior, 
 Resultando em uma complexidade aproximada de $O(|R| + |W|*log(|W|) + k)$, sendo $R$ os pedidos a processar e $W$ os veículos disponibilizados.
 
 \subsection{Análise temporal empírica}
+Para a análise empírica foi utilizado um departamento com cinco veículos e foram geradas tamanhos crescentes de pedidos a distribuir, obtiveram-se os seguintes resultados para cada uma das distribuições:
+
+\begin{center}
+\includegraphics[scale=0.5]{single_empiric.png}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.5]{multi_empiric.png}
+\end{center}
+
+Como esperado, os gráficos aproximam-se de funções lineares, dado que estamos presentes num grafo muito conexo e que as requests são maioritariamente válidas. Também como mencionado, é possível verificar que o gráfico da distribuição do $distributeMultiRequestPerService$ varia ligeiramente devido ao fator $k$ que seria preencher os serviços ao máximo possível.
+
 
 \newpage
 %----------------------------------------------------------------------------------------

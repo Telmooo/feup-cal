@@ -43,6 +43,8 @@ public:
     void thirdIteration(string algorithm);
     void fourthIteration(string algorithm);
 
+    double objectiveFunction();
+
     // -- Complexity -- //
     void dijkstraTime();
     void astarTime();

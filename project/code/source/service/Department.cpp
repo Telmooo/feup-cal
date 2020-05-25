@@ -563,6 +563,29 @@ void Department::fourthIteration(string algorithm) {
     } while (has_service);
 }
 
+double Department::objectiveFunction() {
+    double result = 0;
+    for (Waggon *waggon : waggons) {
+        for (Service *service : waggon->getServices()) {
+            double maxDistP = std::numeric_limits<double>::lowest();
+            double maxTimeP = std::numeric_limits<double>::lowest();
+
+            for (Request request : service->getRequests()) {
+                double distP = request.getPDist();
+                double timeP = request.getPTime();
+                if (distP > maxDistP) maxDistP = distP;
+                if (timeP > maxTimeP) maxTimeP = timeP;
+            }
+
+            for (Edge edge : service->getPath()) {
+                result += edge.getWeightDistance() * maxDistP + edge.getWeightTime() * maxTimeP;
+            }
+        }
+    }
+
+    return result;
+}
+
 void Department::dijkstraTime() {
     int nodes = graph->getNumVertex();
 
@@ -677,13 +700,11 @@ void Department::distributeRequestTime() {
     ofstream outFile("../data/singledistribute.csv");
     ofstream outFile2("../data/multidistribute.csv");
 
-    int sizes[] = {10, 50, 100, 500, 1000, 5000};
+    int sizes[] = {10, 50, 100, 500, 1000, 2000, 3000, 5000};
 
     for (int size : sizes) {
         requests.clear();
-        for (Waggon *waggon : waggons) {
-            delete waggon;
-        }
+        waggons.clear();
 
         for (int i = 0; i < 5; i++) {
             this->addWaggon(20);
@@ -707,9 +728,7 @@ void Department::distributeRequestTime() {
 
     for (int size : sizes) {
         requests.clear();
-        for (Waggon *waggon : waggons) {
-            delete waggon;
-        }
+        waggons.clear();
 
         for (int i = 0; i < 5; i++) {
             this->addWaggon(20);

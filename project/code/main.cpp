@@ -3,11 +3,13 @@
 int main(int argc, char *argv[]) {
     if(argc != 5) {
         cout << "usage: [grid map path] [iteration] [algorithm] [delayed]" << endl;
-        cout << "First and Second iteration algorithms:" << endl;
+        cout << "'first' and 'second' iteration algorithms:" << endl;
         cout << "-   dijkstra" << endl;
         cout << "-   a-star" << endl;
-        cout << "Third and Four iteration algorithms:" << endl;
+        cout << "'third' and 'fourth' iteration algorithms:" << endl;
         cout << "-   nearest" << endl;
+        cout << "Example usage:\n";
+        cout << "./program_name 8x8 fourth nearest true\n";
         return -1;
     }
 
@@ -30,23 +32,27 @@ int main(int argc, char *argv[]) {
         police->addWaggon(10);
         police->addRequests(location);
         police->firstIteration(algorithm);
+        cout << "Objective function result: " << police->objectiveFunction() << "\n";
         getchar();
     } else if (iteration == "second") {
         police->addWaggon(5);
         police->addWaggon(8);
         police->addRequests(location);
         police->secondIteration(algorithm);
+        cout << "Objective function result: " << police->objectiveFunction() << "\n";
         getchar();
     } else if (iteration == "third") {
         police->addWaggon(10);
         police->addRequests(location);
         police->thirdIteration(algorithm);
+        cout << "Objective function result: " << police->objectiveFunction() << "\n";
         getchar();
     } else if (iteration == "fourth") {
         police->addWaggon(10);
         police->addWaggon(8);
         police->addRequests(location);
         police->fourthIteration(algorithm);
+        cout << "Objective function result: " << police->objectiveFunction() << "\n";
         getchar();
     }
     else if (iteration == "algorithmTime") {
