@@ -614,7 +614,7 @@ void Department::astarTime() {
 void Department::nearestNeighbourTime() {
     int nodes = graph->getNumVertex();
 
-    int sizes[] = {4, 16, 32, 64, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 1500000};
+    int sizes[] = {10, 100, 1000, 5000, 10000, 50000, 100000, 200000, 500000, 750000, 1000000};
 
     ofstream outFile("../data/nearestneighbour.csv");
 

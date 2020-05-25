@@ -18,6 +18,7 @@
 
 % Listings
 \usepackage{listings}
+\usepackage{amsmath}
 
 % Color
 \usepackage[dvipsnames]{xcolor}
@@ -748,6 +749,8 @@ O pseudo-código encontra-se já descrito no capitulo de funcionalidades a imple
 
 \subsection{Análise temporal empírica}
 
+
+
 \section{Djisktra}
 Para a implementação do algoritmo de Djisktra, utilizamos uma $MutablePriorityQueue$ que foi fornecida previamente para a resolução de exercícios nas aulas teórico-práticas.
 A utilização desta estrutura de dados demonstra ser vantajosa para a implementação do algoritmo uma vez que permite
@@ -839,9 +842,11 @@ Após esta operação, tendo já o próximo ponto escolhido, é necessário obte
 Após a obtenção do caminho, é necessário apenas transferir os vértices da estrutura auxiliar para o output, e uma vez que o algoritmo $A*$ apenas visita um vértice no máximo uma vez, o pior caso possível trata-se de visitar todos os vértices, sendo assim, esta transferência adiciona uma complexidade linear ao algoritmo no número de vértices do grafo.
 
 Concluindo assim, a versão do algoritmo $NearestNeighbour$ implementada tem uma complexidade total de:
-\begin{equation}
-O(|V|+|V|+|V|+ |PD|*|V| + |PD| * (|PD|)
-\end{equation}
+\begin{align*}
+&O(|V|+|PD|*|V| + |PD| * (|PD| + log(|PD|) + log(|PD|) + |V| + |E|+|V|log(|V|) + |V|))\\
+&\sim O(|PD|*|V| + |PD| * (|PD| + log(|PD|)+|E|+|V|log(|V|) + |V|))\\\\
+&\sim O(|PD|^2 + |PD|log(|PD|) + |PD|*|E| + |PD|*|V|*log(|V|))
+\end{align*}
 
 Semelhante aos algortimos já analisados, o $NearestNeighbour$ também utiliza o próprio grafo, adicionando assim uma complexidade espacial de $O(|V|+|E|)$.
 
@@ -868,7 +873,106 @@ O(|V|+|E|+|PD|+|V|+|V|) \sim O(|V|+|E|+|PD|)
 Para distribuir os pedidos pelos diferentes veículos fizemos um algoritmo que distribui os pedidos pelas várias carrinhas,
 tentando fazer com que estas realizem o menor número de viagens possível.
 
+Dada a natureza das nossa iterações, viu-se necessário dividir esta distribuição em dois algoritmos diferentes, um para distribuir pedidos em que cada serviço apenas continha um único pedido, e no outro em que um serviço podia conter vários pedidos ($distributeSingleRequestPerService$ e $distributeMultiRequestPerService$).
+
 \subsection{Pseudo-código}
+Quanto ao pseudo-código para o $distributeSingleRequestPerService$ temos:\\
+\begin{lstlisting}[frame=single, mathescape=true]
+PRE-PROCESS(requests):
+	FOR EACH request IN requests:
+		pickup $\leftarrow$ findVertex(pickup(request))
+		dest $\leftarrow$ findVertex(dest(request))
+		
+		IF NOT reachable(pickup) OR NOT reachable(dest)
+			ERASE(requests, request)
+
+	SORT(requests) // sort requests by number of prisoners
+
+
+requests $\leftarrow$ PRE-PROCESS(requests) // eliminate any requests 
+
+Q $\leftarrow$ MIN_PRIORITY_QUEUE(waggons) // PRIORITY QUEUE BY HIGHEST CAPACITY FIRST
+
+FOR EACH request IN requests:
+	waggon $\leftarrow$ EXTRACT_MIN(Q)
+	
+	service $\leftarrow$ NEW_SERVICE()
+	
+	IF (capacity(waggon) < numPris(request)):
+		split, request = SPLIT_REQUEST(request)
+		
+		ADD_REQUEST(service, split)
+		
+		INSERT(requests, request)
+		
+	ELSE:
+		ADD_REQUEST(service, request)
+		
+	ADD_SERVICE(waggon, service)
+	
+	IF (isEmpty(Q))
+		Q $\leftarrow$ MIN_PRIORITY_QUEUE(waggons) // adds waggons back
+		
+\end{lstlisting}
+
+Quanto ao pseudo-código para o $distributeMultiRequestPerService$ temos:\\
+\begin{lstlisting}[frame=single, mathescape=true]
+PRE-PROCESS(requests):
+	FOR EACH request IN requests:
+		pickup $\leftarrow$ findVertex(pickup(request))
+		dest $\leftarrow$ findVertex(dest(request))
+		
+		IF NOT reachable(pickup) OR NOT reachable(dest)
+			ERASE(requests, request)
+
+	SORT(requests) // sort requests by number of prisoners
+
+
+requests $\leftarrow$ PRE-PROCESS(requests) // eliminate any requests 
+
+Q $\leftarrow$ MIN_PRIORITY_QUEUE(waggons) // PRIORITY QUEUE BY HIGHEST CAPACITY FIRST
+AUX $\leftarrow$ $\varnothing$ // PRIORITY QUEUE BY EMPTY SEATS ON LAST SERVICE
+
+WHILE has_requests:
+
+	FOR EACH request IN requests:
+		waggon $\leftarrow$ EXTRACT_MIN(Q)
+	
+		service $\leftarrow$ NEW_SERVICE()
+	
+		IF (capacity(waggon) < numPris(request)):
+			split, request = SPLIT_REQUEST(request)
+		
+			ADD_REQUEST(service, split)
+		
+			INSERT(requests, request)
+		
+		ELSE:
+			ADD_REQUEST(service, request)
+		
+		ADD_SERVICE(waggon, service)
+	
+		IF (isEmpty(Q))
+			 BREAK
+			 
+	FOR EACH waggon IN waggons:
+		IF hasEmptySeatsOnLastService(waggon):
+			INSERT(AUX, waggon)
+			
+	WHILE notEmpty(AUX):
+		waggon $\leftarrow$ EXTRACT_MIN(AUX)
+		
+		service $\leftarrow$ GET_LAST_SERVICE(waggon)
+		
+		FOR request IN requests:
+			IF emptySeats(service) >= numPris(request):
+				ADD_REQUEST(service, request)
+				ERASE(requests, request)
+		
+			IF (emptySeats(service)=0):
+				BREAK
+\end{lstlisting}
+
 \subsection{Análise teórica}
 \subsection{Análise temporal empírica}
 
