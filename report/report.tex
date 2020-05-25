@@ -974,6 +974,34 @@ WHILE has_requests:
 \end{lstlisting}
 
 \subsection{Análise teórica}
+Em ambas as distribuições ocorre um pré-processamento dos pedidos, de modo a eliminar as requests inválidas no grafo.
+
+Neste pré-processamento os pedidos, os pedidos são varridos, e em cada passo é feita uma pesquisa do ponto de recolha e ponto de destino no grafo, tendo assim uma complexidade linear no número de vértices do grafo. Caso algum dos pontos seja inválido deve remover-se a request do $vector$, essa operação também opera em tempo linear no número de pedidos existentes.
+
+De seguida estes pedidos são ainda ordenados, esta operação num $vector$ tem complexidade logarítmica.
+
+Assim, no caso geral, este pré-processamento possui uma complexidade temnporal de:
+\begin{equation}
+O(log(|R|) + |R| * (|V| + |V|)) \sim O(log(|R|) + |R|*|V|)
+\end{equation}
+sendo $|R|$ o número de pedidos a processar, e $|V|$ o número de vértices do grafo, amortizando o número de possíveis remoções de pedidos inválidos (no pior caso possível, onde se remove todos os pedidos a complexidade do pré-processamento é de $O(log(|R|) + |R|*|V| + |R|^2)$, porém não faz sentido haver distribuição uma vez que não haverá pedidos, daí amortizar as remoções que serão raras em comparação com o número de pedidos).
+
+Quanto à complexidade espacial do pré-processamento, não é utilizada nenhuma estrutura adicional além do grafo em si, portanto a sua complexidade espacial é o próprio grafo, $O(|V|+|E|)$, e as requests a serem processadas $O(|R|)$, dando então uma complexidade de $O(|V|+|E|+|R|)$.
+
+Ambas as distribuições utilizam uma $priority_queue$, na qual inserções possuem complexidade logarítmica e a operação de extrair o mínimo possui complexidade constante.
+
+Qualquer operação realizada sobre o $vector$ de pedidos é realizada em tempo linear (inserções numa posição especifica e remoções).
+
+Assim podemos concluir que a complexidade temporal do $distributeSingleRequestPerService$, amortizando as operações de repor os veículos na $priority_queue$ e as possíveis inserções no $vector$ de pedidos, uma vez que estes dependem das propriedades dos veículos disponíveis, dos pedidos feitos e do número de veículos disponíveis.
+
+Resultando numa complexidade temporal de $O(|R|+|W|*log(|W|))$ amortizado, sendo $R$ o número de pedidos, $W$ os veículos disponíveis, uma vez que é percorrida cada request uma vez (amortizando possíveis splits de requests) e são inicializados para a $priority_queue$ os veículos disponíveis (sendo amortizado possíveis reposições desta $priority_queue$).
+
+As estruturas usadas pelo $distributeSingleRequestPerService$ são o próprio grafo, o $vector$ de requests e uma estrutura auxiliar de veículos ($priority_queue$), resultando assim numa complexidade espacial de $O(|V|+|E|+|R|+|W|$), sendo $V$ os vértices do grafo, $E$ as arestas do grafo, $R$ os pedidos a serem distribuidos e $W$ os veículos fornecidos.
+
+O $distributeMultiRequestPerService$ tem complexidades semelhantes ao anterior, tendo um fator adicional na tentativa de preencher serviços que tenham lugares livres, no entanto como estes fatores são muito dependentes das propriedades dos veículos e dos pedidos, a sua análise seria demasiado complicada, pelo que considerou-se a complexidade anterior mais um fator $k$, sendo este $k$ o fator adicional de tentativa de preenchimento de serviços dos veículos.
+
+Resultando em uma complexidade aproximada de $O(|R| + |W|*log(|W|) + k)$, sendo $R$ os pedidos a processar e $W$ os veículos disponibilizados.
+
 \subsection{Análise temporal empírica}
 
 \newpage
