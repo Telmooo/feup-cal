@@ -20,7 +20,6 @@ void GraphReader::readNodes() {
         getline(nodes, line);
         std::stringstream ss(line);
 
-        // Funciona para numero < 10 popDensity avg Speed???
         ss >> garbage >> idn >> garbage >> x >> garbage >> y >> garbage >> popDensity >> garbage >> avgSpeed >> garbage;
 
         g->addVertex(idn, x, y, popDensity, avgSpeed);
